@@ -1,0 +1,13 @@
+img {
+  image-rendering: pixelated;
+}
+
+.no-pixel {
+  image-rendering: auto;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}

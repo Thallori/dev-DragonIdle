@@ -1,0 +1,537 @@
+<script>
+import InventoryTab from './components/InventoryTab.vue';
+import ExplorationTab from './components/ExplorationTab.vue';
+import ForagingTab from './components/ForagingTab.vue';
+import HuntingTab from './components/HuntingTab.vue';
+import MiningTab from './components/MiningTab.vue';
+import SmithingTab from './components/SmithingTab.vue';
+import CookingTab from './components/CookingTab.vue';
+import { useSkillStore } from './stores/skills';
+
+export default {
+  components: {
+    InventoryTab, ExplorationTab, ForagingTab, HuntingTab, MiningTab, SmithingTab, CookingTab
+  },
+  setup() {
+    const skillStore = useSkillStore()
+    return { skillStore }
+  },
+  data() {
+    return {
+      window: {
+        width: 0,
+        height: 0
+      },
+      showSidenav: true,
+      jobColor: 'rgb(56, 86, 74)',
+      currentViewedWindow: 'ExplorationTab'
+    }
+  },
+
+  mounted() {
+    window.addEventListener('resize', this.onResize);
+    this.onResize();
+  },
+  unmounted() {
+    window.removeEventListener('resize', this.onResize);
+  },
+
+  methods: {
+    toggleSidenav: function () {
+      this.showSidenav = !this.showSidenav
+      if (this.showSidenav == true && this.window.width > 920) {
+        document.getElementById("idSidenav").style.transform = "translate(0px, 0px)";
+        document.getElementById("idBacking").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+        document.getElementById("idBacking").style.pointerEvents = "all";
+        document.getElementById("idMain").style.marginLeft = "240px";
+      } else if (this.showSidenav == true && this.window.width <= 920) {
+        document.getElementById("idSidenav").style.transform = "translate(0px, 0px)";
+        document.getElementById("idBacking").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+        document.getElementById("idBacking").style.pointerEvents = "all";
+        document.getElementById("idMain").style.marginLeft = "0px";
+      } else {
+        document.getElementById("idSidenav").style.transform = "translate(-240px, 0px)";
+        document.getElementById("idBacking").style.backgroundColor = "rgba(0, 0, 0, 0)";
+        document.getElementById("idBacking").style.pointerEvents = "none";
+        document.getElementById("idMain").style.marginLeft = "0px";
+      }
+    },
+    onResize: function () {
+      this.window.width = window.innerWidth;
+      this.window.height = window.innerHeight;
+      if (this.window.width <= 920 && this.showSidenav == true) {
+        this.toggleSidenav()
+      }
+    },
+    debuggingBoop: function () {
+      console.log('boop')
+    }
+  }
+}
+</script>
+
+<template>
+  <div class="main" id="idMain">
+
+    <!-- Sidenav -->
+    <div class="sidenav position-relatives" id="idSidenav">
+
+      <!-- Logo (240x80) -->
+      <div class="sidenav-logo">
+        <img src="" alt="">
+        <span>Dragon Idle RPG</span>
+      </div>
+
+      <!-- Inventory -->
+      <div class="sidenav-item d-flex align-items-center" @click="currentViewedWindow = 'InventoryTab'">
+        <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
+        <span>Hoard</span>
+      </div>
+      <div class="sidenav-item d-flex align-items-center">
+        <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
+        <span>Shops</span>
+      </div>
+
+      <!-- Combat -->
+      <div class="sidenav-category">
+        <span>Affinities </span>
+        <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCombat"></button>
+      </div>
+
+      <div class="sidenav-item d-flex align-items-center">
+        <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
+        <span>Combat</span>
+      </div>
+      <div class="collapse" id="collapseCombat">
+
+        <div v-for="skill in skillStore.categoryCombat">
+
+          <div class="sidenav-item d-flex align-items-center justify-content-start" v-if="skill.locked == false"
+            @click="jobColor = skill.color">
+
+            <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
+            <div class="flex-grow-1">{{ skill.name }}</div>
+            <div class="little-levels">{{ skill.level }}/{{ skillStore.maxLevel }}</div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Skills -->
+      <div class="sidenav-category">
+        <span>Skills </span>
+        <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSkills"></button>
+      </div>
+
+      <div class="collapse show" id="collapseSkills">
+
+        <!-- Skills and Skilling Accessories -->
+        <div v-for="skill in skillStore.categorySkill">
+
+          <div class="sidenav-item d-flex align-items-center justify-content-start"
+            @click="currentViewedWindow = skill.name + 'Tab'" v-if="skill.locked == false">
+
+            <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
+            <div class="flex-grow-1">{{ skill.name }}</div>
+            <div class="little-levels">{{ skill.level }}/{{ skillStore.maxLevel }}</div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Auxiliary -->
+      <div class="sidenav-category">
+        <span>Auxiliary </span>
+      </div>
+
+      <div class="sidenav-item d-flex align-items-center justify-content-start">
+        <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
+        <span>Statistics</span>
+      </div>
+      <div class="sidenav-item d-flex align-items-center justify-content-start">
+        <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
+        <span>Wiki</span>
+      </div>
+      <div class="sidenav-item d-flex align-items-center justify-content-start">
+        <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
+        <span>Discord</span>
+      </div>
+      <div class="sidenav-item d-flex align-items-center justify-content-start">
+        <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
+        <span>About</span>
+      </div>
+
+      <!-- Settings Footer -->
+      <div class="sidenav-category"></div>
+      <div class="sidenav-footer rounded-top">
+        <div class="content-container d-flex align-items-center justify-content-start">
+          <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
+          <span>Settings</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="backing" id="idBacking" @click="toggleSidenav"></div>
+
+    <!-- Current Activity Header -->
+    <header class="content-header d-flex px-3 flex-row align-items-center justify-content-between sticky"
+      :style="{ 'background-color': jobColor }">
+      <div class="d-flex align-items-center gap-3">
+
+        <button type="button" class="btn btn-dark shadow-none" @click="toggleSidenav">☰</button>
+
+        <div class="current-activity">
+          <span>
+            {{ this.skillStore.currentCat }} {{ this.skillStore.currentActivity.name }}
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Window -->
+    <div class="d-flex justify-content-center px-3">
+      <component :is="currentViewedWindow" />
+    </div>
+  </div>
+</template>
+
+<style>
+.main {
+  padding: 0px;
+  height: 100vh;
+  font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-left: 240px;
+  transition: margin-left 0.3s;
+  animation-timing-function: ease-out;
+  background-color: rgb(56, 67, 87);
+  overflow-y: scroll;
+}
+.main-window {
+  border-width: 0;
+}
+.content-container {
+  padding: 1rem;
+}
+
+.content-header {
+  height: 80px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.collapsing {
+  -webkit-transition: none;
+  transition: unset !important;
+  display: none;
+}
+
+.little-levels {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.sidenav {
+  height: 100vh;
+  width: 240px;
+  position: fixed;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  padding-top: 0;
+  background-color: rgb(30, 38, 51);
+  transition: transform 0.3s;
+  animation-timing-function: ease-out;
+}
+.sidenav-logo {
+  color: gray;
+  background-color: rgb(37, 46, 61);
+  display: flex;
+  align-items: center;
+  height: 79px;
+  margin-bottom: 0.5rem;
+  padding-top: 40px;
+  padding-bottom: 39px;
+}
+.sidenav-logo img {
+  width: 32px;
+  margin-right: 10px;
+}
+.sidenav-logo:hover {
+  color: white;
+}
+.sidenav-category {
+  padding: 0.3rem 1rem;
+  margin-top: 0.5rem;
+  color: gray;
+  display: block;
+  font-size: smaller;
+}
+.sidenav-item {
+  padding: 0.3rem 0.8rem 0.3rem 1rem;
+  color: lightgray;
+  display: block;
+  cursor: pointer;
+}
+.sidenav-item:not(.locked):hover {
+  background-color: #04AA6D;
+  color: white;
+}
+.sidenav-item img {
+  width: 32px;
+  margin-right: 10px;
+}
+.sidenav-footer {
+  margin-top: auto;
+  width: 234px;
+  background-color: rgb(37, 46, 61);
+  color: #b8b8b8;
+}
+.sidenav-footer img {
+  width: 32px;
+  margin-right: 10px;
+}
+.sidenav-footer:hover {
+  background-color: #04AA6D;
+  color: white;
+}
+.sidenav::-webkit-scrollbar {
+  width: 6px;
+}
+.sidenav::-webkit-scrollbar-track {
+  background: #2c343f;
+}
+.sidenav::-webkit-scrollbar-thumb {
+  background: rgba(109, 109, 109, 0.5);
+}
+.sidenav::-webkit-scrollbar-thumb:hover {
+  background: #727272;
+}
+
+@media (max-width: 920px) {
+  .backing {
+    display: inline-block;
+    left: 0;
+    width: 925px;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0);
+    position: fixed;
+    z-index: 5;
+    pointer-events: none;
+  }
+}
+
+.current-activity {
+  font-size: 1rem;
+  color: white;
+}
+
+.card {
+  background-color: rgb(37, 46, 61);
+  color: gray;
+}
+.card-footer {
+  background-color: rgb(30, 38, 51);
+  color: gray;
+}
+.card-activity:hover {
+  background-color: #187379;
+  color: white;
+  border-top-right-radius: 0.3rem;
+  border-top-left-radius: 0.3rem;
+  cursor: pointer;
+}
+
+.btn.activity {
+  background-color: rgb(94, 120, 165);
+  border: none;
+  font-weight: 600;
+}
+.btn:hover {
+  background-color: #04AA6D;
+  color: white;
+}
+
+.xp-progress {
+  background-color: #04AA6D;
+}
+.mastery-progress {
+  background-color: rgb(94, 120, 165);
+}
+.progress-bar {
+  transition: 0.10s;
+}
+
+.smol-badge{
+  background-color: rgb(94, 120, 165);
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+}
+
+.equipment-card {
+  background-color: rgb(52, 62, 80);
+}
+.equipment-card:hover {
+  background-color: rgb(94, 120, 165);
+  color: white;
+  cursor: pointer;
+}
+
+.equipped-card {
+  background-color: #585440;
+  cursor: pointer;
+}
+.equipped-card:hover {
+  background-color: #8b8668;
+}
+
+.tooltip-b .tooltip-text {
+  visibility: hidden;
+  background-color: #212529;
+  color: lightgray;
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 5px;
+  padding-bottom: 3px;
+  border-radius: 4px;
+  cursor: default;
+  pointer-events: none;
+
+  position: absolute;
+  z-index: 1;
+  width: 11rem;
+  top: 100%;
+  margin-left: -1rem;
+}
+.tooltip-b:hover .tooltip-text {
+  visibility: visible;
+}
+
+.tooltip-br .tooltip-text {
+  visibility: hidden;
+  background-color: #212529;
+  color: lightgray;
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 5px;
+  padding-bottom: 3px;
+  border-radius: 4px;
+  cursor: default;
+  pointer-events: none;
+
+  position: absolute;
+  z-index: 1;
+  width: 11rem;
+  top: 100%;
+  margin-left: -5rem;
+}
+.tooltip-br:hover .tooltip-text {
+  visibility: visible;
+}
+
+.tooltip-be .tooltip-text {
+  visibility: hidden;
+  background-color: #212529;
+  color: lightgray;
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 5px;
+  padding-bottom: 3px;
+  border-radius: 4px;
+  cursor: default;
+  pointer-events: none;
+
+  position: absolute;
+  z-index: 1;
+  width: 10rem;
+  top: calc(55% + 5px);
+  left: 50%;
+  transform: translate(-50%);
+}
+.tooltip-be:hover .tooltip-text {
+  visibility: visible;
+}
+
+.crafting-activities {
+  max-width: 46.5rem;
+}
+.card-list {
+  height: 5.5rem;
+  width: 23rem;
+  min-width: 23rem;
+}
+
+@media (max-width: 82rem) {
+  .crafting-activities {
+    max-width: calc(100% - 17.3rem);
+  }
+}
+
+@media (max-width: 44rem) {
+  .crafting-activities {
+    max-width: 25rem;
+  }
+}
+
+.modal {
+  position: fixed;
+  z-index: 20;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+.modal-backing {
+  display: block;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  pointer-events: all;
+}
+
+.hide-modal {
+  display: none;
+}
+
+.show-modal {
+  display: block;
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: rgb(37, 46, 61);
+  color: lightgray;
+  border: 1px solid gray;
+  max-width: 95%;
+  width: 35rem;
+  margin: 15% auto;
+  padding: 20px;
+  z-index: 1
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+</style>
