@@ -2,7 +2,6 @@ import { defineStore } from 'pinia'
 import { useSkillStore } from '@/stores/skills';
 import { useItemStore } from '@/stores/inventory';
 
-
 export const useCookingStore = defineStore('cookingStore', {
   state: () => ({
     progressInterval: 50, // 20 update per second
@@ -24,7 +23,6 @@ export const useCookingStore = defineStore('cookingStore', {
         cat: 'meat',
         name: 'Fried Chops',
         itemID: 'friedChops',
-        // image: '',
         neededMeatItem1: 'meatChop',
         levelRequired: 1,
         xpGain: 3,
@@ -39,7 +37,6 @@ export const useCookingStore = defineStore('cookingStore', {
         cat: 'meat',
         name: 'Seared Game',
         itemID: 'searedGame',
-        // image: '',
         neededMeatItem1: 'meatGame',
         levelRequired: 3,
         xpGain: 5,
@@ -54,7 +51,6 @@ export const useCookingStore = defineStore('cookingStore', {
         cat: 'meat',
         name: 'Flank Steak',
         itemID: 'flankSteak',
-        // image: '',
         neededMeatItem1: 'meatFlank',
         levelRequired: 5,
         xpGain: 7,
@@ -69,7 +65,6 @@ export const useCookingStore = defineStore('cookingStore', {
         cat: 'meat',
         name: 'Shelled Crisps',
         itemID: 'shelledCrisps',
-        // image: '',
         neededMeatItem1: 'meatSpicy',
         levelRequired: 8,
         xpGain: 10,
@@ -84,7 +79,6 @@ export const useCookingStore = defineStore('cookingStore', {
         cat: 'meal',
         name: 'Barkchew',
         itemID: 'meal1',
-        // image: '',
         neededItem1: 'plant1',
         levelRequired: 1,
         xpGain: 3,
@@ -99,7 +93,6 @@ export const useCookingStore = defineStore('cookingStore', {
         cat: 'meal',
         name: 'Flax Bread',
         itemID: 'meal2',
-        // image: '',
         neededItem1: 'plant2',
         levelRequired: 2,
         xpGain: 5,
@@ -114,7 +107,6 @@ export const useCookingStore = defineStore('cookingStore', {
         cat: 'meal',
         name: 'Berry Pie',
         itemID: 'meal3',
-        // image: '',
         neededItem1: 'plant2',
         neededItem2: 'plant3',
         levelRequired: 3,
@@ -130,7 +122,6 @@ export const useCookingStore = defineStore('cookingStore', {
         cat: 'meal',
         name: 'Glazed Chops',
         itemID: 'meal4',
-        // image: '',
         neededMeatItem1: 'meatChop',
         neededItem1: 'plant3',
         levelRequired: 4,
@@ -146,7 +137,6 @@ export const useCookingStore = defineStore('cookingStore', {
         cat: 'meal',
         name: 'Flatcake',
         itemID: 'meal5',
-        // image: '',
         neededItem1: 'plant3',
         neededItem2: 'plant5',
         levelRequired: 5,
@@ -162,7 +152,6 @@ export const useCookingStore = defineStore('cookingStore', {
         cat: 'meal',
         name: 'Sticky Game',
         itemID: 'meal6',
-        // image: '',
         neededMeatItem1: 'meatGame',
         neededItem1: 'plant6',
         levelRequired: 6,
@@ -178,7 +167,6 @@ export const useCookingStore = defineStore('cookingStore', {
         cat: 'meal',
         name: 'Flank Bun',
         itemID: 'meal7',
-        // image: '',
         neededMeatItem1: 'meatFlank',
         neededItem1: 'plant2',
         levelRequired: 7,
@@ -194,7 +182,6 @@ export const useCookingStore = defineStore('cookingStore', {
         cat: 'meal',
         name: 'Shell Cake',
         itemID: 'meal8',
-        // image: '',
         neededMeatItem1: 'meatSpicy',
         neededItem1: 'plant2',
         neededItem2: 'plant8',

@@ -23,7 +23,7 @@ export const useHuntingStore = defineStore('huntingStore', {
         id: '0',
         name: 'Sheep',
         itemMeatID: 'meatChop',
-        itemMeatRange: [1, 2],
+        itemMeatRange: [1, 1],
         itemHideID: 'hide1',
         itemHideRange: [0, 3],
         image: 'src/assets/icons/testIcon16.png',
@@ -40,7 +40,7 @@ export const useHuntingStore = defineStore('huntingStore', {
         id: '1',
         name: 'Hog',
         itemMeatID: 'meatChop',
-        itemMeatRange: [2, 3],
+        itemMeatRange: [1, 2],
         itemHideID: 'hide2',
         itemHideRange: [1, 2],
         itemExtraID: 'hogTusk',
@@ -297,7 +297,7 @@ export const useHuntingStore = defineStore('huntingStore', {
     },
 
     randomIntRange(min, max) {
-      return Math.floor(Math.random() * (max - min)) + min;
+      return Math.floor(Math.random() * (1 + max - min)) + min;
     },
 
     addMXP(mxpAmount) {

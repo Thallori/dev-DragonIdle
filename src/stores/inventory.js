@@ -8,14 +8,18 @@ export const useItemStore = defineStore('itemStore', {
     skillStore: useSkillStore(),
     smithingStore: useSmithingStore(),
 
+    preStance: 5,
+    aggStance: 0,
+    defStance: 0,
+
     equippedStats: {
       meleeDamage: 1,
       rangedDamage: 1,
       magicDamage: 1,
 
-      meleeAccuracy: 3,
-      rangedAccuracy: 3,
-      magicAccuracy: 3,
+      meleeAccuracy: 8,
+      rangedAccuracy: 8,
+      magicAccuracy: 8,
 
       meleePen: 0,
       rangedPen: 0,
@@ -138,7 +142,7 @@ export const useItemStore = defineStore('itemStore', {
         isCombat: true,
         onEquip: false,
         stats: {
-          meleeAccuracy: -5,
+          meleeAccuracy: -10,
           meleeDamage: 2,
           speed: 2.8,
         },
@@ -164,7 +168,7 @@ export const useItemStore = defineStore('itemStore', {
         isCombat: true,
         onEquip: false,
         stats: {
-          meleeAccuracy: -5,
+          meleeAccuracy: -10,
           meleeDamage: 3,
           speed: 2.8,
         },
@@ -244,7 +248,7 @@ export const useItemStore = defineStore('itemStore', {
         stats: {
           meleeAccuracy: -10,
           meleeDamage: 1,
-          pen: 0.30,
+          pen: 0.35,
           speed: 2.8,
         },
         toolSlot: 'miningTool',
@@ -271,7 +275,7 @@ export const useItemStore = defineStore('itemStore', {
         stats: {
           meleeAccuracy: -10,
           meleeDamage: 2,
-          pen: 0.30,
+          pen: 0.35,
           speed: 2.8,
         },
         toolSlot: 'miningTool',
@@ -298,7 +302,7 @@ export const useItemStore = defineStore('itemStore', {
         isCombat: true,
         onEquip: false,
         stats: {
-          meleeAccuracy: 0,
+          meleeAccuracy: -5,
           meleeDamage: 1,
           pen: 0.10,
           speed: 2.2,
@@ -357,7 +361,7 @@ export const useItemStore = defineStore('itemStore', {
         isCombat: true,
         onEquip: false,
         stats: {
-          meleeAccuracy: 0,
+          meleeAccuracy: -5,
           meleeDamage: 2,
           pen: 0.10,
           speed: 2.2,
@@ -377,7 +381,7 @@ export const useItemStore = defineStore('itemStore', {
         isCombat: true,
         onEquip: false,
         stats: {
-          meleeAccuracy: 5,
+          meleeAccuracy: -5,
           meleeDamage: 3,
           pen: 0.15,
           speed: 2.4,
@@ -397,7 +401,7 @@ export const useItemStore = defineStore('itemStore', {
         isCombat: true,
         onEquip: false,
         stats: {
-          meleeAccuracy: 5,
+          meleeAccuracy: -5,
           meleeDamage: 3,
           pen: 0.25,
           speed: 2.6,
@@ -417,7 +421,7 @@ export const useItemStore = defineStore('itemStore', {
         isCombat: true,
         onEquip: false,
         stats: {
-          meleeAccuracy: 10,
+          meleeAccuracy: -5,
           meleeDamage: 4,
           pen: 0.30,
           speed: 3.0,
@@ -456,8 +460,8 @@ export const useItemStore = defineStore('itemStore', {
         isCombat: true,
         onEquip: false,
         stats: {
-          meleeDodge: 8,
-          rangedDodge: 8,
+          meleeDodge: 6,
+          rangedDodge: 6,
           magicDodge: -8,
           physicalArmor: 1,
           speed: -0.3,
@@ -477,8 +481,8 @@ export const useItemStore = defineStore('itemStore', {
         isCombat: true,
         onEquip: false,
         stats: {
-          meleeDodge: 6,
-          rangedDodge: 5,
+          meleeDodge: 4,
+          rangedDodge: 4,
           magicDodge: -2,
           resist: 0.05,
           speed: -0.10,
@@ -498,7 +502,7 @@ export const useItemStore = defineStore('itemStore', {
         isCombat: true,
         onEquip: false,
         stats: {
-          meleeDodge: 4,
+          meleeDodge: 5,
           rangedDodge: 4,
           magicDodge: -3,
           physicalArmor: 1,
@@ -553,7 +557,7 @@ export const useItemStore = defineStore('itemStore', {
         dcat: 'rawFood',
         isFood: true,
         onEquip: false,
-        heals: 2,
+        heals: 1,
         dlvl: 1,
         sellPrice: 2,
         count: 20, //debug
@@ -566,7 +570,7 @@ export const useItemStore = defineStore('itemStore', {
         dcat: 'rawFood',
         isFood: true,
         onEquip: false,
-        heals: 3,
+        heals: 2,
         dlvl: 2,
         sellPrice: 3,
         count: 0,
@@ -579,10 +583,10 @@ export const useItemStore = defineStore('itemStore', {
         dcat: 'rawFood',
         isFood: true,
         onEquip: false,
-        heals: 4,
+        heals: 3,
         dlvl: 3,
         sellPrice: 14,
-        count: 0,
+        count: 20, //debug
         totalCount: 0,
       },
       {
@@ -592,10 +596,10 @@ export const useItemStore = defineStore('itemStore', {
         dcat: 'rawFood',
         isFood: true,
         onEquip: false,
-        heals: 5,
+        heals: 4,
         dlvl: 4,
         sellPrice: 22,
-        count: 0,
+        count: 20, //debug
         totalCount: 0,
       },
       {
@@ -1079,10 +1083,41 @@ export const useItemStore = defineStore('itemStore', {
     ],
   }),
   getters: {
+    getAllFoodWithCount() {
+      return this.consumableItems.filter(e => e.isFood === true && e.count > 0)
+    },
   },
   actions: {
     changeItemCount(itemID, amount, itemCat) {
-      let itemToAddCount = this[itemCat].find(t => t.id === itemID)
+      let itemToAddCount
+
+      //if we got a category, use it
+      if (itemCat) {
+        itemToAddCount = this[itemCat].find(t => t.id === itemID)
+      } else {
+        //look in resource items
+        itemToAddCount = this.resourceItems.find(t => t.id === itemID)
+        //look in consumable items
+        if (itemToAddCount == undefined) {
+          itemToAddCount = this.consumableItems.find(t => t.id === itemID)
+        }
+        //look in equipment items
+        if (itemToAddCount == undefined) {
+          itemToAddCount = this.equipmentItems.find(t => t.id === itemID)
+        } 
+      }
+
+      //give up and report the error
+      if (itemToAddCount == undefined) {
+        console.log('failed to add item ' + itemID)
+        return false
+      }
+
+      if (amount > 0) {
+        console.log('hoarding ' + amount + ' ' + itemToAddCount.name)
+      } else {
+        // console.log('losing ' + amount + ' ' + itemToAddCount.name)
+      }
 
       if (itemToAddCount.count + amount < 0) { return false } //can't have negative apples
 
@@ -1105,12 +1140,53 @@ export const useItemStore = defineStore('itemStore', {
 
     },
     getItemImage(itemID, itemCat) {
-      let temp = this[itemCat].find(t => t.id === itemID)
+      let temp
 
-      if (temp.image != null) {
-        return temp.image
+      if (itemCat) {
+        temp = this[itemCat].find(t => t.id === itemID)
+      } else {
+        //look in resource items
+        temp = this.resourceItems.find(t => t.id === itemID)
+        //look in consumable items
+        if (temp == undefined) {
+          temp = this.consumableItems.find(t => t.id === itemID)
+        }
+        //look in equipment items
+        if (temp == undefined) {
+          temp = this.equipmentItems.find(t => t.id === itemID)
+        }
       }
-      return 'src/assets/icons/testIcon16.png'
+
+      //give up and report the error
+      if (itemToAddCount == undefined) {
+        console.log('failed find item image' + itemID)
+        return 'src/assets/icons/testIcon16.png'
+      }
+      return temp.image
+    },
+    getItemData(itemID, itemCat) {
+      let temp
+
+      if (itemCat) {
+        temp = this[itemCat].find(t => t.id === itemID)
+      } else {
+        //look in resource items
+        temp = this.resourceItems.find(t => t.id === itemID)
+        //look in consumable items
+        if (temp == undefined) {
+          temp = this.consumableItems.find(t => t.id === itemID)
+        }
+        //look in equipment items
+        if (temp == undefined) {
+          temp = this.equipmentItems.find(t => t.id === itemID)
+        }
+      }
+
+      //give up and report the error
+      if (temp == undefined) {
+        console.log('failed find item data' + itemID)
+      }
+      return temp
     },
 
     equipItem(item) {
@@ -1177,13 +1253,13 @@ export const useItemStore = defineStore('itemStore', {
     updateEquippedStats() {
       let item = {}
 
-      this.equippedStats.meleeDamage = this.skillStore.skills[1].level
-      this.equippedStats.rangedDamage = this.skillStore.skills[2].level
-      this.equippedStats.magicDamage = this.skillStore.skills[3].level
+      this.equippedStats.meleeDamage = this.skillStore.skills[1].level + this.aggStance
+      this.equippedStats.rangedDamage = this.skillStore.skills[2].level + this.aggStance
+      this.equippedStats.magicDamage = this.skillStore.skills[3].level + this.aggStance
 
-      this.equippedStats.meleeAccuracy = 3 * this.skillStore.skills[0].level
-      this.equippedStats.rangedAccuracy = 3 * this.skillStore.skills[0].level
-      this.equippedStats.magicAccuracy = 3 * this.skillStore.skills[0].level
+      this.equippedStats.meleeAccuracy = (3 * this.skillStore.skills[0].level) + this.preStance
+      this.equippedStats.rangedAccuracy = (3 * this.skillStore.skills[0].level) + this.preStance
+      this.equippedStats.magicAccuracy = (3 * this.skillStore.skills[0].level) + this.preStance
 
       this.equippedStats.meleePen = 0
       this.equippedStats.rangedPen = 0
@@ -1193,9 +1269,9 @@ export const useItemStore = defineStore('itemStore', {
       this.equippedStats.rangedSpeed = 2.0
       this.equippedStats.magicSpeed = 2.0
 
-      this.equippedStats.meleeDodge = 3 * this.skillStore.skills[4].level
-      this.equippedStats.rangedDodge = 3 * this.skillStore.skills[5].level
-      this.equippedStats.magicDodge = 3 * this.skillStore.skills[6].level
+      this.equippedStats.meleeDodge = (3 * this.skillStore.skills[4].level) + this.defStance
+      this.equippedStats.rangedDodge = (3 * this.skillStore.skills[5].level) + this.defStance
+      this.equippedStats.magicDodge = (3 * this.skillStore.skills[6].level) + this.defStance
 
       this.equippedStats.physicalArmor = 0
       this.equippedStats.energyArmor = 0

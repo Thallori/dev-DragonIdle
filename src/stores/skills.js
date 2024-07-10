@@ -1,4 +1,6 @@
 import { defineStore } from 'pinia'
+import { useItemStore } from '@/stores/inventory';
+import { useCombatStore } from '@/stores/combat';
 
 export const useSkillStore = defineStore('skillStore', {
   state: () => ({
@@ -6,6 +8,10 @@ export const useSkillStore = defineStore('skillStore', {
     absoluteMaxLevel: 8,
     currentActivity: { name: 'Nothing' },
     currentCat: 'Currently Doing: ',
+    currentColor: 'rgb(56, 86, 74)',
+
+    itemStore: useItemStore(),
+    combatStore: useCombatStore(),
 
     skills: [
       {
@@ -349,11 +355,20 @@ export const useSkillStore = defineStore('skillStore', {
       }
 
       this.skills[index].xp = xp
+      // console.log('gained ' + xpAmount + ' ' + this.skills[index].name + ' xp')
 
-      // I should be able to just compute all of these, but I don't know how to get the data out.
-      this.skills[index].level = level
-      this.skills[index].xpPrev = xpFromLevel(level)
-      this.skills[index].xpNext = xpFromLevel(level + 1)
+      //updating combat stats on level up is required
+      if (level != this.skills[index].level) {
+        this.skills[index].level = level
+        this.skills[index].xpPrev = xpFromLevel(level)
+        this.skills[index].xpNext = xpFromLevel(level + 1)
+
+        //if vitality levels up, gain 5 health
+        if (index == 7) {
+          this.combatStore.onHealthUp()
+        }
+        this.itemStore.updateEquippedStats()
+      }
     },
     unlockSkill(index) {
       this.skills[index].locked = false

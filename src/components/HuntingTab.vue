@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     isNotValidArea(activityObject, activityIndex) {
-      // return false
+      return false
 
       // if skill isn't up to snuff, is never valid
       if (activityObject.levelRequired > this.skillStore.skills[this.skillID].level) {

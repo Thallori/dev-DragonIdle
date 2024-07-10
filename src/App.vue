@@ -1,16 +1,18 @@
 <script>
+import { useSkillStore } from './stores/skills';
+
 import InventoryTab from './components/InventoryTab.vue';
+import CombatTab from './components/CombatTab.vue';
 import ExplorationTab from './components/ExplorationTab.vue';
 import ForagingTab from './components/ForagingTab.vue';
 import HuntingTab from './components/HuntingTab.vue';
 import MiningTab from './components/MiningTab.vue';
 import SmithingTab from './components/SmithingTab.vue';
 import CookingTab from './components/CookingTab.vue';
-import { useSkillStore } from './stores/skills';
 
 export default {
   components: {
-    InventoryTab, ExplorationTab, ForagingTab, HuntingTab, MiningTab, SmithingTab, CookingTab
+    InventoryTab, CombatTab, ExplorationTab, ForagingTab, HuntingTab, MiningTab, SmithingTab, CookingTab
   },
   setup() {
     const skillStore = useSkillStore()
@@ -23,8 +25,12 @@ export default {
         height: 0
       },
       showSidenav: true,
-      jobColor: 'rgb(56, 86, 74)',
-      currentViewedWindow: 'ExplorationTab'
+      showAllAffinities: true,
+      showAllSkills: true,
+      // currentViewedWindow: 'ExplorationTab'
+      hover: '',
+
+      currentViewedWindow: 'CombatTab'
     }
   },
 
@@ -65,7 +71,7 @@ export default {
     },
     debuggingBoop: function () {
       console.log('boop')
-    }
+    },
   }
 }
 </script>
@@ -93,47 +99,73 @@ export default {
       </div>
 
       <!-- Combat -->
-      <div class="sidenav-category">
+      <div class="sidenav-category card-button" @click="showAllAffinities = !showAllAffinities">
         <span>Affinities </span>
-        <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCombat"></button>
       </div>
 
-      <div class="sidenav-item d-flex align-items-center">
+      <div class="sidenav-item d-flex align-items-center" @click="currentViewedWindow = 'CombatTab'">
         <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
         <span>Combat</span>
       </div>
-      <div class="collapse" id="collapseCombat">
+      <div v-if="showAllAffinities == true">
 
         <div v-for="skill in skillStore.categoryCombat">
 
-          <div class="sidenav-item d-flex align-items-center justify-content-start" v-if="skill.locked == false"
-            @click="jobColor = skill.color">
+          <div class="sidenav-item d-flex align-items-center hover-box" v-if="skill.locked == false"
+            @click="currentViewedWindow = 'CombatTab'">
 
             <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
-            <div class="flex-grow-1">{{ skill.name }}</div>
-            <div class="little-levels">{{ skill.level }}/{{ skillStore.maxLevel }}</div>
 
+            <div class="flex-grow-1" style="translate: 0px -4px;">
+
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  {{ skill.name }}
+                </div>
+                <div class="hover-hide little-levels">
+                  ({{ skill.xp }}/{{ skill.xpNext }})
+                </div>
+                <div class="hover-show little-levels">
+                  {{ skill.level }}/{{ skillStore.maxLevel }}
+                </div>
+              </div>
+
+              <div class="progress sidenav-progress" role="attack time bar">
+                <div class="progress-bar attack-progress"
+                  :style="`width: ${(skill.xp - skill.xpPrev) / (skill.xpNext - skill.xpPrev) * 100}%;`">
+                </div>
+              </div>
+            </div>
           </div>
+
         </div>
       </div>
 
       <!-- Skills -->
-      <div class="sidenav-category">
+      <div class="sidenav-category card-button" @click="showAllSkills = !showAllSkills">
         <span>Skills </span>
-        <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSkills"></button>
       </div>
 
-      <div class="collapse show" id="collapseSkills">
-
+      <div v-if="showAllSkills == true">
         <!-- Skills and Skilling Accessories -->
         <div v-for="skill in skillStore.categorySkill">
 
-          <div class="sidenav-item d-flex align-items-center justify-content-start"
+          <div class="sidenav-item d-flex align-items-center justify-content-start hover-box"
             @click="currentViewedWindow = skill.name + 'Tab'" v-if="skill.locked == false">
 
             <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
-            <div class="flex-grow-1">{{ skill.name }}</div>
-            <div class="little-levels">{{ skill.level }}/{{ skillStore.maxLevel }}</div>
+
+            <div class="d-flex flex-grow-1 justify-content-between align-items-center">
+              <div>
+                {{ skill.name }}
+              </div>
+              <div class="hover-hide little-levels">
+                ({{ skill.xp }}/{{ skill.xpNext }})
+              </div>
+              <div class="hover-show little-levels">
+                {{ skill.level }}/{{ skillStore.maxLevel }}
+              </div>
+            </div>
 
           </div>
         </div>
@@ -163,6 +195,7 @@ export default {
 
       <!-- Settings Footer -->
       <div class="sidenav-category"></div>
+
       <div class="sidenav-footer rounded-top">
         <div class="content-container d-flex align-items-center justify-content-start">
           <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
@@ -175,7 +208,7 @@ export default {
 
     <!-- Current Activity Header -->
     <header class="content-header d-flex px-3 flex-row align-items-center justify-content-between sticky"
-      :style="{ 'background-color': jobColor }">
+      :style="{ 'background-color': this.skillStore.currentColor }">
       <div class="d-flex align-items-center gap-3">
 
         <button type="button" class="btn btn-dark shadow-none" @click="toggleSidenav">☰</button>
@@ -232,6 +265,10 @@ export default {
   font-size: 0.9rem;
   font-weight: 500;
 }
+.dark-text {
+  color: gray;
+  font-weight: 500;
+}
 
 .sidenav {
   height: 100vh;
@@ -273,7 +310,7 @@ export default {
   font-size: smaller;
 }
 .sidenav-item {
-  padding: 0.3rem 0.8rem 0.3rem 1rem;
+  padding: 0.2rem 0.8rem 0.2rem 1rem;
   color: lightgray;
   display: block;
   cursor: pointer;
@@ -340,6 +377,10 @@ export default {
   background-color: rgb(30, 38, 51);
   color: gray;
 }
+.card-big {
+  background-color: rgb(30, 38, 51);
+  color: lightgray;
+}
 .card-activity:hover {
   background-color: #187379;
   color: white;
@@ -358,20 +399,58 @@ export default {
   color: white;
 }
 
+.disabled {
+  border-style: none;
+}
+
 .xp-progress {
   background-color: #04AA6D;
 }
 .mastery-progress {
   background-color: rgb(94, 120, 165);
 }
+.attack-progress {
+  background-color: rgb(110, 144, 204);
+}
+.health-progress {
+  background-color: rgb(211, 101, 101);
+}
+.sidenav-progress {
+  height: 5px;
+  background-color: rgb(52, 62, 80);
+  translate: 0px -2px;
+  margin-bottom: -2px;
+}
 .progress-bar {
   transition: 0.10s;
+}
+
+.hover-box {
+  position: relative;
+}
+.hover-box .hover-hide {
+  display: none;
+}
+.hover-box:hover .hover-hide {
+  display: block;
+}
+.hover-box:hover .hover-show {
+  display: none;
 }
 
 .smol-badge{
   background-color: rgb(94, 120, 165);
   padding-top: 0.2rem;
   padding-bottom: 0.2rem;
+}
+
+.bigger-levels {
+  font-size: smaller;
+}
+.card-button:hover {
+  background-color: rgb(94, 120, 165);
+  color: white;
+  cursor: pointer;
 }
 
 .equipment-card {
@@ -410,6 +489,29 @@ export default {
   margin-left: -1rem;
 }
 .tooltip-b:hover .tooltip-text {
+  visibility: visible;
+}
+
+.tooltip-bcf .tooltip-text {
+  visibility: hidden;
+  background-color: #212529;
+  color: lightgray;
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 5px;
+  padding-bottom: 3px;
+  border-radius: 4px;
+  cursor: default;
+  pointer-events: none;
+
+  position: absolute;
+  z-index: 1;
+  width: 10rem;
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%);
+}
+.tooltip-bcf:hover .tooltip-text {
   visibility: visible;
 }
 
@@ -503,7 +605,6 @@ export default {
 .hide-modal {
   display: none;
 }
-
 .show-modal {
   display: block;
 }
@@ -514,9 +615,7 @@ export default {
   color: lightgray;
   border: 1px solid gray;
   max-width: 95%;
-  width: 35rem;
   margin: 15% auto;
-  padding: 20px;
   z-index: 1
 }
 
