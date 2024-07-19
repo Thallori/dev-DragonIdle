@@ -3,8 +3,13 @@ import { useItemStore } from '@/stores/inventory';
 import { useSmithingStore } from '@/stores/smithing';
 import { useCookingStore } from '@/stores/cooking';
 
+import tooltips from './tooltips.vue';
+
 export default {
   name: 'equipstats',
+  components: {
+    tooltips,
+  },
   setup() {
     const itemStore = useItemStore()
     const smithingStore = useSmithingStore()
@@ -43,8 +48,12 @@ export default {
     <div class="d-flex flex-wrap gap-1 p-2" style="width: 16.3rem;">
 
       <!-- wingSlot -->
-      <div class="card tooltip-b equipment-card" style="width: 58px; height: 58px;"
+      <div class="card tooltip-br equipment-card" style="width: 58px; height: 58px;"
         @dblclick="itemStore.equipItem(itemStore.equippedCombat.wingSlot)">
+
+        <div class="tooltip-text" v-if="itemStore.equippedCombat.wingSlot.id">
+          <tooltips :itemObject="itemStore.equippedCombat.wingSlot" />
+        </div>
 
         <img class="mx-auto my-auto" :src="itemStore.equippedCombat.wingSlot.image" alt="" width="48" height="48"
           v-if="itemStore.equippedCombat.wingSlot.image">
@@ -54,8 +63,12 @@ export default {
       </div>
 
       <!-- bodySlot -->
-      <div class="card tooltip-b equipment-card" style="width: 58px; height: 58px;"
+      <div class="card tooltip-br equipment-card" style="width: 58px; height: 58px;"
         @dblclick="itemStore.equipItem(itemStore.equippedCombat.bodySlot)">
+
+        <div class="tooltip-text" v-if="itemStore.equippedCombat.bodySlot.id">
+          <tooltips :itemObject="itemStore.equippedCombat.bodySlot" />
+        </div>
 
         <img class=" mx-auto my-auto" :src="itemStore.equippedCombat.bodySlot.image" alt="" width="48" height="48"
           v-if="itemStore.equippedCombat.bodySlot.image">
@@ -65,8 +78,12 @@ export default {
       </div>
 
       <!-- chestSlot -->
-      <div class="card tooltip-b equipment-card" style="width: 58px; height: 58px;"
+      <div class="card tooltip-br equipment-card" style="width: 58px; height: 58px;"
         @dblclick="itemStore.equipItem(itemStore.equippedCombat.chestSlot)">
+
+        <div class="tooltip-text" v-if="itemStore.equippedCombat.chestSlot.id">
+          <tooltips :itemObject="itemStore.equippedCombat.chestSlot" />
+        </div>
 
         <img class="mx-auto my-auto" :src="itemStore.equippedCombat.chestSlot.image" alt="" width="48" height="48"
           v-if="itemStore.equippedCombat.chestSlot.image">
@@ -76,8 +93,12 @@ export default {
       </div>
 
       <!-- hatSlot -->
-      <div class="card tooltip-b equipment-card" style="width: 58px; height: 58px;"
+      <div class="card tooltip-br equipment-card" style="width: 58px; height: 58px;"
         @dblclick="itemStore.equipItem(itemStore.equippedCombat.hatSlot)">
+
+        <div class="tooltip-text" v-if="itemStore.equippedCombat.hatSlot.id">
+          <tooltips :itemObject="itemStore.equippedCombat.hatSlot" />
+        </div>
 
         <img class="mx-auto my-auto" :src="itemStore.equippedCombat.hatSlot.image" alt="" width="48" height="48"
           v-if="itemStore.equippedCombat.hatSlot.image">
@@ -87,8 +108,12 @@ export default {
       </div>
 
       <!-- trinketSlot -->
-      <div class="card tooltip-b equipment-card" style="width: 58px; height: 58px;"
+      <div class="card tooltip-br equipment-card" style="width: 58px; height: 58px;"
         @dblclick="itemStore.equipItem(itemStore.equippedCombat.trinketSlot)">
+
+        <div class="tooltip-text" v-if="itemStore.equippedCombat.trinketSlot.id">
+          <tooltips :itemObject="itemStore.equippedCombat.trinketSlot" />
+        </div>
 
         <img class="mx-auto my-auto" :src="itemStore.equippedCombat.trinketSlot.image" alt="" width="48" height="48"
           v-if="itemStore.equippedCombat.trinketSlot.image">
@@ -98,8 +123,12 @@ export default {
       </div>
 
       <!-- ringSlot -->
-      <div class="card tooltip-b equipment-card" style="width: 58px; height: 58px;"
+      <div class="card tooltip-br equipment-card" style="width: 58px; height: 58px;"
         @dblclick="itemStore.equipItem(itemStore.equippedCombat.ringSlot)">
+
+        <div class="tooltip-text" v-if="itemStore.equippedCombat.trinketSlot.id">
+          <tooltips :itemObject="itemStore.equippedCombat.trinketSlot" />
+        </div>
 
         <img class="mx-auto my-auto" :src="itemStore.equippedCombat.ringSlot.image" alt="" width="48" height="48"
           v-if="itemStore.equippedCombat.ringSlot.image">
@@ -109,8 +138,12 @@ export default {
       </div>
 
       <!-- ammySlot -->
-      <div class="card tooltip-b equipment-card" style="width: 58px; height: 58px;"
+      <div class="card tooltip-br equipment-card" style="width: 58px; height: 58px;"
         @dblclick="itemStore.equipItem(itemStore.equippedCombat.ammySlot)">
+
+        <div class="tooltip-text" v-if="itemStore.equippedCombat.ammySlot.id">
+          <tooltips :itemObject="itemStore.equippedCombat.ammySlot" />
+        </div>
 
         <img class="mx-auto my-auto" :src="itemStore.equippedCombat.ammySlot.image" alt="" width="48" height="48"
           v-if="itemStore.equippedCombat.ammySlot.image">
@@ -120,8 +153,12 @@ export default {
       </div>
 
       <!-- legSlot -->
-      <div class="card tooltip-b equipment-card" style="width: 58px; height: 58px;"
+      <div class="card tooltip-br equipment-card" style="width: 58px; height: 58px;"
         @dblclick="itemStore.equipItem(itemStore.equippedCombat.legSlot)">
+
+        <div class="tooltip-text" v-if="itemStore.equippedCombat.legSlot.id">
+          <tooltips :itemObject="itemStore.equippedCombat.legSlot" />
+        </div>
 
         <img class="mx-auto my-auto" :src="itemStore.equippedCombat.legSlot.image" alt="" width="48" height="48"
           v-if="itemStore.equippedCombat.legSlot.image">
@@ -136,8 +173,12 @@ export default {
     <div class="d-flex flex-wrap gap-1 p-2" style="width: 12.4rem;">
 
       <!-- meleeSlot -->
-      <div class="card tooltip-b equipment-card" style="width: 58px; height: 58px;"
+      <div class="card tooltip-br equipment-card" style="width: 58px; height: 58px;"
         @dblclick="itemStore.equipItem(itemStore.equippedCombat.meleeSlot)">
+
+        <div class="tooltip-text" v-if="itemStore.equippedCombat.meleeSlot.id">
+          <tooltips :itemObject="itemStore.equippedCombat.meleeSlot" />
+        </div>
 
         <img class="mx-auto my-auto" :src="itemStore.equippedCombat.meleeSlot.image" alt="" width="48" height="48"
           v-if="itemStore.equippedCombat.meleeSlot.image">
@@ -147,8 +188,12 @@ export default {
       </div>
 
       <!-- rangedSlot -->
-      <div class="card tooltip-b equipment-card" style="width: 58px; height: 58px;"
+      <div class="card tooltip-br equipment-card" style="width: 58px; height: 58px;"
         @dblclick="itemStore.equipItem(itemStore.equippedCombat.rangedSlot)">
+
+        <div class="tooltip-text" v-if="itemStore.equippedCombat.rangedSlot.id">
+          <tooltips :itemObject="itemStore.equippedCombat.rangedSlot" />
+        </div>
 
         <img class=" mx-auto my-auto" :src="itemStore.equippedCombat.rangedSlot.image" alt="" width="48" height="48"
           v-if="itemStore.equippedCombat.rangedSlot.image">
@@ -157,20 +202,28 @@ export default {
         </div>
       </div>
 
-      <!-- mageSlot -->
-      <div class="card tooltip-b equipment-card" style="width: 58px; height: 58px;"
-        @dblclick="itemStore.equipItem(itemStore.equippedCombat.mageSlot)">
+      <!-- magicSlot -->
+      <div class="card tooltip-br equipment-card" style="width: 58px; height: 58px;"
+        @dblclick="itemStore.equipItem(itemStore.equippedCombat.magicSlot)">
 
-        <img class="mx-auto my-auto" :src="itemStore.equippedCombat.mageSlot.image" alt="" width="48" height="48"
-          v-if="itemStore.equippedCombat.mageSlot.image">
+        <div class="tooltip-text" v-if="itemStore.equippedCombat.magicSlot.id">
+          <tooltips :itemObject="itemStore.equippedCombat.magicSlot" />
+        </div>
+
+        <img class="mx-auto my-auto" :src="itemStore.equippedCombat.magicSlot.image" alt="" width="48" height="48"
+          v-if="itemStore.equippedCombat.magicSlot.image">
         <div class="little-levels text-center" v-else>
           Magic
         </div>
       </div>
 
       <!-- oilSlot -->
-      <div class="card tooltip-b equipment-card" style="width: 58px; height: 58px;"
+      <div class="card tooltip-br equipment-card" style="width: 58px; height: 58px;"
         @dblclick="itemStore.equipItem(itemStore.equippedCombat.oilSlot)">
+
+        <div class="tooltip-text" v-if="itemStore.equippedCombat.oilSlot.id">
+          <tooltips :itemObject="itemStore.equippedCombat.oilSlot" />
+        </div>
 
         <img class="mx-auto my-auto" :src="itemStore.equippedCombat.oilSlot.image" alt="" width="48" height="48"
           v-if="itemStore.equippedCombat.oilSlot.image">
@@ -180,8 +233,12 @@ export default {
       </div>
 
       <!-- ammoSlot -->
-      <div class="card tooltip-b equipment-card" style="width: 58px; height: 58px;"
+      <div class="card tooltip-br equipment-card" style="width: 58px; height: 58px;"
         @dblclick="itemStore.equipItem(itemStore.equippedCombat.ammoSlot)">
+
+        <div class="tooltip-text" v-if="itemStore.equippedCombat.ammoSlot.id">
+          <tooltips :itemObject="itemStore.equippedCombat.ammoSlot" />
+        </div>
 
         <img class="mx-auto my-auto" :src="itemStore.equippedCombat.ammoSlot.image" alt="" width="48" height="48"
           v-if="itemStore.equippedCombat.ammoSlot.image">
@@ -191,8 +248,12 @@ export default {
       </div>
 
       <!-- chargeSlot -->
-      <div class="card tooltip-b equipment-card" style="width: 58px; height: 58px;"
+      <div class="card tooltip-br equipment-card" style="width: 58px; height: 58px;"
         @dblclick="itemStore.equipItem(itemStore.equippedCombat.chargeSlot)">
+
+        <div class="tooltip-text" v-if="itemStore.equippedCombat.chargeSlot.id">
+          <tooltips :itemObject="itemStore.equippedCombat.chargeSlot" />
+        </div>
 
         <img class="mx-auto my-auto" :src="itemStore.equippedCombat.chargeSlot.image" alt="" width="48" height="48"
           v-if="itemStore.equippedCombat.chargeSlot.image">
@@ -209,15 +270,15 @@ export default {
         <div class="text-warning">Melee / Ranged / Magic</div>
         <div class="d-flex justify-content-between">
           <span>Max Hit: </span>
-          <span>{{ itemStore.equippedStats.meleeDamage }} /
-            {{ itemStore.equippedStats.rangedDamage }} /
-            {{ itemStore.equippedStats.magicDamage }}</span>
+          <span>{{ itemStore.equippedStats.meleeDamage.toFixed(2).replace(/\.00$/, '') }} /
+            {{ itemStore.equippedStats.rangedDamage.toFixed(2).replace(/\.00$/, '') }} /
+            {{ itemStore.equippedStats.magicDamage.toFixed(2).replace(/\.00$/, '') }}</span>
         </div>
         <div class="d-flex justify-content-between">
           <span>Accuracy: </span>
           <span>{{ itemStore.equippedStats.meleeAccuracy }} /
             {{ itemStore.equippedStats.rangedAccuracy }} /
-            {{ itemStore.equippedStats.rangedAccuracy }}</span>
+            {{ itemStore.equippedStats.magicAccuracy }}</span>
         </div>
         <div class="d-flex justify-content-between">
           <span>Penetration: </span>

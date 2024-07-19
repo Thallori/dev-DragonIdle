@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { useSkillStore } from '@/stores/skills';
+import { useItemStore } from '@/stores/inventory';
 //exploration skill is stored as id 9 which is also its index, because I don't know how to do it otherwise
 
 export const useExplorationStore = defineStore('explorationStore', {
@@ -18,6 +19,7 @@ export const useExplorationStore = defineStore('explorationStore', {
     //exploration skill is stored as id 9 which is also its index, because I don't know how to do it otherwise
     skillID: 9,
     skillStore: useSkillStore(),
+    itemStore: useItemStore(),
 
     activities: [
       {
@@ -34,8 +36,8 @@ export const useExplorationStore = defineStore('explorationStore', {
         isSealed: true,
         requiresAnyFlags: 'tbd',
         efficencySkill: 'Foraging',
-        uniqueFeature1: ['Foraging', 0], //oak
-        uniqueFeature2: ['Hunting', 2], //phesant
+        uniqueFeature1: ['Foraging', 0, 'src/assets/icons/oak.png'], //oak
+        uniqueFeature2: ['Hunting', 2, 'src/assets/icons/bird.png'], //phesant
       },
       {
         id: '1',
@@ -51,7 +53,7 @@ export const useExplorationStore = defineStore('explorationStore', {
         isSealed: true,
         requiresAnyFlags: 'tbd',
         efficencySkill: 'Mining',
-        uniqueFeature1: ['Mining', 1], //tin
+        uniqueFeature1: ['Mining', 1, 'src/assets/icons/tinore.png'], //tin
       },
       {
         id: '2',
@@ -67,7 +69,7 @@ export const useExplorationStore = defineStore('explorationStore', {
         isSealed: true,
         efficencySkill: 'Scrying',
         uniqueFeature1: ['Scrying', 0], //bone clay
-        uniqueFeature2: ['Mining', 2], //amber
+        uniqueFeature2: ['Mining', 2, 'src/assets/icons/amber.png'], //amber
       },
       // {
       //   id: '3',
@@ -132,7 +134,7 @@ export const useExplorationStore = defineStore('explorationStore', {
     },
 
     updateProgress() {
-      if (this.activeProgress >= (this.activeObject.interval * 1000)) {
+      if (this.activeProgress >= (1000 * this.activeObject.interval * (1 - itemStore.equippedTools.explorationTool.toolStats.explorationMulti))) {
         let wasEfficent = this.efficencyReturn()
 
         this.skillStore.addXP(this.skillID, (this.activeObject.xpGain * wasEfficent))

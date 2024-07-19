@@ -1,25 +1,25 @@
 <script>
 import { useSkillStore } from '@/stores/skills';
 import { useExplorationStore } from '@/stores/exploration';
-import { useForagingStore } from '@/stores/foraging';
+import { useScryingStore } from '@/stores/scrying';
 import { useItemStore } from '@/stores/inventory';
 import areaRequirements from '@/data/areaRequirements';
 
 export default {
-  name: 'ForagingTab',
+  name: 'ScryingTab',
   setup() {
     const skillStore = useSkillStore()
     const explorationStore = useExplorationStore()
-    const foragingStore = useForagingStore()
+    const scryingStore = useScryingStore()
     const itemStore = useItemStore()
     const areaData = { ...areaRequirements }
 
-    return { skillStore, explorationStore, foragingStore, itemStore, areaData }
+    return { skillStore, explorationStore, scryingStore, itemStore, areaData }
   },
   data() {
     return {
-      skillID: 13,
-      itemIndexStart: 9, //itemStore.resourceItems.findIndex(t => t.id === this.foragingStore[0].resourceID) //this code will get the start index of itemIDs, but I don't know how to run it after everything is loaded. Also, it hardcodes all activity items which could limit further development.
+      skillID: 12,
+      itemIndexStart: 1, //itemStore.resourceItems.findIndex(t => t.id === this.scryingStore[0].resourceID) //this code will get the start index of itemIDs, but I don't know how to run it after everything is loaded. Also, it hardcodes all activity items which could limit further development.
     }
   },
   methods: {
@@ -32,8 +32,8 @@ export default {
       }
 
       //check each activity's relevant areas, if any are valid, return valid
-      for (let loopCheckAreaIndex in this.areaData.foragingArea) {
-        if (this.areaData.foragingArea[loopCheckAreaIndex].requiresMastery[activityIndex] <= this.explorationStore.activities[loopCheckAreaIndex].mLevel && this.explorationStore.activities[loopCheckAreaIndex].isSealed == false) {
+      for (let loopCheckAreaIndex in this.areaData.scryingArea) {
+        if (this.areaData.scryingArea[loopCheckAreaIndex].requiresMastery[activityIndex] <= this.explorationStore.activities[loopCheckAreaIndex].mLevel && this.explorationStore.activities[loopCheckAreaIndex].isSealed == false) {
           return false
         }
       }
@@ -43,8 +43,8 @@ export default {
     },
     isSealed(activityIndex) {
       //check each activity's relevant areas, if any are valid, return valid
-      for (let loopCheckAreaIndex in this.areaData.foragingArea) {
-        if (this.areaData.foragingArea[loopCheckAreaIndex].requiresMastery[activityIndex] > this.explorationStore.activities[loopCheckAreaIndex].mLevel && this.explorationStore.activities[loopCheckAreaIndex].isSealed == false) {
+      for (let loopCheckAreaIndex in this.areaData.scryingArea) {
+        if (this.areaData.scryingArea[loopCheckAreaIndex].requiresMastery[activityIndex] > this.explorationStore.activities[loopCheckAreaIndex].mLevel && this.explorationStore.activities[loopCheckAreaIndex].isSealed == false) {
           return false
         }
       }
@@ -152,7 +152,7 @@ export default {
     <div class="d-flex flex-wrap gap-1" style="max-width: 61rem">
 
       <div class="card border-dark text-center px-0" style="width: 12rem; height: 14rem;"
-        v-for="(activity, index) in foragingStore.activities">
+        v-for="(activity, index) in scryingStore.activities">
 
         <!-- Not Enough Levels or Area Access for Activity -->
         <div class="card-body pt-2" v-if="isNotValidArea(activity, index)">
@@ -175,7 +175,7 @@ export default {
 
           <!-- Area Requirements -->
           <div class="pt-1"></div>
-          <div class="little-levels pt-0" v-for="(area, areaIndex) in areaData.foragingArea">
+          <div class="little-levels pt-0" v-for="(area, areaIndex) in areaData.scryingArea">
 
             <!-- Area Exists -->
             <div v-if="area.requiresMastery[index]">
@@ -222,13 +222,13 @@ export default {
 
             <!-- Progress Bar for Activity Completion -->
             <div class="progress" role="progressbar" style="height: 12px;">
-              <div class="progress-bar xp-progress" :style="`width: ${foragingStore.activePercent}%;`"
-                v-if="activity.id == foragingStore.activeObject.id">
+              <div class="progress-bar xp-progress" :style="`width: ${scryingStore.activePercent}%;`"
+                v-if="activity.id == scryingStore.activeObject.id">
               </div>
             </div>
           </div>
 
-          <div class="stretched-link" @click="foragingStore.setActiveAction(activity)"></div>
+          <div class="stretched-link" @click="scryingStore.setActiveAction(activity)"></div>
         </div>
 
         <!-- Mastery Level and XP Footer -->

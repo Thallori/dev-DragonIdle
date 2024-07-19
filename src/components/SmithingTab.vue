@@ -3,8 +3,13 @@ import { useSkillStore } from '@/stores/skills';
 import { useSmithingStore } from '@/stores/smithing';
 import { useItemStore } from '@/stores/inventory';
 
+import tooltips from './panels/tooltips.vue';
+
 export default {
   name: 'SmithingTab',
+  components: {
+    tooltips,
+  },
   setup() {
     const skillStore = useSkillStore()
     const smithingStore = useSmithingStore()
@@ -26,7 +31,7 @@ export default {
   },
   methods: {
     isNotValidActivity(activityObject) {
-      // return false
+      return false
 
       // if skill isn't up to snuff, is never valid
       if (activityObject.levelRequired > this.skillStore.skills[this.skillID].level) {
@@ -68,7 +73,7 @@ export default {
   <div class="card pt-4 align-items-center main-window bg-transparent" style="width: 77rem">
 
     <!-- Top Info -->
-    <div class="px-5 pb-3 w-100" style="min-width: 500px;">
+    <div class="px-5 pb-3 w-100" style="max-width: 64rem;">
 
       <!-- Leveling and Boost Info -->
       <div class="d-flex justify-content-center gap-1 pb-1">
@@ -200,7 +205,11 @@ export default {
             <div class="pb-1">
 
               <!-- Image of Activity -->
-              <div class="pt-1 pb-3">
+              <div class="pt-1 pb-3 tooltip-be2">
+
+                <div class="tooltip-text" v-if="shownActivity.mCat != undefined">
+                  <tooltips :itemObject="itemStore.getItemData(shownActivity.itemID)" />
+                </div>
 
                 <img :src="itemStore.getItemImage(shownActivity.itemID, 'resourceItems')" alt="" width="64" height="64"
                   v-if="shownActivity.cat == 'bar'">
@@ -285,7 +294,8 @@ export default {
 
             <!-- Derived Time to Complete -->
             <div class="little-levels" v-if="shownActivity.cat == 'bar'">
-              Time: {{ (Math.ceil((shownActivity.heatNeeded / (this.smithingStore.heatFromUpgrades + (0.1 * shownActivity.mLevel))) * 20) / 20).toFixed(2) }} Seconds
+              Time: {{ (Math.ceil((shownActivity.heatNeeded / (this.smithingStore.heatFromUpgrades + (0.1 *
+              shownActivity.mLevel))) * 20) / 20).toFixed(2) }} Seconds
             </div>
 
             <div class="little-levels" v-else>

@@ -3,8 +3,13 @@ import { useSkillStore } from '@/stores/skills';
 import { useCookingStore } from '@/stores/cooking';
 import { useItemStore } from '@/stores/inventory';
 
+import tooltips from './panels/tooltips.vue';
+
 export default {
   name: 'CookingTab',
+  components: {
+    tooltips,
+  },
   setup() {
     const skillStore = useSkillStore()
     const cookingStore = useCookingStore()
@@ -68,7 +73,7 @@ export default {
   <div class="card pt-4 align-items-center main-window bg-transparent" style="width: 77rem">
 
     <!-- Top Info -->
-    <div class="px-5 pb-3 w-100" style="min-width: 500px;">
+    <div class="px-5 pb-3 w-100" style="max-width: 64rem;">
 
       <!-- Leveling and Boost Info -->
       <div class="d-flex justify-content-center gap-1 pb-1">
@@ -180,8 +185,14 @@ export default {
             <div class="pb-1">
 
               <!-- Image of Activity -->
-              <div class="pt-1 pb-3">
-                <img src="src/assets/icons/testIcon16.png" alt="" width="64" height="64">
+              <div class="pt-1 pb-3 tooltip-be2">
+
+                <div class="tooltip-text">
+                  <tooltips :itemObject="itemStore.getItemData(shownActivity.itemID) " />
+                </div>
+
+                <img :src="itemStore.getItemImage(shownActivity.itemID, 'consumableItems')" alt="" width="64"
+                  height="64">
                 <div style="height: 0.0rem">
                   <span class="position-relative little-levels badge bg-secondary"
                     style="translate: -30px -76px; padding: 0.25rem;">
@@ -196,7 +207,9 @@ export default {
               <div class="d-flex justify-content-center align-items-center gap-3 pb-3">
 
                 <div v-if="shownActivity.neededMeatItem1">
-                  <img src="src/assets/icons/testIcon16.png" alt="" width="48" height="48">
+                  <img :src="itemStore.getItemImage(shownActivity.neededMeatItem1, 'consumableItems')" alt="" width="48"
+                    height="48">
+
                   <div style="height: 0.0rem">
                     <span class="position-relative little-levels badge bg-secondary"
                       style="translate: -20px -60px; padding: 0.25rem;">
@@ -206,7 +219,8 @@ export default {
                 </div>
 
                 <div v-if="shownActivity.neededItem1">
-                  <img src="src/assets/icons/testIcon16.png" alt="" width="48" height="48">
+                  <img :src="itemStore.getItemImage(shownActivity.neededItem1, 'resourceItems')" alt="" width="48"
+                    height="48">
                   <div style="height: 0.0rem">
                     <span class="position-relative little-levels badge bg-secondary"
                       style="translate: -20px -60px; padding: 0.25rem;">
@@ -216,7 +230,8 @@ export default {
                 </div>
 
                 <div v-if="shownActivity.neededItem2">
-                  <img src="src/assets/icons/testIcon16.png" alt="" width="48" height="48">
+                  <img :src="itemStore.getItemImage(shownActivity.neededItem2, 'resourceItems')" alt="" width="48"
+                    height="48">
                   <div style="height: 0.0rem">
                     <span class="position-relative little-levels badge bg-secondary"
                       style="translate: -20px -60px; padding: 0.25rem;">
@@ -267,7 +282,6 @@ export default {
               <div class="d-flex justify-content-around align-items-center">
 
                 <div class="d-flex flex-grow-1">
-                  <img src="src/assets/icons/testIcon16.png" alt="" width="32" height="32">
                   <h5 class="mt-1 px-2">{{ activity.name }}</h5>
                 </div>
 
@@ -285,7 +299,7 @@ export default {
               <div class="d-flex justify-content-around align-items-center">
 
                 <div class="d-flex align-items-center flex-grow-1">
-                  <img src="src/assets/icons/testIcon16.png" alt="" width="32" height="32">
+                  <img :src="itemStore.getItemImage(activity.itemID, 'consumableItems')" alt="" width="32" height="32">
                   <h5 class="mt-1 px-2">{{ activity.name }}</h5>
                 </div>
 

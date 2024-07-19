@@ -19,12 +19,12 @@ export default {
   data() {
     return {
       skillID: 15,
-      itemIndexStart: 8, //itemStore.resourceItems.findIndex(t => t.id === this.miningStore[0].resourceID) //this code will get the start index of itemIDs, but I don't know how to run it after everything is loaded. Also, it hardcodes all activity items which could limit further development.
+      itemIndexStart: 17, //itemStore.resourceItems.findIndex(t => t.id === this.miningStore[0].resourceID) //this code will get the start index of itemIDs, but I don't know how to run it after everything is loaded. Also, it hardcodes all activity items which could limit further development.
     }
   },
   methods: {
     isNotValidArea(activityObject, activityIndex) {
-      // return false
+      return false
 
       // if skill isn't up to snuff, is never valid
       if (activityObject.levelRequired > this.skillStore.skills[this.skillID].level) {
@@ -60,7 +60,7 @@ export default {
   <div class="card pt-4 align-items-center main-window bg-transparent" style="width: 77rem">
 
     <!-- Top Info -->
-    <div class="px-5 pb-3 w-100" style="min-width: 500px;">
+    <div class="px-5 pb-3 w-100" style="max-width: 64rem;">
 
       <!-- Leveling and Boost Info -->
       <div class="d-flex justify-content-center gap-1 pb-1">
@@ -198,7 +198,7 @@ export default {
 
             <!-- Image of Activity -->
             <div>
-              <img src="src/assets/icons/testIcon16.png" alt="" width="64" height="64">
+              <img :src="itemStore.resourceItems[index + itemIndexStart].image" alt="" width="64" height="64">
               <div style="height: 0.0rem">
                 <span class="position-relative little-levels badge bg-secondary"
                   style="translate: -30px -76px; padding: 0.25rem;">

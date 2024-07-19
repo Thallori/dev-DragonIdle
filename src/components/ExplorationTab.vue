@@ -5,6 +5,7 @@ import { useScryingStore } from '@/stores/scrying';
 import { useForagingStore } from '@/stores/foraging';
 import { useHuntingStore } from '@/stores/hunting';
 import { useMiningStore } from '@/stores/mining';
+import { useItemStore } from '@/stores/inventory';
 import areaRequirements from '@/data/areaRequirements';
 
 export default {
@@ -16,9 +17,10 @@ export default {
     const foragingStore = useForagingStore()
     const huntingStore = useHuntingStore()
     const miningStore = useMiningStore()
+    const itemStore = useItemStore()
     const areaData = { ...areaRequirements }
 
-    return { skillStore, explorationStore, scryingStore, foragingStore, huntingStore, miningStore, areaData }
+    return { skillStore, explorationStore, scryingStore, foragingStore, huntingStore, miningStore, itemStore, areaData }
   },
   data() {
     return {
@@ -28,7 +30,7 @@ export default {
   },
   methods: {
     isNotValidActivity(activityObject) {
-      // return false
+      return false
 
       // if skill isn't up to snuff, is never valid
       if (activityObject.levelRequired > this.skillStore.skills[this.skillID].level) {
@@ -64,7 +66,7 @@ export default {
   <div class="card pt-4 align-items-center main-window bg-transparent" style="width: 77rem">
 
     <!-- Top Info -->
-    <div class="px-5 pb-3 w-100" style="min-width: 500px;">
+    <div class="px-5 pb-3 w-100" style="max-width: 64rem;">
 
       <!-- Leveling and Boost Info -->
       <div class="d-flex justify-content-center gap-1 pb-1">
@@ -78,7 +80,6 @@ export default {
         <div class="card flex-grow-1 px-0">
 
           <div class="d-flex justify-content-between py-1 px-2">
-
             <!-- Level -->
             <div class="px-2">
               LEVEL <span class="badge bg-secondary">{{ skillStore.skills[this.skillID].level }}</span>
@@ -110,15 +111,27 @@ export default {
           <div class="d-flex justify-content-between py-2 px-2">
 
             <!-- Tool -->
-            <div class="flex-grow-1 px-2">
+            <div class="px-2">
               <span>
-                <img src="src/assets/icons/testIcon16.png" alt="" width="32" height="32">
-                <span> Old Map</span>
+                <div class="tooltip-b">
+                  <img :src="itemStore.equippedTools.explorationTool.image" alt="" width="32" height="32">
+                  {{ itemStore.equippedTools.explorationTool.name }}
+
+                  <!-- Tooltip -->
+                  <div class="tooltip-text py-1 px-4">
+                    <div class="d-flex justify-content-between little-levels ">
+                      <span>Exploring: </span>
+                      <span>
+                        {{ itemStore.equippedTools.explorationTool.toolStats.explorationMulti * 100 }}%
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </span>
             </div>
 
             <!-- Efficency % -->
-            <div class="tooltip-be">
+            <div class="tooltip-br">
               {{ explorationStore.efficency }}%
               <img src="src/assets/icons/testIcon12.png" alt="" width="24" height="24">
               <div class="tooltip-text pt-1 pb-2 px-2">
@@ -206,8 +219,7 @@ export default {
 
               <!-- Image and Tooltip of Activity 1 -->
               <span class="tooltip-be" v-if="activity.uniqueFeature1">
-                <img :src="findUniqueFeatureObject(activity.uniqueFeature1[0], activity.uniqueFeature1[1]).image" alt=""
-                  width="32" height="32">
+                <img :src="activity.uniqueFeature1[2]" alt="" width="32" height="32">
 
                 <!-- Name of Activity 1 -->
                 <div class="tooltip-text">
@@ -240,10 +252,9 @@ export default {
 
               <!-- Image and Tooltip of Activity 2 -->
               <span class="tooltip-be" v-if="activity.uniqueFeature2">
-                <img :src="findUniqueFeatureObject(activity.uniqueFeature2[0], activity.uniqueFeature2[1]).image" alt=""
-                  width="32" height="32">
+                <img :src="activity.uniqueFeature2[2]" alt="" width="32" height="32">
 
-                <!-- Name of Activity 1 -->
+                <!-- Name of Activity 2 -->
                 <div class="tooltip-text">
                   <div class="card-header py-1">
                     <span>
@@ -275,7 +286,7 @@ export default {
 
             <!-- XP per Completion and Seconds per Complete -->
             <div class="little-levels pb-2">
-              <div class="pb-1">{{ activity.xpGain }} XP / {{ activity.interval.toFixed(2) }} Seconds</div>
+              <div class="pb-1">{{ activity.xpGain }} XP / {{ (activity.interval * (1 - itemStore.equippedTools.explorationTool.toolStats.explorationMulti)).toFixed(2) }} Seconds</div>
 
               <!-- Progress Bar for Activity Completion -->
               <div class="progress" role="progressbar" style="height: 12px;">

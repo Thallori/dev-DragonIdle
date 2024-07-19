@@ -23,7 +23,7 @@ export const useScryingStore = defineStore('scryingStore', {
     activities: [
       {
         id: '0',
-        name: 'Bone Clay',
+        name: 'Pale Clay',
         resourceID: 'rune1',
         resourceAmount: 1,
         image: 'src/assets/icons/testIcon16.png',
@@ -40,8 +40,8 @@ export const useScryingStore = defineStore('scryingStore', {
       },
       {
         id: '1',
-        name: 'Sunflax',
-        resourceID: 'plant2',
+        name: 'Pure Oil',
+        resourceID: 'rune2',
         resourceAmount: 1,
         image: 'src/assets/icons/testIcon16.png',
         levelRequired: 2,
@@ -57,8 +57,8 @@ export const useScryingStore = defineStore('scryingStore', {
       },
       {
         id: '2',
-        name: 'Mossberry',
-        resourceID: 'plant3',
+        name: 'Nitor',
+        resourceID: 'rune3',
         resourceAmount: 1,
         image: 'src/assets/icons/testIcon16.png',
         levelRequired: 3,
@@ -74,8 +74,8 @@ export const useScryingStore = defineStore('scryingStore', {
       },
       {
         id: '3',
-        name: 'Snow Cotton',
-        resourceID: 'plant4',
+        name: 'Spelldew',
+        resourceID: 'rune4',
         resourceAmount: 1,
         image: 'src/assets/icons/testIcon16.png',
         levelRequired: 4,
@@ -91,8 +91,8 @@ export const useScryingStore = defineStore('scryingStore', {
       },
       {
         id: '4',
-        name: 'Rosemilk',
-        resourceID: 'plant5',
+        name: 'Cinnabar',
+        resourceID: 'rune5',
         resourceAmount: 1,
         image: 'src/assets/icons/testIcon16.png',
         levelRequired: 5,
@@ -108,8 +108,8 @@ export const useScryingStore = defineStore('scryingStore', {
       },
       {
         id: '5',
-        name: 'Drip Maple',
-        resourceID: 'plant6',
+        name: 'Vis',
+        resourceID: 'rune6',
         resourceAmount: 1,
         image: 'src/assets/icons/testIcon16.png',
         levelRequired: 6,
@@ -125,8 +125,8 @@ export const useScryingStore = defineStore('scryingStore', {
       },
       {
         id: '6',
-        name: 'Siris Silk',
-        resourceID: 'plant7',
+        name: 'Spark Salt',
+        resourceID: 'rune7',
         resourceAmount: 1,
         image: 'src/assets/icons/testIcon16.png',
         levelRequired: 7,
@@ -142,8 +142,8 @@ export const useScryingStore = defineStore('scryingStore', {
       },
       {
         id: '7',
-        name: 'Sweet Cane',
-        resourceID: 'plant8',
+        name: 'Flux Crystal',
+        resourceID: 'rune8',
         resourceAmount: 1,
         image: 'src/assets/icons/testIcon16.png',
         levelRequired: 8,

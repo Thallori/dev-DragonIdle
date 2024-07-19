@@ -50,7 +50,7 @@ export const useItemStore = defineStore('itemStore', {
       oilSlot: {},
       rangedSlot: {},
       ammoSlot: {},
-      mageSlot: {},
+      magicSlot: {},
       chargeSlot: {},
       foodSlot: {},
     },
@@ -65,7 +65,15 @@ export const useItemStore = defineStore('itemStore', {
       trinketSlot: {},
     },
     equippedTools: {
-      explorationTool: {},
+      explorationTool: {
+        id: 'defaultMap',
+        name: 'Old Map',
+        image: 'src/assets/icons/defaultmap.png',
+        dcat: 'tool',
+        toolStats: {
+          explorationMulti: 0.0,
+        },
+      },
       foragingTool: {
         id: 'defaultAxe',
         name: 'Rock Axe',
@@ -98,7 +106,15 @@ export const useItemStore = defineStore('itemStore', {
       alchemyTool: {},
     },
     defaultTools: {
-      explorationTool: {},
+      explorationTool: {
+        id: 'defaultMap',
+        name: 'Old Map',
+        image: 'src/assets/icons/defaultmap.png',
+        dcat: 'tool',
+        toolStats: {
+          explorationMulti: 0.0,
+        },
+      },
       foragingTool: {
         id: 'defaultAxe',
         name: 'Rock Axe',
@@ -132,6 +148,24 @@ export const useItemStore = defineStore('itemStore', {
     },
     equipmentItems: [
       {
+        id: 'koboldMap',
+        name: 'Kobold Map',
+        extra: 'Provides exploration XP per combat kill.',
+        flavor: 'Depicts the approximate location of many things.',
+        image: 'src/assets/icons/koboldmap.png',
+        dcat: 'tool',
+        dlvl: 2,
+        toolSlot: 'explorationTool',
+        isTool: true,
+        onToolbar: false,
+        toolStats: {
+          explorationMulti: 0.1,
+        },
+        sellPrice: 35,
+        count: 20, //debug
+        totalCount: 0,
+      },
+      {
         id: 'copperHatchet',
         name: 'Copper Hatchet',
         image: 'src/assets/icons/copperaxe16.png',
@@ -142,8 +176,8 @@ export const useItemStore = defineStore('itemStore', {
         isCombat: true,
         onEquip: false,
         stats: {
-          meleeAccuracy: -10,
-          meleeDamage: 2,
+          meleeAccuracy: 0,
+          meleeDamage: 0.45,
           speed: 2.8,
         },
         toolSlot: 'foragingTool',
@@ -168,8 +202,8 @@ export const useItemStore = defineStore('itemStore', {
         isCombat: true,
         onEquip: false,
         stats: {
-          meleeAccuracy: -10,
-          meleeDamage: 3,
+          meleeAccuracy: 0,
+          meleeDamage: 0.50,
           speed: 2.8,
         },
         toolSlot: 'foragingTool',
@@ -195,7 +229,7 @@ export const useItemStore = defineStore('itemStore', {
         onEquip: false,
         stats: {
           meleeAccuracy: 0,
-          meleeDamage: 0,
+          meleeDamage: 0.30,
           speed: 2.0,
         },
         toolSlot: 'huntingTool',
@@ -221,7 +255,7 @@ export const useItemStore = defineStore('itemStore', {
         onEquip: false,
         stats: {
           meleeAccuracy: 0,
-          meleeDamage: 1,
+          meleeDamage: 0.35,
           speed: 2.0,
         },
         toolSlot: 'huntingTool',
@@ -236,6 +270,33 @@ export const useItemStore = defineStore('itemStore', {
         totalCount: 0,
       },
       {
+        id: 'crystalAntler',
+        name: 'Crystal Claws',
+        flavor: 'A gnarled gnash of spikes.',
+        image: 'src/assets/icons/testIcon16.png',
+        dcat: 'meleeTool',
+        dlvl: 3,
+        slot: 'meleeSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeAccuracy: 10,
+          meleeDamage: 0.35,
+          pen: 0.10,
+          speed: 2.0,
+        },
+        toolSlot: 'huntingTool',
+        isTool: true,
+        onToolbar: false,
+        toolStats: {
+          bleeding: 1,
+          instaKill: 0.50,
+        },
+        sellPrice: 55,
+        count: 20, //debug
+        totalCount: 0,
+      },
+      {
         id: 'copperPickaxe',
         name: 'Copper Pickaxe',
         image: 'src/assets/icons/copperpick16.png',
@@ -246,8 +307,8 @@ export const useItemStore = defineStore('itemStore', {
         isCombat: true,
         onEquip: false,
         stats: {
-          meleeAccuracy: -10,
-          meleeDamage: 1,
+          meleeAccuracy: 0,
+          meleeDamage: 0.40,
           pen: 0.35,
           speed: 2.8,
         },
@@ -273,8 +334,8 @@ export const useItemStore = defineStore('itemStore', {
         isCombat: true,
         onEquip: false,
         stats: {
-          meleeAccuracy: -10,
-          meleeDamage: 2,
+          meleeAccuracy: 0,
+          meleeDamage: 0.45,
           pen: 0.35,
           speed: 2.8,
         },
@@ -302,8 +363,8 @@ export const useItemStore = defineStore('itemStore', {
         isCombat: true,
         onEquip: false,
         stats: {
-          meleeAccuracy: -5,
-          meleeDamage: 1,
+          meleeAccuracy: 0,
+          meleeDamage: 0.35,
           pen: 0.10,
           speed: 2.2,
         },
@@ -325,8 +386,9 @@ export const useItemStore = defineStore('itemStore', {
           meleeDodge: 3,
           rangedDodge: 2,
           magicDodge: -1,
+          resist: 0.02,
         },
-        sellPrice: 20,
+        sellPrice: 13,
         count: 20, //debug
         totalCount: 0,
       },
@@ -341,10 +403,12 @@ export const useItemStore = defineStore('itemStore', {
         isCombat: true,
         onEquip: false,
         stats: {
+          meleeAccuracy: 1,
           meleeDodge: 2,
           rangedDodge: 1,
+          resist: 0.02,
         },
-        sellPrice: 18,
+        sellPrice: 12,
         count: 20, //debug
         totalCount: 0,
       },
@@ -361,12 +425,12 @@ export const useItemStore = defineStore('itemStore', {
         isCombat: true,
         onEquip: false,
         stats: {
-          meleeAccuracy: -5,
-          meleeDamage: 2,
+          meleeAccuracy: 0,
+          meleeDamage: 0.40,
           pen: 0.10,
           speed: 2.2,
         },
-        sellPrice: 18,
+        sellPrice: 15,
         count: 20, //debug
         totalCount: 0,
       },
@@ -381,12 +445,12 @@ export const useItemStore = defineStore('itemStore', {
         isCombat: true,
         onEquip: false,
         stats: {
-          meleeAccuracy: -5,
-          meleeDamage: 3,
-          pen: 0.15,
+          meleeAccuracy: 0,
+          meleeDamage: 0.50,
+          pen: 0.20,
           speed: 2.4,
         },
-        sellPrice: 42,
+        sellPrice: 34,
         count: 20, //debug
         totalCount: 0,
       },
@@ -401,12 +465,12 @@ export const useItemStore = defineStore('itemStore', {
         isCombat: true,
         onEquip: false,
         stats: {
-          meleeAccuracy: -5,
-          meleeDamage: 3,
-          pen: 0.25,
+          meleeAccuracy: 0,
+          meleeDamage: 0.55,
+          pen: 0.30,
           speed: 2.6,
         },
-        sellPrice: 40,
+        sellPrice: 30,
         count: 20, //debug
         totalCount: 0,
       },
@@ -421,9 +485,9 @@ export const useItemStore = defineStore('itemStore', {
         isCombat: true,
         onEquip: false,
         stats: {
-          meleeAccuracy: -5,
-          meleeDamage: 4,
-          pen: 0.30,
+          meleeAccuracy: 0,
+          meleeDamage: 0.70,
+          pen: 0.40,
           speed: 3.0,
         },
         sellPrice: 50,
@@ -444,8 +508,9 @@ export const useItemStore = defineStore('itemStore', {
           meleeDodge: 4,
           rangedDodge: 3,
           magicDodge: -1,
+          resist: 0.03,
         },
-        sellPrice: 38,
+        sellPrice: 32,
         count: 20, //debug
         totalCount: 0,
       },
@@ -464,9 +529,9 @@ export const useItemStore = defineStore('itemStore', {
           rangedDodge: 6,
           magicDodge: -8,
           physicalArmor: 1,
-          speed: -0.3,
+          resist: 0.03,
         },
-        sellPrice: 94,
+        sellPrice: 80,
         count: 20, //debug
         totalCount: 0,
       },
@@ -484,8 +549,7 @@ export const useItemStore = defineStore('itemStore', {
           meleeDodge: 4,
           rangedDodge: 4,
           magicDodge: -2,
-          resist: 0.05,
-          speed: -0.10,
+          resist: 0.03,
         },
         sellPrice: 65,
         count: 20, //debug
@@ -504,9 +568,8 @@ export const useItemStore = defineStore('itemStore', {
         stats: {
           meleeDodge: 5,
           rangedDodge: 4,
-          magicDodge: -3,
-          physicalArmor: 1,
-          speed: -0.2,
+          magicDodge: -5,
+          resist: 0.03,
         },
         sellPrice: 44,
         count: 20, //debug
@@ -523,8 +586,10 @@ export const useItemStore = defineStore('itemStore', {
         isCombat: true,
         onEquip: false,
         stats: {
+          meleeAccuracy: 2,
           meleeDodge: 3,
           rangedDodge: 2,
+          resist: 0.03,
         },
         sellPrice: 32,
         count: 20, //debug
@@ -548,12 +613,155 @@ export const useItemStore = defineStore('itemStore', {
         count: 0,
         totalCount: 0,
       },
+
+      //arrows
+      {
+        id: 'copperArrow',
+        name: 'Copper Arrows',
+        image: 'src/assets/icons/testIcon16.png',
+        dcat: 'ammo',
+        dlvl: 1,
+        slot: 'ammoSlot',
+        ammoType: 'arrow',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          rangedDamage: 0.45,
+        },
+        sellPrice: 1,
+        count: 20, //debug
+        totalCount: 0,
+      },
+      {
+        id: 'bronzeArrow',
+        name: 'Bronze Arrows',
+        image: 'src/assets/icons/testIcon16.png',
+        dcat: 'ammo',
+        dlvl: 2,
+        slot: 'ammoSlot',
+        ammoType: 'arrow',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          rangedDamage: 0.50,
+        },
+        sellPrice: 2,
+        count: 20, //debug
+        totalCount: 0,
+      },
+
+      //kobold set
+      {
+        id: 'koboldDagger',
+        name: 'Kobold Nail',
+        flavor: 'Not that kind of nail.',
+        image: 'src/assets/icons/kobolddagger.png',
+        dcat: 'meleeBlade',
+        dlvl: 2,
+        slot: 'meleeSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeAccuracy: 5,
+          meleeDamage: 0.40,
+          pen: 0.05,
+          speed: 2.2,
+        },
+        sellPrice: 22,
+        count: 20, //debug
+        totalCount: 0,
+      },
+      {
+        id: 'koboldSling',
+        name: 'Kobold Sling',
+        extra: 'Requires no ammo.',
+        flavor: "Shepherd's favourite.",
+        image: 'src/assets/icons/testIcon16.png',
+        dcat: 'rangedWeapon',
+        dlvl: 2,
+        slot: 'rangedSlot',
+        requiredAmmo: 'none',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          rangedAccuracy: 5,
+          rangedDamage: 0.30,
+          pen: 0.05,
+          speed: 2.2,
+        },
+        sellPrice: 20,
+        count: 20, //debug
+        totalCount: 0,
+      },
+      {
+        id: 'koboldBow',
+        name: 'Kobold Longbow',
+        flavor: "Bigger than its maker.",
+        image: 'src/assets/icons/testIcon16.png',
+        dcat: 'rangedWeapon',
+        dlvl: 2,
+        slot: 'rangedSlot',
+        requiredAmmo: 'arrow',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          rangedAccuracy: 5,
+          rangedDamage: 0.05,
+          pen: 0.10,
+          speed: 2.6,
+        },
+        sellPrice: 36,
+        count: 20, //debug
+        totalCount: 0,
+      },
+      {
+        id: 'koboldBracer',
+        name: 'Kobold Armwraps',
+        flavor: 'Also works with legs.',
+        image: 'src/assets/icons/testIcon16.png',
+        dcat: 'rangedArmor',
+        dlvl: 2,
+        slot: 'legSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          rangedDamage: 0.05,
+          meleeDodge: 2,
+          rangedDodge: 2,
+          magicDodge: 3,
+          resist: 0.03,
+        },
+        sellPrice: 34,
+        count: 20, //debug
+        totalCount: 0,
+      },
+      {
+        id: 'koboldChest',
+        name: 'Kobold Shield',
+        flavor: 'Too small for wings, but may be a good chestplate.',
+        image: 'src/assets/icons/testIcon16.png',
+        dcat: 'rangedArmor',
+        dlvl: 3,
+        slot: 'chestSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 3,
+          rangedDodge: 3,
+          magicDodge: 4,
+          physicalArmor: 1,
+          resist: 0.03,
+        },
+        sellPrice: 29,
+        count: 20, //debug
+        totalCount: 0,
+      },
     ],
     consumableItems: [
       {
         id: 'meatChop',
         name: 'Raw Chop',
-        image: 'src/assets/icons/testIcon16.png',
+        image: 'src/assets/icons/rawchop.png',
         dcat: 'rawFood',
         isFood: true,
         onEquip: false,
@@ -566,20 +774,20 @@ export const useItemStore = defineStore('itemStore', {
       {
         id: 'meatGame',
         name: 'Raw Game',
-        image: 'src/assets/icons/testIcon16.png',
+        image: 'src/assets/icons/rawgame.png',
         dcat: 'rawFood',
         isFood: true,
         onEquip: false,
         heals: 2,
         dlvl: 2,
         sellPrice: 3,
-        count: 0,
+        count: 20, //debug
         totalCount: 0,
       },
       {
         id: 'meatFlank',
         name: 'Raw Flank',
-        image: 'src/assets/icons/testIcon16.png',
+        image: 'src/assets/icons/rawsteak.png',
         dcat: 'rawFood',
         isFood: true,
         onEquip: false,
@@ -592,7 +800,7 @@ export const useItemStore = defineStore('itemStore', {
       {
         id: 'meatSpicy',
         name: 'Shell Meat',
-        image: 'src/assets/icons/testIcon16.png',
+        image: 'src/assets/icons/rawbug.png',
         dcat: 'rawFood',
         isFood: true,
         onEquip: false,
@@ -605,7 +813,7 @@ export const useItemStore = defineStore('itemStore', {
       {
         id: 'friedChops',
         name: 'Fried Chops',
-        image: 'src/assets/icons/testIcon16.png',
+        image: 'src/assets/icons/cookedchop.png',
         dcat: 'cookedFood',
         isFood: true,
         onEquip: false,
@@ -618,79 +826,82 @@ export const useItemStore = defineStore('itemStore', {
       {
         id: 'searedGame',
         name: 'Seared Game',
-        image: 'src/assets/icons/testIcon16.png',
+        image: 'src/assets/icons/cookedgame.png',
         dcat: 'cookedFood',
         isFood: true,
         onEquip: false,
         heals: 3,
         dlvl: 2,
         sellPrice: 5,
-        count: 0,
+        count: 20, //debug
         totalCount: 0,
       },
       {
         id: 'flankSteak',
         name: 'Flank Steak',
-        image: 'src/assets/icons/testIcon16.png',
+        image: 'src/assets/icons/cookedsteak.png',
         dcat: 'cookedFood',
         isFood: true,
         onEquip: false,
         heals: 4,
         dlvl: 3,
         sellPrice: 19,
-        count: 0,
+        count: 20, //debug
         totalCount: 0,
       },
       {
         id: 'shelledCrisps',
         name: 'Shelled Crisps',
-        image: 'src/assets/icons/testIcon16.png',
+        image: 'src/assets/icons/cookedbug.png',
         dcat: 'cookedFood',
         isFood: true,
         onEquip: false,
         heals: 5,
         dlvl: 4,
         sellPrice: 27,
-        count: 0,
+        count: 20, //debug
         totalCount: 0,
       },
       {
         id: 'meal1',
         name: 'Barkchew',
-        image: 'src/assets/icons/testIcon16.png',
+        flavor: 'Fully of chewy goodness.',
+        image: 'src/assets/icons/chew.png',
         dcat: 'cookedFood',
         isFood: true,
         onEquip: false,
         heals: 1,
         dlvl: 1,
         sellPrice: 1,
-        count: 0,
+        count: 20, //debug
         totalCount: 0,
       },
       {
         id: 'meal2',
         name: 'Flax Bread',
-        image: 'src/assets/icons/testIcon16.png',
+        flavor: 'Neither thick nor fried.',
+        image: 'src/assets/icons/bread.png',
         dcat: 'cookedFood',
         isFood: true,
         onEquip: false,
         heals: 2,
         dlvl: 2,
         sellPrice: 9,
-        count: 0,
+        count: 20, //debug
         totalCount: 0,
       },
       {
         id: 'meal3',
         name: 'Berry Pie',
-        image: 'src/assets/icons/testIcon16.png',
+        flavor: 'Berries, now less portable.',
+        image: 'src/assets/icons/berrypie.png',
         dcat: 'cookedFood',
         isFood: true,
         onEquip: false,
-        heals: 3,
+        heals: 4,
         dlvl: 3,
         sellPrice: 21,
-        count: 0,
+        count: 20, //debug
         totalCount: 0,
       },
       {
@@ -761,33 +972,126 @@ export const useItemStore = defineStore('itemStore', {
     ],
     resourceItems: [
       {
+        id: 'money',
+        name: 'Argal Coins',
+        flavor: 'Minted, but not minty.',
+        image: 'src/assets/icons/coins.png',
+        dcat: 'money',
+        dlvl: 1,
+        count: 20, //debug
+        totalCount: 0,
+      },
+      {
+        id: 'rune1',
+        name: 'Pale Clay',
+        image: 'src/assets/icons/testIcon16.png',
+        dcat: 'living',
+        dlvl: 1,
+        sellPrice: 3,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'rune2',
+        name: 'Pure Oil',
+        image: 'src/assets/icons/testIcon16.png',
+        dcat: 'living',
+        dlvl: 2,
+        sellPrice: 5,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'rune3',
+        name: 'Nitor',
+        image: 'src/assets/icons/testIcon16.png',
+        dcat: 'living',
+        dlvl: 3,
+        sellPrice: 11,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'rune4',
+        name: 'Spelldew',
+        image: 'src/assets/icons/testIcon16.png',
+        dcat: 'living',
+        dlvl: 4,
+        sellPrice: 99,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'rune5',
+        name: 'Cinnabar',
+        image: 'src/assets/icons/testIcon16.png',
+        dcat: 'living',
+        dlvl: 5,
+        sellPrice: 99,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'rune6',
+        name: 'Vis',
+        image: 'src/assets/icons/testIcon16.png',
+        dcat: 'living',
+        dlvl: 6,
+        sellPrice: 99,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'rune7',
+        name: 'Spark Salt',
+        image: 'src/assets/icons/testIcon16.png',
+        dcat: 'living',
+        dlvl: 7,
+        sellPrice: 99,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'rune8',
+        name: 'Flux Crystal',
+        image: 'src/assets/icons/testIcon16.png',
+        dcat: 'living',
+        dlvl: 8,
+        sellPrice: 99,
+        count: 0,
+        totalCount: 0,
+      },
+      {
         id: 'plant1',
         name: 'Oakbark',
-        image: 'src/assets/icons/testIcon16.png',
-        dcat: 'living', //deconstruction category
-        dlvl: 1, //deconstruction level
+        flavor: 'More oak than bark.',
+        image: 'src/assets/icons/oak.png',
+        dcat: 'living',
+        dlvl: 1,
         sellPrice: 2,
-        count: 0,
+        count: 20, //debug
         totalCount: 0,
       },
       {
         id: 'plant2',
         name: 'Sunflax',
-        image: 'src/assets/icons/testIcon16.png',
+        flavor: 'Edible seeds and less edible stalks.',
+        image: 'src/assets/icons/flax.png',
         dcat: 'living',
         dlvl: 2,
         sellPrice: 4,
-        count: 0,
+        count: 20, //debug
         totalCount: 0,
       },
       {
         id: 'plant3',
         name: 'Mossberry',
-        image: 'src/assets/icons/testIcon16.png',
+        flavor: 'Sweet juice gathered from unrolled stones.',
+        image: 'src/assets/icons/berry.png',
         dcat: 'living',
         dlvl: 3,
         sellPrice: 7,
-        count: 0,
+        count: 20, //debug,
         totalCount: 0,
       },
       {
@@ -843,31 +1147,32 @@ export const useItemStore = defineStore('itemStore', {
       {
         id: 'ore1',
         name: 'Copper Ore',
-        image: 'src/assets/icons/testIcon16.png',
+        image: 'src/assets/icons/copperore.png',
         dcat: 'ore',
         dlvl: 1,
         sellPrice: 4,
-        count: 0,
+        count: 20, //debug
         totalCount: 0,
       },
       {
         id: 'ore2',
         name: 'Tin Ore',
-        image: 'src/assets/icons/testIcon16.png',
+        image: 'src/assets/icons/tinore.png',
         dcat: 'ore',
         dlvl: 2,
         sellPrice: 7,
-        count: 0,
+        count: 20, //debug
         totalCount: 0,
       },
       {
         id: 'ore3',
         name: 'Amber',
-        image: 'src/assets/icons/testIcon16.png',
+        flavor: 'Old plant blood.',
+        image: 'src/assets/icons/amber.png',
         dcat: 'ore',
         dlvl: 3,
-        sellPrice: 12,
-        count: 0,
+        sellPrice: 19,
+        count: 20, //debug
         totalCount: 0,
       },
       {
@@ -926,7 +1231,7 @@ export const useItemStore = defineStore('itemStore', {
         image: 'src/assets/icons/copperingot16.png',
         dcat: 'bar',
         dlvl: 1,
-        sellPrice: 6,
+        sellPrice: 5,
         count: 20, //debug
         totalCount: 0,
       },
@@ -937,7 +1242,7 @@ export const useItemStore = defineStore('itemStore', {
         dcat: 'bar',
         dlvl: 2,
         sellPrice: 14,
-        count: 0,
+        count: 20, //debug
         totalCount: 0,
       },
       {
@@ -983,21 +1288,23 @@ export const useItemStore = defineStore('itemStore', {
       {
         id: 'hide1',
         name: 'Wool',
-        image: 'src/assets/icons/testIcon16.png',
+        flavor: 'Yarn in a convenient ball.',
+        image: 'src/assets/icons/wool.png',
         dcat: 'hide',
         dlvl: 1,
         sellPrice: 3,
-        count: 0,
+        count: 20, //debug
         totalCount: 0,
       },
       {
         id: 'hide2',
         name: 'Fur',
-        image: 'src/assets/icons/testIcon16.png',
+        flavor: 'Tufts of tough fluff.',
+        image: 'src/assets/icons/fur.png',
         dcat: 'hide',
         dlvl: 2,
         sellPrice: 5,
-        count: 0,
+        count: 20, //debug
         totalCount: 0,
       },
       {
@@ -1033,21 +1340,21 @@ export const useItemStore = defineStore('itemStore', {
       {
         id: 'hogTusk',
         name: 'Hog Tusk',
-        image: 'src/assets/icons/testIcon16.png',
+        image: 'src/assets/icons/tusk.png',
         dcat: 'ingredient',
         dlvl: 2,
         sellPrice: 4,
-        count: 0,
+        count: 20, //debug
         totalCount: 0,
       },
       {
         id: 'feather',
         name: 'Feathers',
-        image: 'src/assets/icons/testIcon16.png',
+        image: 'src/assets/icons/feather.png',
         dcat: 'ingredient',
         dlvl: 3,
         sellPrice: 1,
-        count: 0,
+        count: 20, //debug
         totalCount: 0,
       },
       {
@@ -1066,7 +1373,7 @@ export const useItemStore = defineStore('itemStore', {
         image: 'src/assets/icons/testIcon16.png',
         dcat: 'ingredient',
         dlvl: 7,
-        sellPrice: 45,
+        sellPrice: 24,
         count: 0,
         totalCount: 0,
       },
@@ -1078,6 +1385,46 @@ export const useItemStore = defineStore('itemStore', {
         dlvl: 8,
         sellPrice: 20,
         count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'antler',
+        name: 'Antlers',
+        image: 'src/assets/icons/testIcon16.png',
+        dcat: 'ingredient',
+        dlvl: 1,
+        sellPrice: 5,
+        count: 20, //debug
+        totalCount: 0,
+      },
+      {
+        id: 'bones1',
+        name: 'Animal Bones',
+        image: 'src/assets/icons/bones1.png',
+        dcat: 'remains',
+        dlvl: 1,
+        sellPrice: 3,
+        count: 20, //debug
+        totalCount: 0,
+      },
+      {
+        id: 'bones2',
+        name: 'Kin Bones',
+        image: 'src/assets/icons/bones2.png',
+        dcat: 'remains',
+        dlvl: 2,
+        sellPrice: 2,
+        count: 20, //debug
+        totalCount: 0,
+      },
+      {
+        id: 'bones3',
+        name: 'Noble Bones',
+        image: 'src/assets/icons/testIcon16.png',
+        dcat: 'remains',
+        dlvl: 3,
+        sellPrice: 40,
+        count: 20, //debug
         totalCount: 0,
       },
     ],
@@ -1113,19 +1460,22 @@ export const useItemStore = defineStore('itemStore', {
         return false
       }
 
+      //can't have negative apples
+      if (itemToAddCount.count + amount < 0) { return false }
+
+      //explain what you're doing
       if (amount > 0) {
         console.log('hoarding ' + amount + ' ' + itemToAddCount.name)
       } else {
         // console.log('losing ' + amount + ' ' + itemToAddCount.name)
       }
 
-      if (itemToAddCount.count + amount < 0) { return false } //can't have negative apples
-
       itemToAddCount.count += amount
       if (amount > 0) {
         itemToAddCount.totalCount += amount
       }
     },
+
     hasItemCount(itemID, amount, itemCat) {
       let itemToAddCount = this[itemCat].find(t => t.id === itemID)
       //not enough items
@@ -1158,7 +1508,7 @@ export const useItemStore = defineStore('itemStore', {
       }
 
       //give up and report the error
-      if (itemToAddCount == undefined) {
+      if (temp == undefined) {
         console.log('failed find item image' + itemID)
         return 'src/assets/icons/testIcon16.png'
       }
@@ -1253,9 +1603,9 @@ export const useItemStore = defineStore('itemStore', {
     updateEquippedStats() {
       let item = {}
 
-      this.equippedStats.meleeDamage = this.skillStore.skills[1].level + this.aggStance
-      this.equippedStats.rangedDamage = this.skillStore.skills[2].level + this.aggStance
-      this.equippedStats.magicDamage = this.skillStore.skills[3].level + this.aggStance
+      this.equippedStats.meleeDamage = 0
+      this.equippedStats.rangedDamage = 0
+      this.equippedStats.magicDamage = 0
 
       this.equippedStats.meleeAccuracy = (3 * this.skillStore.skills[0].level) + this.preStance
       this.equippedStats.rangedAccuracy = (3 * this.skillStore.skills[0].level) + this.preStance
@@ -1278,15 +1628,39 @@ export const useItemStore = defineStore('itemStore', {
       this.equippedStats.resist = 0
 
       for (item in this.equippedCombat) {
-        if (this.equippedCombat[item].stats) {
+        if (this.equippedCombat[item].stats != null) {
 
           //damage
+          //has melee damage
           if (this.equippedCombat[item].stats.meleeDamage != null) {
             this.equippedStats.meleeDamage += this.equippedCombat[item].stats.meleeDamage
           }
+
+          //has ranged damage
           if (this.equippedCombat[item].stats.rangedDamage != null) {
-            this.equippedStats.rangedDamage += this.equippedCombat[item].stats.rangedDamage
+
+            //is not a weapon and ammo
+            if (this.equippedCombat[item].slot != 'rangedSlot' && this.equippedCombat[item].slot != 'ammoSlot') {
+              this.equippedStats.rangedDamage += this.equippedCombat[item].stats.rangedDamage
+            }
+
+            //if it is a weapon
+            if (this.equippedCombat[item].slot == 'rangedSlot') {
+              
+              //if the weapon does not have required ammo
+              if (this.equippedCombat[item].requiredAmmo == 'none') {
+                this.equippedStats.rangedDamage += this.equippedCombat[item].stats.rangedDamage
+              }
+
+              //if the weapon has required ammo and the required ammo is equipped
+              if (this.equippedCombat[item].requiredAmmo == this.equippedCombat.ammoSlot.ammoType) {
+                this.equippedStats.rangedDamage += this.equippedCombat[item].stats.rangedDamage
+                this.equippedStats.rangedDamage += this.equippedCombat.ammoSlot.stats.rangedDamage
+              }
+            }
           }
+
+          //has magic damage
           if (this.equippedCombat[item].stats.magicDamage != null) {
             this.equippedStats.magicDamage += this.equippedCombat[item].stats.magicDamage
           }
@@ -1295,11 +1669,30 @@ export const useItemStore = defineStore('itemStore', {
           if (this.equippedCombat[item].stats.meleeAccuracy != null) {
             this.equippedStats.meleeAccuracy += this.equippedCombat[item].stats.meleeAccuracy + this.bonusSmithingMastery(this.equippedCombat[item])
           }
+
           if (this.equippedCombat[item].stats.rangedAccuracy != null) {
-            this.equippedStats.rangedAccuracy += this.equippedCombat[item].stats.rangedAccuracy
+            //is not a weapon and ammo
+            if (this.equippedCombat[item].slot != 'rangedSlot' && this.equippedCombat[item].slot != 'ammoSlot') {
+              this.equippedStats.rangedAccuracy += this.equippedCombat[item].stats.rangedAccuracy
+            }
+
+            //if it is a weapon
+            if (this.equippedCombat[item].slot == 'rangedSlot') {
+
+              //if the weapon does not have required ammo
+              if (this.equippedCombat[item].requiredAmmo == 'none') {
+                this.equippedStats.rangedAccuracy += this.equippedCombat[item].stats.rangedAccuracy
+              }
+
+              //if the weapon has required ammo and the required ammo is equipped
+              if (this.equippedCombat[item].requiredAmmo == this.equippedCombat.ammoSlot.ammoType) {
+                this.equippedStats.rangedAccuracy += this.equippedCombat[item].stats.rangedAccuracy
+              }
+            }
           }
-          if (this.equippedCombat[item].stats.rangedAccuracy != null) {
-            this.equippedStats.rangedAccuracy += this.equippedCombat[item].stats.rangedAccuracy
+
+          if (this.equippedCombat[item].stats.magicAccuracy != null) {
+            this.equippedStats.magicAccuracy += this.equippedCombat[item].stats.magicAccuracy
           }
 
           //penetration
@@ -1307,26 +1700,35 @@ export const useItemStore = defineStore('itemStore', {
             if (this.equippedCombat[item].slot == 'meleeSlot') {
               this.equippedStats.meleePen += this.equippedCombat[item].stats.pen
             }
-            if (this.equippedCombat[item].slot != 'meleeSlot' && this.equippedCombat[item].slot != 'rangedSlot' && this.equippedCombat[item].slot != 'mageSlot') {
-              this.equippedStats.meleePen -= this.equippedCombat[item].stats.pen
+            if (this.equippedCombat[item].slot != 'meleeSlot' && this.equippedCombat[item].slot != 'rangedSlot' && this.equippedCombat[item].slot != 'magicSlot') {
+              this.equippedStats.meleePen += this.equippedCombat[item].stats.pen
             }
           }
 
           if (this.equippedCombat[item].stats.pen != null) {
             if (this.equippedCombat[item].slot == 'rangedSlot') {
-              this.equippedStats.rangedPen += this.equippedCombat[item].stats.pen
+
+              //if the weapon does not have required ammo
+              if (this.equippedCombat[item].requiredAmmo == 'none') {
+                this.equippedStats.rangedPen += this.equippedCombat[item].stats.pen
+              }
+
+              //if the weapon has required ammo and the required ammo is equipped
+              if (this.equippedCombat[item].requiredAmmo == this.equippedCombat.ammoSlot.ammoType) {
+                this.equippedStats.rangedPen += this.equippedCombat[item].stats.pen
+              }
             }
-            if (this.equippedCombat[item].slot != 'meleeSlot' && this.equippedCombat[item].slot != 'rangedSlot' && this.equippedCombat[item].slot != 'mageSlot') {
-              this.equippedStats.rangedPen -= this.equippedCombat[item].stats.pen
+            if (this.equippedCombat[item].slot != 'meleeSlot' && this.equippedCombat[item].slot != 'rangedSlot' && this.equippedCombat[item].slot != 'magicSlot') {
+              this.equippedStats.rangedPen += this.equippedCombat[item].stats.pen
             }
           }
 
           if (this.equippedCombat[item].stats.pen != null) {
-            if (this.equippedCombat[item].slot == 'mageSlot') {
+            if (this.equippedCombat[item].slot == 'magicSlot') {
               this.equippedStats.magicPen += this.equippedCombat[item].stats.pen
             }
-            if (this.equippedCombat[item].slot != 'meleeSlot' && this.equippedCombat[item].slot != 'rangedSlot' && this.equippedCombat[item].slot != 'mageSlot') {
-              this.equippedStats.magicPen -= this.equippedCombat[item].stats.pen
+            if (this.equippedCombat[item].slot != 'meleeSlot' && this.equippedCombat[item].slot != 'rangedSlot' && this.equippedCombat[item].slot != 'magicSlot') {
+              this.equippedStats.magicPen += this.equippedCombat[item].stats.pen
             }
           }
 
@@ -1335,25 +1737,34 @@ export const useItemStore = defineStore('itemStore', {
             if (this.equippedCombat[item].slot == 'meleeSlot') {
               this.equippedStats.meleeSpeed += this.equippedCombat[item].stats.speed - 2
             }
-            if (this.equippedCombat[item].slot != 'meleeSlot' && this.equippedCombat[item].slot != 'rangedSlot' && this.equippedCombat[item].slot != 'mageSlot') {
+            if (this.equippedCombat[item].slot != 'meleeSlot' && this.equippedCombat[item].slot != 'rangedSlot' && this.equippedCombat[item].slot != 'magicSlot') {
               this.equippedStats.meleeSpeed -= this.equippedCombat[item].stats.speed
             }
           }
 
           if (this.equippedCombat[item].stats.speed != null) {
             if (this.equippedCombat[item].slot == 'rangedSlot') {
-              this.equippedStats.rangedSpeed += this.equippedCombat[item].stats.speed - 2
+
+              //if the weapon does not have required ammo
+              if (this.equippedCombat[item].requiredAmmo == 'none') {
+                this.equippedStats.rangedSpeed += this.equippedCombat[item].stats.speed - 2
+              }
+
+              //if the weapon has required ammo and the required ammo is equipped
+              if (this.equippedCombat[item].requiredAmmo == this.equippedCombat.ammoSlot.ammoType) {
+                this.equippedStats.rangedSpeed += this.equippedCombat[item].stats.speed - 2
+              }
             }
-            if (this.equippedCombat[item].slot != 'meleeSlot' && this.equippedCombat[item].slot != 'rangedSlot' && this.equippedCombat[item].slot != 'mageSlot') {
+            if (this.equippedCombat[item].slot != 'meleeSlot' && this.equippedCombat[item].slot != 'rangedSlot' && this.equippedCombat[item].slot != 'magicSlot') {
               this.equippedStats.rangedSpeed -= this.equippedCombat[item].stats.speed
             }
           }
 
           if (this.equippedCombat[item].stats.speed != null) {
-            if (this.equippedCombat[item].slot == 'mageSlot') {
+            if (this.equippedCombat[item].slot == 'magicSlot') {
               this.equippedStats.magicSpeed += this.equippedCombat[item].stats.speed - 2
             }
-            if (this.equippedCombat[item].slot != 'meleeSlot' && this.equippedCombat[item].slot != 'rangedSlot' && this.equippedCombat[item].slot != 'mageSlot') {
+            if (this.equippedCombat[item].slot != 'meleeSlot' && this.equippedCombat[item].slot != 'rangedSlot' && this.equippedCombat[item].slot != 'magicSlot') {
               this.equippedStats.magicSpeed -= this.equippedCombat[item].stats.speed
             }
           }
@@ -1382,6 +1793,11 @@ export const useItemStore = defineStore('itemStore', {
 
         }
       }
+
+      //adds bonus damage to base damage
+      this.equippedStats.meleeDamage = (this.skillStore.skills[1].level + this.aggStance) * (1 + this.equippedStats.meleeDamage)
+      this.equippedStats.rangedDamage = (this.skillStore.skills[2].level + this.aggStance) * (1 + this.equippedStats.rangedDamage)
+      this.equippedStats.magicDamage = (this.skillStore.skills[3].level + this.aggStance) * (1 + this.equippedStats.magicDamage)
 
     },
 

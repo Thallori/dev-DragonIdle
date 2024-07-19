@@ -26,7 +26,8 @@ export const useHuntingStore = defineStore('huntingStore', {
         itemMeatRange: [1, 1],
         itemHideID: 'hide1',
         itemHideRange: [0, 3],
-        image: 'src/assets/icons/testIcon16.png',
+        itemBonesID: 'bones1',
+        image: 'src/assets/icons/sheep.png',
         levelRequired: 1,
         xpGain: 6,
         stalking: 4,
@@ -45,7 +46,8 @@ export const useHuntingStore = defineStore('huntingStore', {
         itemHideRange: [1, 2],
         itemExtraID: 'hogTusk',
         itemExtraRange: [0, 2],
-        image: 'src/assets/icons/testIcon16.png',
+        itemBonesID: 'bones1',
+        image: 'src/assets/icons/hog.png',
         levelRequired: 2,
         xpGain: 9,
         stalking: 5,
@@ -62,7 +64,8 @@ export const useHuntingStore = defineStore('huntingStore', {
         itemMeatRange: [1, 1],
         itemExtraID: 'feather',
         itemExtraRange: [2, 12],
-        image: 'src/assets/icons/testIcon16.png',
+        itemBonesID: 'bones1',
+        image: 'src/assets/icons/bird.png',
         levelRequired: 3,
         xpGain: 14,
         stalking: 6,
@@ -81,6 +84,7 @@ export const useHuntingStore = defineStore('huntingStore', {
         itemHideRange: [1, 2],
         itemExtraID: 'goatHorn',
         itemExtraRange: [0, 2],
+        itemBonesID: 'bones1',
         image: 'src/assets/icons/testIcon16.png',
         levelRequired: 4,
         xpGain: 15,
@@ -98,6 +102,7 @@ export const useHuntingStore = defineStore('huntingStore', {
         itemMeatRange: [3, 5],
         itemHideID: 'hide3',
         itemHideRange: [2, 5],
+        itemBonesID: 'bones1',
         image: 'src/assets/icons/testIcon16.png',
         levelRequired: 5,
         xpGain: 25,
@@ -115,6 +120,7 @@ export const useHuntingStore = defineStore('huntingStore', {
         itemMeatRange: [2, 3],
         itemHideID: 'hide4',
         itemHideRange: [2, 3],
+        itemBonesID: 'bones1',
         image: 'src/assets/icons/testIcon16.png',
         levelRequired: 6,
         xpGain: 28,
@@ -134,6 +140,7 @@ export const useHuntingStore = defineStore('huntingStore', {
         itemHideRange: [2, 4],
         itemExtraID: 'slothClaws',
         itemExtraRange: [0, 4],
+        itemBonesID: 'bones3',
         image: 'src/assets/icons/testIcon16.png',
         levelRequired: 7,
         xpGain: 40,
@@ -250,6 +257,11 @@ export const useHuntingStore = defineStore('huntingStore', {
       let rangeRoll2 = this.randomIntRange(this.activeObject.itemMeatRange[0], this.activeObject.itemMeatRange[1])
 
       this.itemStore.changeItemCount(this.activeObject.itemMeatID, (rangeRoll + (rangeRoll2 * (wasEfficent - 1))), 'consumableItems')
+
+      //if there are bones, there is only one
+      if (this.activeObject.itemBonesID) {
+        this.itemStore.changeItemCount(this.activeObject.itemBonesID, (1 * wasEfficent), 'resourceItems')
+      }
 
       // if there is a hide, there is a range for hide, roll and give it
       if (this.activeObject.itemHideID) {

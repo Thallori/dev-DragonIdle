@@ -4,6 +4,7 @@ import { useSkillStore } from './stores/skills';
 import InventoryTab from './components/InventoryTab.vue';
 import CombatTab from './components/CombatTab.vue';
 import ExplorationTab from './components/ExplorationTab.vue';
+import ScryingTab from './components/ScryingTab.vue';
 import ForagingTab from './components/ForagingTab.vue';
 import HuntingTab from './components/HuntingTab.vue';
 import MiningTab from './components/MiningTab.vue';
@@ -12,7 +13,7 @@ import CookingTab from './components/CookingTab.vue';
 
 export default {
   components: {
-    InventoryTab, CombatTab, ExplorationTab, ForagingTab, HuntingTab, MiningTab, SmithingTab, CookingTab
+    InventoryTab, CombatTab, ExplorationTab, ScryingTab, ForagingTab, HuntingTab, MiningTab, SmithingTab, CookingTab
   },
   setup() {
     const skillStore = useSkillStore()
@@ -28,7 +29,6 @@ export default {
       showAllAffinities: true,
       showAllSkills: true,
       // currentViewedWindow: 'ExplorationTab'
-      hover: '',
 
       currentViewedWindow: 'CombatTab'
     }
@@ -90,11 +90,11 @@ export default {
 
       <!-- Inventory -->
       <div class="sidenav-item d-flex align-items-center" @click="currentViewedWindow = 'InventoryTab'">
-        <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
+        <img src="src/assets/12x/coins.png" alt="" style="height: 24px; width: 24px;">
         <span>Hoard</span>
       </div>
       <div class="sidenav-item d-flex align-items-center">
-        <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
+        <img src="src/assets/12x/shop.png" alt="" style="height: 24px; width: 24px;">
         <span>Shops</span>
       </div>
 
@@ -104,7 +104,7 @@ export default {
       </div>
 
       <div class="sidenav-item d-flex align-items-center" @click="currentViewedWindow = 'CombatTab'">
-        <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
+        <img src="src/assets/12x/combat.png" alt="" style="height: 24px; width: 24px;">
         <span>Combat</span>
       </div>
       <div v-if="showAllAffinities == true">
@@ -114,18 +114,18 @@ export default {
           <div class="sidenav-item d-flex align-items-center hover-box" v-if="skill.locked == false"
             @click="currentViewedWindow = 'CombatTab'">
 
-            <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
+            <img :src="skill.image" alt="" style="height: 24px; width: 24px;">
 
             <div class="flex-grow-1" style="translate: 0px -4px;">
 
-              <div class="d-flex justify-content-between align-items-center">
-                <div>
+              <div class="d-flex justify-content-between align-items-center" style="min-height: 1.8rem;">
+                <div class="hover-show">
                   {{ skill.name }}
                 </div>
                 <div class="hover-hide little-levels">
                   ({{ skill.xp }}/{{ skill.xpNext }})
                 </div>
-                <div class="hover-show little-levels">
+                <div class="little-levels">
                   {{ skill.level }}/{{ skillStore.maxLevel }}
                 </div>
               </div>
@@ -153,16 +153,16 @@ export default {
           <div class="sidenav-item d-flex align-items-center justify-content-start hover-box"
             @click="currentViewedWindow = skill.name + 'Tab'" v-if="skill.locked == false">
 
-            <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
+            <img :src="skill.image" alt="" style="height: 24px; width: 24px;">
 
-            <div class="d-flex flex-grow-1 justify-content-between align-items-center">
-              <div>
+            <div class="d-flex flex-grow-1 justify-content-between align-items-center" style="min-height: 1.8rem;">
+              <div class="hover-show">
                 {{ skill.name }}
               </div>
               <div class="hover-hide little-levels">
                 ({{ skill.xp }}/{{ skill.xpNext }})
               </div>
-              <div class="hover-show little-levels">
+              <div class="little-levels">
                 {{ skill.level }}/{{ skillStore.maxLevel }}
               </div>
             </div>
@@ -176,20 +176,20 @@ export default {
         <span>Auxiliary </span>
       </div>
 
-      <div class="sidenav-item d-flex align-items-center justify-content-start">
+      <!-- <div class="sidenav-item d-flex align-items-center justify-content-start">
         <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
         <span>Statistics</span>
       </div>
       <div class="sidenav-item d-flex align-items-center justify-content-start">
         <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
         <span>Wiki</span>
-      </div>
+      </div> -->
       <div class="sidenav-item d-flex align-items-center justify-content-start">
-        <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
+        <img src="src/assets/12x/discord.png" alt="" style="height: 24px; width: 24px;">
         <span>Discord</span>
       </div>
       <div class="sidenav-item d-flex align-items-center justify-content-start">
-        <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
+        <img src="src/assets/12x/about.png" alt="" style="height: 24px; width: 24px;">
         <span>About</span>
       </div>
 
@@ -198,7 +198,7 @@ export default {
 
       <div class="sidenav-footer rounded-top">
         <div class="content-container d-flex align-items-center justify-content-start">
-          <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
+          <img src="src/assets/12x/settings.png" alt="" style="height: 24px; width: 24px;">
           <span>Settings</span>
         </div>
       </div>
@@ -265,8 +265,16 @@ export default {
   font-size: 0.9rem;
   font-weight: 500;
 }
+.tiny-levels {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
 .dark-text {
   color: gray;
+  font-weight: 500;
+}
+.info-text {
+  color: rgb(146, 186, 255);
   font-weight: 500;
 }
 
@@ -367,6 +375,10 @@ export default {
 .current-activity {
   font-size: 1rem;
   color: white;
+}
+
+.top-info {
+  max-width: 64rem;
 }
 
 .card {
@@ -484,7 +496,7 @@ export default {
 
   position: absolute;
   z-index: 1;
-  width: 11rem;
+  width: 12rem;
   top: 100%;
   margin-left: -1rem;
 }
@@ -529,7 +541,7 @@ export default {
 
   position: absolute;
   z-index: 1;
-  width: 11rem;
+  width: 12rem;
   top: 100%;
   margin-left: -5rem;
 }
@@ -557,6 +569,51 @@ export default {
   transform: translate(-50%);
 }
 .tooltip-be:hover .tooltip-text {
+  visibility: visible;
+}
+
+.tooltip-be2 .tooltip-text {
+  visibility: hidden;
+  background-color: #212529;
+  color: lightgray;
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 5px;
+  padding-bottom: 3px;
+  border-radius: 4px;
+  cursor: default;
+  pointer-events: none;
+
+  position: absolute;
+  z-index: 1;
+  width: 12rem;
+  top: calc(35%);
+  left: 50%;
+  transform: translate(-50%);
+}
+.tooltip-be2:hover .tooltip-text {
+  visibility: visible;
+}
+
+.tooltip-be3 .tooltip-text {
+  visibility: hidden;
+  background-color: #212529;
+  color: lightgray;
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 5px;
+  padding-bottom: 3px;
+  border-radius: 4px;
+  cursor: default;
+  pointer-events: none;
+
+  position: absolute;
+  z-index: 1;
+  width: 12rem;
+  left: 50%;
+  transform: translate(-50%);
+}
+.tooltip-be3:hover .tooltip-text {
   visibility: visible;
 }
 

@@ -129,7 +129,7 @@ export const useMiningStore = defineStore('miningStore', {
       },
       {
         id: '7',
-        name: 'Gemstone',
+        name: 'Beadstone',
         resourceID: 'ore8',
         resourceAmount: 1,
         image: 'src/assets/icons/testIcon16.png',

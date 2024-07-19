@@ -60,7 +60,7 @@ export default {
   <div class="card pt-4 align-items-center main-window bg-transparent" style="width: 77rem">
 
     <!-- Top Info -->
-    <div class="px-5 pb-3 w-100" style="min-width: 500px;">
+    <div class="px-5 pb-3 w-100" style="max-width: 64rem;">
 
       <!-- Leveling and Boost Info -->
       <div class="d-flex justify-content-center gap-1 pb-1">
@@ -203,7 +203,7 @@ export default {
 
             <!-- Image of Activity -->
             <div>
-              <img src="src/assets/icons/testIcon16.png" alt="" width="64" height="64">
+              <img :src="activity.image" alt="" width="64" height="64">
             </div>
           </div>
 
@@ -225,7 +225,63 @@ export default {
             </div>
           </div>
 
-          <div class="stretched-link" @click="huntingStore.setActiveAction(activity)"></div>
+          <div class="stretched-link tooltip-be3" @click="huntingStore.setActiveAction(activity)">
+
+            <!-- Tooltip of Items Given -->
+            <div class="tooltip-text">
+              <div class="card-header py-1">Field Dressings</div>
+              <div class="py-1 px-3 little-levels">
+
+                <div class="d-flex justify-content-between dark-text tiny-levels"
+                  v-if="activity.itemMeatID != undefined">
+                  <span>
+                    Strippings
+                  </span>
+                  <span>
+                    up to
+                  </span>
+                </div>
+
+                <div class="d-flex justify-content-between" v-if="activity.itemMeatID != undefined">
+                  <span>
+                    {{ itemStore.getItemData(activity.itemMeatID).name }}
+                  </span>
+                  <span>
+                    x{{ activity.itemMeatRange[1] }}
+                  </span>
+                </div>
+
+                <div class="d-flex justify-content-between" v-if="activity.itemHideID != undefined">
+                  <span>
+                    {{ itemStore.getItemData(activity.itemHideID).name }}
+                  </span>
+                  <span>
+                    x{{ activity.itemHideRange[1] }}
+                  </span>
+                </div>
+
+                <div class="d-flex justify-content-between" v-if="activity.itemExtraID != undefined">
+                  <span>
+                    {{ itemStore.getItemData(activity.itemExtraID).name }}
+                  </span>
+                  <span>
+                    x{{ activity.itemExtraRange[1] }}
+                  </span>
+                </div>
+
+                <div class="d-flex justify-content-between" v-if="activity.itemBonesID != undefined">
+                  <span>
+                    {{ itemStore.getItemData(activity.itemBonesID).name }}
+                  </span>
+                  <span>
+                    x1
+                  </span>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
         </div>
 
         <!-- Mastery Level and XP Footer -->
