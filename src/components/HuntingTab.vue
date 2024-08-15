@@ -112,7 +112,7 @@ export default {
                   {{ itemStore.equippedTools.huntingTool.name }}
 
                   <!-- Tooltip -->
-                  <div class="tooltip-text py-1 px-4">
+                  <div class="tooltip-text py-1 px-3">
                     <div class="d-flex justify-content-between little-levels ">
                       <span>Bleed: </span>
                       <span>

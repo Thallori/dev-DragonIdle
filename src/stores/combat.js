@@ -217,7 +217,7 @@ export const useCombatStore = defineStore('combatStore', {
       {
         id: 'koboldSlinger',
         name: 'Kobold Slinger',
-        location: 1, //canyon
+        location: 1, //canton
         image: 'src/assets/icons/testIcon16.png',
         totalCount: 0,
         styles: ['ranged'],
@@ -263,15 +263,15 @@ export const useCombatStore = defineStore('combatStore', {
         ],
       },
       {
-        id: 'koboldArcher',
-        name: 'Kobold Archer',
-        location: 1, //canyon
+        id: 'koboldRanger',
+        name: 'Kobold Ranger',
+        location: 1, //canton
         image: 'src/assets/icons/testIcon16.png',
         totalCount: 0,
         styles: ['ranged'],
         stats: {
           health: 11,
-          speed: 2.4,
+          speed: 2.6,
 
           rangedDamage: 4,
           rangedAccuracy: 9,
@@ -382,7 +382,7 @@ export const useCombatStore = defineStore('combatStore', {
             ],
           },
           {
-            id: 'bossDuke',
+            id: 'bossScar',
             name: 'Scar',
             image: 'src/assets/icons/testIcon16.png',
             amount: 1,
@@ -421,6 +421,170 @@ export const useCombatStore = defineStore('combatStore', {
                 itemID: 'hide2',
                 itemRange: [1, 3],
                 weight: 1,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: '1',
+        name: 'Guarded Keep',
+        location: 1, //canton
+        image: 'src/assets/icons/testIcon16.png',
+        totalCount: 0,
+        alwaysDrops: [
+          {
+            itemID: 'bronzeArrow',
+            itemRange: [8, 20],
+          },
+        ],
+        randomDrops: [
+          {
+            itemID: 'koboldCowl',
+            weight: 4,
+          },
+          {
+            itemID: 'koboldJacket',
+            weight: 4,
+          },
+          {
+            itemID: 'koboldBracer',
+            weight: 1,
+          },
+          {
+            itemID: 'koboldBow',
+            weight: 1,
+          },
+          {
+            itemID: 'greenAmmy',
+            weight: 1,
+          },
+          {
+            itemID: 'koboldPick',
+            weight: 1,
+          },
+        ],
+        rounds: [
+          {
+            id: 'bossKoboldRanger',
+            name: 'Kobold Archer',
+            image: 'src/assets/icons/testIcon16.png',
+            amount: 4,
+            totalCount: 0,
+            styles: ['ranged'],
+            stats: {
+              health: 12,
+              speed: 2.6,
+
+              rangedDamage: 4,
+              rangedAccuracy: 10,
+
+              penetration: 0,
+              physicalArmor: 0,
+              energyArmor: 0,
+              resist: 0.05,
+
+              meleeDodge: 6,
+              rangedDodge: 12,
+              magicDodge: 12,
+            },
+            alwaysDrops: [
+              {
+                itemID: 'bones2',
+              },
+            ],
+            randomDrops: [
+              {
+                itemID: 'money',
+                itemRange: [2, 10],
+                weight: 10
+              },
+              {
+                itemID: 'meal2',
+                weight: 6
+              },
+            ],
+          },
+          {
+            id: 'bossKoboldMelee',
+            name: 'Kobold Guard',
+            image: 'src/assets/icons/testIcon16.png',
+            amount: 1,
+            totalCount: 0,
+            styles: ['melee'],
+            stats: {
+              health: 14,
+              speed: 2.4,
+
+              meleeDamage: 4,
+              meleeAccuracy: 10,
+
+              penetration: 0,
+              physicalArmor: 1,
+              energyArmor: 0,
+              resist: 0.15,
+
+              meleeDodge: 12,
+              rangedDodge: 12,
+              magicDodge: 0,
+            },
+            alwaysDrops: [
+              {
+                itemID: 'bones2',
+              },
+            ],
+            randomDrops: [
+              {
+                itemID: 'money',
+                itemRange: [2, 12],
+                weight: 10
+              },
+              {
+                itemID: 'meal2',
+                weight: 6
+              },
+            ],
+          },
+          {
+            id: 'bossDuke',
+            name: 'The Duke',
+            image: 'src/assets/icons/testIcon16.png',
+            amount: 1,
+            totalCount: 0,
+            styles: ['melee', 'ranged'],
+            stats: {
+              health: 60,
+              speed: 2.8,
+
+              meleeDamage: 5,
+              meleeAccuracy: 10,
+              rangedDamage: 5,
+              rangedAccuracy: 15,
+
+              penetration: 0,
+              physicalArmor: 0,
+              energyArmor: 0,
+              resist: 0.10,
+
+              meleeDodge: 20,
+              rangedDodge: 20,
+              magicDodge: 20,
+            },
+            alwaysDrops: [
+              {
+                itemID: 'bones2',
+              },
+            ],
+            randomDrops: [
+              {
+                itemID: 'money',
+                itemRange: [10, 40],
+                weight: 10
+              },
+              {
+                itemID: 'meal3',
+                itemRange: [2, 3],
+                weight: 6
               },
             ],
           },

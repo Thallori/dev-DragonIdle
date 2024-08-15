@@ -66,11 +66,15 @@ export default {
         <span>Hardness: </span>
         <span>{{ this.itemObject.toolStats.bonusPen }}</span>
       </div>
+      <div class="d-flex justify-content-between" v-if="this.itemObject.toolStats.miningInterval">
+        <span>Speed Bonus: </span>
+        <span>{{ this.itemObject.toolStats.miningInterval.toFixed(2) }}s</span>
+      </div>
     </div>
 
     <!-- Combat Stats if not a Tool -->
     <div v-if="this.itemObject.isCombat && this.itemObject.isTool != true">
-      
+
       <div class="text-warning"
         v-if="this.itemObject.slot == 'meleeSlot' || this.itemObject.slot == 'rangedSlot' || this.itemObject.slot == 'magicSlot'">
         Weapon
@@ -121,19 +125,19 @@ export default {
 
 
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.meleeDodge != null">
-        <span>Melee Dodge: </span>
+        <span>🛡️ Melee: </span>
         <span>
           {{ this.itemObject.stats.meleeDodge + (bonusSmithingMastery(this.itemObject) / 4) }}
         </span>
       </div>
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.rangedDodge != null">
-        <span>Ranged Dodge: </span>
+        <span>🛡️ Ranged: </span>
         <span>
           {{ this.itemObject.stats.rangedDodge + (bonusSmithingMastery(this.itemObject) / 4) }}
         </span>
       </div>
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.magicDodge != null">
-        <span>Magic Dodge: </span>
+        <span>🛡️ Magic: </span>
         <span>
           {{ this.itemObject.stats.magicDodge + (bonusSmithingMastery(this.itemObject) / 4) }}
         </span>

@@ -780,16 +780,16 @@ export default {
 
                 <div class="py-2">
                   <div class="d-flex justify-content-between">
-                    <span>Armor: </span>
-                    <span v-if="combatStore.activeObject.stats">
-                      {{ combatStore.activeObject.stats.physicalArmor }}
+                    <span>Special: </span>
+                    <span v-if="combatStore.activeObject.spec">
+                      Camo
                     </span>
                     <span v-else>—</span>
                   </div>
                   <div class="d-flex justify-content-between">
-                    <span>Barrier: </span>
-                    <span v-if="combatStore.activeObject.stats">
-                      {{ combatStore.activeObject.stats.energyArmor }}
+                    <span>Intensity: </span>
+                    <span v-if="combatStore.activeObject.specIntense">
+                      15%
                     </span>
                     <span v-else>—</span>
                   </div>

@@ -113,14 +113,21 @@ export default {
                   {{ itemStore.equippedTools.miningTool.name }}
 
                   <!-- Tooltip -->
-                  <div class="tooltip-text py-1 px-4">
-                    <div class="d-flex justify-content-between little-levels ">
+                  <div class="tooltip-text py-1 px-3">
+                    <div class="d-flex justify-content-between little-levels">
                       <span>Hit: </span>
                       <span>{{ itemStore.equippedTools.miningTool.toolStats.bonusDamage }}</span>
                     </div>
-                    <div class="d-flex justify-content-between little-levels ">
+                    <div class="d-flex justify-content-between little-levels">
                       <span>Hardness: </span>
                       <span>{{ itemStore.equippedTools.miningTool.toolStats.bonusPen }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between little-levels"
+                      v-if="itemStore.equippedTools.miningTool.toolStats.miningInterval">
+                      <span>Speed Bonus: </span>
+                      <span>
+                        {{ itemStore.equippedTools.miningTool.toolStats.miningInterval.toFixed(2) }}s
+                      </span>
                     </div>
                   </div>
                 </div>

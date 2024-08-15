@@ -350,6 +350,34 @@ export const useItemStore = defineStore('itemStore', {
         count: 20, //debug
         totalCount: 0,
       },
+      {
+        id: 'koboldPick',
+        name: 'Boulder Breaker',
+        image: 'src/assets/icons/testIcon16.png',
+        mSmithing: 'pickaxe',
+        dcat: 'meleeTool',
+        dlvl: 4,
+        slot: 'meleeSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeAccuracy: 5,
+          meleeDamage: 0.75,
+          pen: 0.40,
+          speed: 2.8,
+        },
+        toolSlot: 'miningTool',
+        isTool: true,
+        onToolbar: false,
+        toolStats: {
+          bonusDamage: 4,
+          bonusPen: 10,
+          miningInterval: 0.20,
+        },
+        sellPrice: 45,
+        count: 20, //debug
+        totalCount: 0,
+      },
 
       //copper set
       {
@@ -613,6 +641,23 @@ export const useItemStore = defineStore('itemStore', {
         count: 0,
         totalCount: 0,
       },
+      {
+        id: 'greenAmmy',
+        name: 'Ranging Amulet',
+        image: 'src/assets/icons/testIcon16.png',
+        dcat: 'jewellery',
+        dlvl: 10,
+        slot: 'ammySlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          rangedDamage: 0.05,
+          rangedAccuracy: 3,
+        },
+        sellPrice: 225,
+        count: 20, //debug
+        totalCount: 0,
+      },
 
       //arrows
       {
@@ -715,23 +760,22 @@ export const useItemStore = defineStore('itemStore', {
         totalCount: 0,
       },
       {
-        id: 'koboldBracer',
-        name: 'Kobold Armwraps',
-        flavor: 'Also works with legs.',
+        id: 'koboldCowl',
+        name: 'Kobold Cowl',
         image: 'src/assets/icons/testIcon16.png',
         dcat: 'rangedArmor',
         dlvl: 2,
-        slot: 'legSlot',
+        slot: 'hatSlot',
         isCombat: true,
         onEquip: false,
         stats: {
           rangedDamage: 0.05,
-          meleeDodge: 2,
-          rangedDodge: 2,
+          meleeDodge: 3,
+          rangedDodge: 3,
           magicDodge: 3,
           resist: 0.03,
         },
-        sellPrice: 34,
+        sellPrice: 37,
         count: 20, //debug
         totalCount: 0,
       },
@@ -746,13 +790,55 @@ export const useItemStore = defineStore('itemStore', {
         isCombat: true,
         onEquip: false,
         stats: {
-          meleeDodge: 3,
-          rangedDodge: 3,
+          rangedDamage: 0.05,
+          meleeDodge: 4,
+          rangedDodge: 4,
           magicDodge: 4,
           physicalArmor: 1,
           resist: 0.03,
         },
         sellPrice: 29,
+        count: 20, //debug
+        totalCount: 0,
+      },
+      {
+        id: 'koboldJacket',
+        name: 'Kobold Jacket',
+        image: 'src/assets/icons/testIcon16.png',
+        dcat: 'rangedArmor',
+        dlvl: 2,
+        slot: 'bodySlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          rangedDamage: 0.05,
+          meleeDodge: 3,
+          rangedDodge: 3,
+          magicDodge: 3,
+          resist: 0.03,
+        },
+        sellPrice: 37,
+        count: 20, //debug
+        totalCount: 0,
+      },
+      {
+        id: 'koboldBracer',
+        name: 'Kobold Armwraps',
+        flavor: 'Also works with legs.',
+        image: 'src/assets/icons/testIcon16.png',
+        dcat: 'rangedArmor',
+        dlvl: 2,
+        slot: 'legSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          rangedDamage: 0.05,
+          meleeDodge: 2,
+          rangedDodge: 2,
+          magicDodge: 2,
+          resist: 0.03,
+        },
+        sellPrice: 34,
         count: 20, //debug
         totalCount: 0,
       },
