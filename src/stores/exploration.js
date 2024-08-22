@@ -25,7 +25,7 @@ export const useExplorationStore = defineStore('explorationStore', {
       {
         id: '0',
         name: 'Gleaming Glade',
-        image: 'src/assets/icons/testIcon16.png',
+        image: 'src/assets/icons/area1.png',
         levelRequired: 1,
         xpGain: 2,
         interval: 2.0,
@@ -42,7 +42,7 @@ export const useExplorationStore = defineStore('explorationStore', {
       {
         id: '1',
         name: 'Cassit Canton',
-        image: 'src/assets/icons/testIcon16.png',
+        image: 'src/assets/icons/area2.png',
         levelRequired: 2,
         xpGain: 4,
         interval: 3.0,
@@ -58,7 +58,7 @@ export const useExplorationStore = defineStore('explorationStore', {
       {
         id: '2',
         name: 'Vibrant Vale',
-        image: 'src/assets/icons/testIcon16.png',
+        image: 'src/assets/icons/area3.png',
         levelRequired: 3,
         xpGain: 6,
         interval: 3.5,
@@ -68,7 +68,7 @@ export const useExplorationStore = defineStore('explorationStore', {
         mxpNext: 10,
         isSealed: true,
         efficencySkill: 'Scrying',
-        uniqueFeature1: ['Scrying', 0], //bone clay
+        uniqueFeature1: ['Scrying', 0, 'src/assets/icons/rune1.png'], //pale clay
         uniqueFeature2: ['Mining', 2, 'src/assets/icons/amber.png'], //amber
       },
       // {
@@ -83,7 +83,6 @@ export const useExplorationStore = defineStore('explorationStore', {
       //   mxpPrev: 0,
       //   mxpNext: 10,
       //   isSealed: true,
-      //   requiresAnyFlags: 'tbd',
       // },
       // {
       //   id: '4',
@@ -97,7 +96,45 @@ export const useExplorationStore = defineStore('explorationStore', {
       //   mxpPrev: 0,
       //   mxpNext: 10,
       //   isSealed: true,
-      //   requiresAnyFlags: 'tbd',
+      // },
+      // {
+      //   id: '5',
+      //   name: 'Sixth Area',
+      //   image: 'src/assets/icons/testIcon16.png',
+      //   levelRequired: 6,
+      //   xpGain: 88,
+      //   interval: 88.0,
+      //   mxp: 0,
+      //   mLevel: 0,
+      //   mxpPrev: 0,
+      //   mxpNext: 10,
+      //   isSealed: true,
+      // },
+      // {
+      //   id: '6',
+      //   name: 'Seventh Area',
+      //   image: 'src/assets/icons/testIcon16.png',
+      //   levelRequired: 7,
+      //   xpGain: 88,
+      //   interval: 88.0,
+      //   mxp: 0,
+      //   mLevel: 0,
+      //   mxpPrev: 0,
+      //   mxpNext: 10,
+      //   isSealed: true,
+      // },
+      // {
+      //   id: '7',
+      //   name: 'Eighth Area',
+      //   image: 'src/assets/icons/testIcon16.png',
+      //   levelRequired: 8,
+      //   xpGain: 88,
+      //   interval: 88.0,
+      //   mxp: 0,
+      //   mLevel: 0,
+      //   mxpPrev: 0,
+      //   mxpNext: 10,
+      //   isSealed: true,
       // },
     ]
   }),
@@ -115,6 +152,8 @@ export const useExplorationStore = defineStore('explorationStore', {
       this.activePercent = 0
       this.activeProgress = 0
       this.activeObject = newActiveActivity
+
+      this.skillStore.cancelCurrentActivity('explore')
       this.skillStore.setCurrentActivity(this.activeObject)
       this.skillStore.setCurrentCat('Exploring: ')
       this.updateEfficency()
@@ -129,12 +168,10 @@ export const useExplorationStore = defineStore('explorationStore', {
       this.activeObject = {}
       this.skillStore.setCurrentActivity({ name: 'Nothing' })
       this.skillStore.setCurrentCat('Currently Doing: ')
-
-      console.log('canceling action')
     },
 
     updateProgress() {
-      if (this.activeProgress >= (1000 * this.activeObject.interval * (1 - itemStore.equippedTools.explorationTool.toolStats.explorationMulti))) {
+      if (this.activeProgress >= (1000 * this.activeObject.interval * (1 - this.itemStore.equippedTools.explorationTool.toolStats.explorationMulti))) {
         let wasEfficent = this.efficencyReturn()
 
         this.skillStore.addXP(this.skillID, (this.activeObject.xpGain * wasEfficent))

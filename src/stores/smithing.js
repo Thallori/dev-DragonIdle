@@ -434,6 +434,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 4,
         xpGain: 110,
         heatNeeded: 15,
+        mCat: 0,
       },
       {
         id: 'ironClaws',
@@ -445,6 +446,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 4,
         xpGain: 110,
         heatNeeded: 15,
+        mCat: 1,
       },
       {
         id: 'ironPickaxe',
@@ -456,6 +458,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 4,
         xpGain: 110,
         heatNeeded: 15,
+        mCat: 2,
       },
       {
         id: 'ironDagger',
@@ -467,6 +470,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 4,
         xpGain: 55,
         heatNeeded: 8,
+        mCat: 3,
       },
       {
         id: 'ironBroadsword',
@@ -478,6 +482,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 6,
         xpGain: 110,
         heatNeeded: 15,
+        mCat: 7,
       },
       {
         id: 'ironMace',
@@ -489,6 +494,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 6,
         xpGain: 110,
         heatNeeded: 15,
+        mCat: 8,
       },
       {
         id: 'ironHeavy',
@@ -500,6 +506,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 6,
         xpGain: 165,
         heatNeeded: 22,
+        mCat: 9,
       },
       {
         id: 'ironGreaves',
@@ -511,6 +518,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 4,
         xpGain: 110,
         heatNeeded: 15,
+        mCat: 4,
       },
       {
         id: 'ironHelmet',
@@ -522,6 +530,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 4,
         xpGain: 110,
         heatNeeded: 15,
+        mCat: 5,
       },
       {
         id: 'ironChainmail',
@@ -533,6 +542,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 4,
         xpGain: 220,
         heatNeeded: 29,
+        mCat: 6,
       },
       {
         id: 'ironPlate',
@@ -544,6 +554,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 6,
         xpGain: 275,
         heatNeeded: 36,
+        mCat: 10,
       },
       {
         id: 'ironShield',
@@ -555,6 +566,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 6,
         xpGain: 165,
         heatNeeded: 22,
+        mCat: 11,
       },
 
       //steel
@@ -568,6 +580,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 7,
         xpGain: 160,
         heatNeeded: 19,
+        mCat: 0,
       },
       {
         id: 'steelClaws',
@@ -579,6 +592,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 7,
         xpGain: 160,
         heatNeeded: 19,
+        mCat: 1,
       },
       {
         id: 'steelPickaxe',
@@ -590,6 +604,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 7,
         xpGain: 160,
         heatNeeded: 19,
+        mCat: 2,
       },
       {
         id: 'steelDagger',
@@ -601,6 +616,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 7,
         xpGain: 80,
         heatNeeded: 10,
+        mCat: 3,
       },
       {
         id: 'steelBroadsword',
@@ -612,6 +628,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 8,
         xpGain: 160,
         heatNeeded: 19,
+        mCat: 7,
       },
       {
         id: 'steelMace',
@@ -623,6 +640,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 8,
         xpGain: 160,
         heatNeeded: 19,
+        mCat: 8,
       },
       {
         id: 'steelHeavy',
@@ -634,6 +652,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 8,
         xpGain: 240,
         heatNeeded: 28,
+        mCat: 9,
       },
       {
         id: 'steelGreaves',
@@ -645,6 +664,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 7,
         xpGain: 160,
         heatNeeded: 19,
+        mCat: 4,
       },
       {
         id: 'steelHelmet',
@@ -656,6 +676,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 7,
         xpGain: 160,
         heatNeeded: 19,
+        mCat: 5,
       },
       {
         id: 'steelChainmail',
@@ -667,6 +688,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 7,
         xpGain: 320,
         heatNeeded: 37,
+        mCat: 6,
       },
       {
         id: 'steelPlate',
@@ -678,6 +700,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 8,
         xpGain: 400,
         heatNeeded: 46,
+        mCat: 10,
       },
       {
         id: 'steelShield',
@@ -689,6 +712,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 8,
         xpGain: 240,
         heatNeeded: 28,
+        mCat: 11,
       },
     ]
   }),
@@ -706,6 +730,8 @@ export const useSmithingStore = defineStore('smithingStore', {
       this.activeProgress = 0
       this.activePercent = 0
       this.activeObject = newActiveActivity
+
+      this.skillStore.cancelCurrentActivity('smith')
       this.skillStore.setCurrentActivity(this.activeObject)
       this.skillStore.setCurrentCat('Smithing: ')
       this.tryRepeatActionHeat()
@@ -718,8 +744,6 @@ export const useSmithingStore = defineStore('smithingStore', {
       this.activeObject = {}
       this.skillStore.setCurrentActivity({ name: 'Nothing' })
       this.skillStore.setCurrentCat('Currently Doing: ')
-
-      console.log('canceling action')
     },
 
     updateHeatProgress() {

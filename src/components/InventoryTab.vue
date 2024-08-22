@@ -21,7 +21,6 @@ export default {
   data() {
     return {
       skillID: 13,
-      equippedback: { width: '400px' }
     }
   },
   methods: {
@@ -44,10 +43,10 @@ export default {
 </script>
 
 <template>
-  <div class="d-flex py-3 pe-3 main-window bg-transparent gap-1" style="width: 85rem;">
+  <div class="d-flex pt-3 pb-4 pe-2 main-window bg-transparent gap-1" style="width: 82rem;">
 
     <!-- All Items -->
-    <div class="w-100">
+    <div class="w-100 pb-5">
       <!-- Equipment -->
       <div class="card w-100 my-1" style="min-height: 6rem;">
 

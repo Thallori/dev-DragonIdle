@@ -20,6 +20,7 @@ export default {
     return {
       skillID: 13,
       itemIndexStart: 9, //itemStore.resourceItems.findIndex(t => t.id === this.foragingStore[0].resourceID) //this code will get the start index of itemIDs, but I don't know how to run it after everything is loaded. Also, it hardcodes all activity items which could limit further development.
+      showGuideModal: false,
     }
   },
   methods: {
@@ -59,6 +60,39 @@ export default {
 <template>
   <div class="card pt-4 align-items-center main-window bg-transparent" style="width: 77rem">
 
+    
+    <!-- Guide Modal -->
+    <div class="modal show-modal" v-if="showGuideModal == true">
+      <div class="modal-backing" @click="showGuideModal = false"></div>
+
+      <!-- Guide Content -->
+      <div class="modal-content py-4 px-2" style="width: 23rem;">
+
+        <div class="text-center pb-2">
+          <div class="pb-1">
+            Foraging Guide
+          </div>
+
+          <!-- Page 1 -->
+          <div class="little-levels">
+            Some of these walls gleam with hidden treasures.
+            <br><br>
+            
+            <!-- locating/harvesting -->
+            <span class="text-warning">Plants</span>
+            <br>
+            
+            <br><br>
+            Plants have may have more than one use, but generally <span class="info-text">wood</span> can be fletched into weapons and ammo, <span class="info-text">fibers</span> can be tailored into armor, and <span class="info-text">fruit</span> (normally inedible) can be cooked.
+            <br><br>
+            Each <span class="info-text">mastery level</span> increases the <span class="info-text">yield</span> of located plants by 1.
+            
+          </div>
+        </div>
+
+      </div>
+    </div>
+
     <!-- Top Info -->
     <div class="px-5 pb-3 w-100" style="max-width: 64rem;">
 
@@ -66,8 +100,9 @@ export default {
       <div class="d-flex justify-content-center gap-1 pb-1">
 
         <!-- Skill Icon and Help Button -->
-        <div class="card align-items-center" style="width: 67px; height: 67px;">
-          <!-- <img src="src/assets/icons/testIcon32.png" alt="" width="64" height="64"> -->
+        <div class="card card-activity align-items-center py-2" style="width: 67px; height: 67px;">
+          <img src="src/assets/12x/questionmark.png" alt="" width="48" height="48">
+          <div class="stretched-link" @click="showGuideModal = true"></div>
         </div>
 
         <!-- Level and XP Card -->

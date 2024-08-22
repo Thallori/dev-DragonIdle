@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     isNotValidArea(activityObject, activityIndex) {
-      return false
+      // return false
 
       // if skill isn't up to snuff, is never valid
       if (activityObject.levelRequired > this.skillStore.skills[this.skillID].level) {
@@ -108,18 +108,18 @@ export default {
             <div class="px-2">
               <span>
                 <div class="tooltip-b">
-                  <img :src="itemStore.equippedTools.foragingTool.image" alt="" width="32" height="32">
-                  {{ itemStore.equippedTools.foragingTool.name }}
+                  <img :src="itemStore.equippedTools.scryingTool.image" alt="" width="32" height="32">
+                  {{ itemStore.equippedTools.scryingTool.name }}
 
                   <!-- Tooltip -->
                   <div class="tooltip-text py-1 px-4">
                     <div class="d-flex justify-content-between little-levels ">
-                      <span>Locating: </span>
-                      <span>{{ (itemStore.equippedTools.foragingTool.toolStats.locatingMultiplierAdd * 100) }}%</span>
+                      <span>Syphoning: </span>
+                      <span>{{ itemStore.equippedTools.scryingTool.toolStats.syphoningTime.toFixed(2) }}s</span>
                     </div>
                     <div class="d-flex justify-content-between little-levels ">
-                      <span>Harvesting: </span>
-                      <span>{{ itemStore.equippedTools.foragingTool.toolStats.harvestingTimeBonus }}s</span>
+                      <span>Stability: </span>
+                      <span>{{ 100 * itemStore.equippedTools.scryingTool.toolStats.baseStabilityBonus }}%</span>
                     </div>
                   </div>
                 </div>
@@ -128,7 +128,7 @@ export default {
 
             <!-- Efficency % -->
             <div class="tooltip-br">
-              {{ explorationStore.activities[0].mLevel + (2 * skillStore.skills[this.skillID].level) }}%
+              {{ explorationStore.activities[2].mLevel + (2 * skillStore.skills[this.skillID].level) }}%
               <img src="src/assets/icons/testIcon12.png" alt="" width="24" height="24">
               <div class="tooltip-text py-1 px-2">
                 <div class="little-levels">
@@ -212,18 +212,17 @@ export default {
           <!-- XP per Completion and Seconds per Complete -->
           <div class="little-levels pb-0">
             <div>
-              Locate: {{ activity.currentYield }} / {{ (activity.searchDifficulty * (1 -
-              itemStore.equippedTools.foragingTool.toolStats.locatingMultiplierAdd)).toFixed(2) }}s
+              Fortify: {{ activity.fortifyTime }}s
             </div>
             <div class="pb-1">
-              Harvest: {{ activity.xpGain }} XP / {{ (activity.gatherDifficulty -
-              itemStore.equippedTools.foragingTool.toolStats.harvestingTimeBonus).toFixed(2) }}s
+              Syphon: {{ activity.xpGain }} XP / {{ (100 * (activity.baseStability +
+              itemStore.equippedTools.scryingTool.toolStats.baseStabilityBonus + (activity.mLevel * 0.02))).toFixed() }}%
             </div>
 
             <!-- Progress Bar for Activity Completion -->
             <div class="progress" role="progressbar" style="height: 12px;">
-              <div class="progress-bar xp-progress" :style="`width: ${scryingStore.activePercent}%;`"
-                v-if="activity.id == scryingStore.activeObject.id">
+              <div class="progress-bar xp-progress" :class="(scryingStore.activePercent >= 100) ? 'progress-bar-striped progress-bar-animated' : ''"
+                :style="`width: ${scryingStore.activePercent}%;`" v-if="activity.id == scryingStore.activeObject.id">
               </div>
             </div>
           </div>

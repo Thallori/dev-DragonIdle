@@ -25,12 +25,12 @@ export default {
   data() {
     return {
       skillID: 9,
-      blep: true,
+      showGuideModal: false,
     }
   },
   methods: {
     isNotValidActivity(activityObject) {
-      return false
+      // return false
 
       // if skill isn't up to snuff, is never valid
       if (activityObject.levelRequired > this.skillStore.skills[this.skillID].level) {
@@ -64,6 +64,41 @@ export default {
 
 <template>
   <div class="card pt-4 align-items-center main-window bg-transparent" style="width: 77rem">
+    
+    <!-- Guide Modal -->
+    <div class="modal show-modal" v-if="showGuideModal == true">
+      <div class="modal-backing" @click="showGuideModal = false"></div>
+
+      <!-- Guide Content -->
+      <div class="modal-content py-4 px-2" style="width: 23rem;">
+
+        <div class="text-center pb-2">
+          <div class="pb-1">
+            Exploration Guide
+          </div>
+
+          <!-- Page 1 -->
+          <div class="little-levels">
+            The world is full of possibilities, just waiting to be found.
+            <br><br>
+            
+            <span class="text-warning">Areas</span>
+            <br>
+
+            Regions begin frozen, <span class="info-text">sealed</span> away in time. They are easy enough to release, but as the flow of time returns, the <span class="info-text">stability</span> of this fragile existance will become threatened. Limiting the options for what can be accessed, leaving the rest locked.
+            <br><br>
+            Each area has unique resources, enemies, and a <span class="info-text">sequence</span> of encounters that guard something <span class="info-text">special</span>.
+            <br><br>
+            
+            <span class="text-warning">Resources</span>
+            <br>
+
+            Exploring an area grants <span class="info-text">mastery</span> of it, each level providing something new to <span class="info-text">gather</span> and some <span class="info-text">efficency</span> for that region's primary skill.
+          </div>
+        </div>
+
+      </div>
+    </div>
 
     <!-- Top Info -->
     <div class="px-5 pb-3 w-100" style="max-width: 64rem;">
@@ -72,8 +107,9 @@ export default {
       <div class="d-flex justify-content-center gap-1 pb-1">
 
         <!-- Skill Icon and Help Button -->
-        <div class="card align-items-center" style="width: 67px; height: 67px;">
-          <!-- <img src="src/assets/icons/testIcon32.png" alt="" width="64" height="64"> -->
+        <div class="card card-activity align-items-center py-2" style="width: 67px; height: 67px;">
+          <img src="src/assets/12x/questionmark.png" alt="" width="48" height="48">
+          <div class="stretched-link" @click="showGuideModal = true"></div>
         </div>
 
         <!-- Level and XP Card -->
@@ -202,7 +238,7 @@ export default {
             <div class="pb-1">
 
               <!-- Image of Activity -->
-              <img src="src/assets/icons/testIcon32.png" alt="" width="64" height="64">
+              <img :src="activity.image" alt="" width="64" height="64">
             </div>
 
             <!-- Unique Features -->

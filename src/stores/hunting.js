@@ -187,6 +187,8 @@ export const useHuntingStore = defineStore('huntingStore', {
       this.activeProgress = 0
       this.activePercent = 0
       this.activeObject = newActiveActivity
+
+      this.skillStore.cancelCurrentActivity('hunt')
       this.skillStore.setCurrentActivity(this.activeObject)
       this.skillStore.setCurrentCat('Hunting: ')
 
@@ -201,8 +203,6 @@ export const useHuntingStore = defineStore('huntingStore', {
       this.activeObject = {}
       this.skillStore.setCurrentActivity({ name: 'Nothing' })
       this.skillStore.setCurrentCat('Currently Doing: ')
-
-      console.log('canceling action') //debug
     },
 
     updateProgress() {

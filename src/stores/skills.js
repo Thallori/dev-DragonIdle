@@ -1,6 +1,13 @@
 import { defineStore } from 'pinia'
 import { useItemStore } from '@/stores/inventory';
 import { useCombatStore } from '@/stores/combat';
+import { useExplorationStore } from '@/stores/exploration';
+import { useScryingStore } from '@/stores/scrying';
+import { useForagingStore } from '@/stores/foraging';
+import { useHuntingStore } from '@/stores/hunting';
+import { useMiningStore } from '@/stores/mining';
+import { useSmithingStore } from '@/stores/smithing';
+import { useCookingStore } from '@/stores/cooking';
 
 export const useSkillStore = defineStore('skillStore', {
   state: () => ({
@@ -12,6 +19,13 @@ export const useSkillStore = defineStore('skillStore', {
 
     itemStore: useItemStore(),
     combatStore: useCombatStore(),
+    explorationStore: useExplorationStore(),
+    scryingStore: useScryingStore(),
+    foragingStore: useForagingStore(),
+    huntingStore: useHuntingStore(),
+    miningStore: useMiningStore(),
+    smithingStore: useSmithingStore(),
+    cookingStore: useCookingStore(),
 
     skills: [
       {
@@ -53,14 +67,14 @@ export const useSkillStore = defineStore('skillStore', {
       {
         id: '3',
         name: 'Spirit',
-        image: 'src/assets/12x/strength.png',
+        image: 'src/assets/12x/spirit.png',
         color: '#FFFFFF',
         isCombat: true,
         xp: 0,
         xpPrev: 0,
         xpNext: 800,
         level: 1,
-        locked: true,
+        locked: false,
       },
       {
         id: '4',
@@ -89,14 +103,14 @@ export const useSkillStore = defineStore('skillStore', {
       {
         id: '6',
         name: 'Acuity',
-        image: 'src/assets/12x/strength.png',
+        image: 'src/assets/12x/acuity.png',
         color: '#FFFFFF',
         isCombat: true,
         xp: 0,
         xpPrev: 0,
         xpNext: 800,
         level: 1,
-        locked: true,
+        locked: false,
       },
       {
         id: '7',
@@ -161,14 +175,14 @@ export const useSkillStore = defineStore('skillStore', {
       {
         id: '12',
         name: 'Scrying',
-        image: 'src/assets/12x/strength.png',
+        image: 'src/assets/12x/scrying.png',
         color: '#CEBEAD',
         isCombat: false,
         xp: 0,
         xpPrev: 0,
         xpNext: 800,
         level: 1,
-        locked: true,
+        locked: false,
       },
       {
         id: '13',
@@ -322,6 +336,37 @@ export const useSkillStore = defineStore('skillStore', {
     // }
   },
   actions: {
+    cancelCurrentActivity(temp) {
+      //TODO, only cancel current activity instead of all of them
+      if (this.currentCat == 'Currently Doing: ') {
+        return
+      }
+
+      if (temp != 'combat') {
+        this.combatStore.cancelAction()
+      }
+      if (temp != 'explore') {
+        this.explorationStore.cancelAction()
+      }
+      if (temp != 'scry') {
+        this.scryingStore.cancelAction()
+      }
+      if (temp != 'forage') {
+        this.foragingStore.cancelAction()
+      }
+      if (temp != 'hunt') {
+        this.huntingStore.cancelAction()
+      }
+      if (temp != 'mine') {
+        this.miningStore.cancelAction()
+      }
+      if (temp != 'smith') {
+        this.smithingStore.cancelAction()
+      }
+      if (temp != 'cook') {
+        this.cookingStore.cancelAction()
+      }
+    },
     setCurrentActivity(newActivity) {
       this.currentActivity = newActivity
     },
@@ -330,6 +375,11 @@ export const useSkillStore = defineStore('skillStore', {
     },
 
     addXP(index, xpAmount) {
+      
+      if (isNaN(xpAmount) == true) {
+        return console.log('xp just tried to be a NaN, silly')
+      }
+
       let xp = this.skills[index].xp
       let level = this.skills[index].level
 

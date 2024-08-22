@@ -121,7 +121,7 @@ export default {
             <!-- Tool -->
             <div class="flex-grow-1 px-2">
               <span>
-                <img src="src/assets/icons/testIcon16.png" alt="" width="32" height="32">
+                <img src="src/assets/icons/defaultcook16.png" alt="" width="32" height="32">
                 <span> Fire Pit</span>
               </span>
             </div>
@@ -157,14 +157,14 @@ export default {
           <div class="btn sidenav-item" style="font-size: 1.2rem; font-weight: 500; width: 150px"
             @click="shownCat = 'meat'">
             <div class="d-flex justify-content-start">
-              <img src="src/assets/icons/testIcon16.png">Meat
+              <img src="src/assets/icons/cookedsteak.png">Meat
             </div>
           </div>
 
           <div class="btn sidenav-item" style="font-size: 1.2rem; font-weight: 500; width: 150px"
             @click="shownCat = 'meal'">
             <div class="d-flex justify-content-start">
-              <img src="src/assets/icons/testIcon16.png">Meals
+              <img src="src/assets/icons/berrypie.png">Meals
             </div>
           </div>
 

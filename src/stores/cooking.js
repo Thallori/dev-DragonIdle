@@ -209,6 +209,8 @@ export const useCookingStore = defineStore('cookingStore', {
       this.activeProgress = 0
       this.activePercent = 0
       this.activeObject = newActiveActivity
+
+      this.skillStore.cancelCurrentActivity('cook')
       this.skillStore.setCurrentActivity(this.activeObject)
       this.skillStore.setCurrentCat('Cooking: ')
       this.tryRepeatActionCook()
@@ -221,8 +223,6 @@ export const useCookingStore = defineStore('cookingStore', {
       this.activeObject = {}
       this.skillStore.setCurrentActivity({ name: 'Nothing' })
       this.skillStore.setCurrentCat('Currently Doing: ')
-
-      console.log('canceling action')
     },
 
     updateCookProgress() {

@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      showAllLocations: true,
+      shownMenu: 0,
       shownLocation: -1,
       showAllStyles: false,
       showAllStances: false,
@@ -32,12 +32,21 @@ export default {
       
       dropsObject: {},
       showDropsModal: false,
-      showGuide: false,
+      showGuideModal: false,
+      guidePage: 0,
     }
   },
   methods: {
     scrollToTop() {
       this.$refs.topEl?.scrollIntoView({ behavior: 'smooth' })
+    },
+
+    toggleMenus(temp) {
+      if (this.shownMenu == temp) {
+        this.shownMenu = 0
+        return
+      }
+      this.shownMenu = temp
     },
     
     toggleStyles() {
@@ -83,7 +92,7 @@ export default {
       <div class="modal-backing" @click="showDropsModal = false"></div>
 
       <!-- Drops Content -->
-      <div class="modal-content py-4 px-5" style="width: 20rem;">
+      <div class="modal-content py-4 px-5" style="width: 23rem;">
 
         <div class="text-center pb-2">
           <div class="pb-1">
@@ -140,99 +149,238 @@ export default {
 
     </div>
 
-    <!-- Activity Selector -->
-    <div class="d-flex gap-1 pb-1" style="max-width: 66rem;" v-if="showAllLocations">
+    <!-- Guide Modal -->
+    <div class="modal show-modal" v-if="showGuideModal == true">
+      <div class="modal-backing" @click="showGuideModal = false"></div>
 
-      <!-- Area Selector -->
+      <!-- Guide Content -->
+      <div class="modal-content py-4 px-2" style="width: 23rem;">
+
+        <div class="text-center pb-2">
+          <div class="pb-1">
+            Combat Guide
+          </div>
+
+          <!-- Page 1 -->
+          <div class="little-levels" v-if="guidePage == 0">
+            Life and death are in a dance, eating at each other in an endless stalemate.
+            <br><br>
+
+            <span class="text-warning">Vitality</span>
+            <br>
+            The essense of life. It grows with every blow taken and won't heal without help. <span
+              class="info-text">Food</span> is a primary assitant, <span class="info-text">equipped meals</span> will be automatically eaten when health reaches the <span class="info-text">meal's base heal stat</span>. If a
+            dragon recieves more damage than this, time will break and the dragon will be <span class="info-text">maimed</span>.
+            <br><br>
+
+            <span class="text-warning">Max Hit</span>
+            <br>
+            The worst a creature can do. Damage comes from an <span class="info-text">affinity (strength, markship, or spirit)</span> multiplied by equipment bonuses.
+            <br><br>
+
+            <span class="text-warning">Chance to Hit</span>
+            <br>
+            Not every attempt to harm lands. Each round, a d100 is rolled to determine what happens.
+            <div class="px-4">
+              <div class="d-flex justify-content-between">
+                <span>
+                  <span class="badge">*</span>
+                  Miss = 0-24
+                </span>
+                <span>Zero 💥</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span>
+                  <span class="badge bg-secondary">*</span>
+                  Graze = 25-49
+                </span>
+                <span>Deals 1% to 25% 💥</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span>
+                  <span class="badge" style="background-color: #dc3644;">*</span>
+                  Hit = 50-99
+                </span>
+                <span>Deals 25% to 100% 💥</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span>
+                  <span class="badge" style="background-color: #dca936;">*</span>
+                  Crit = 100+
+                </span>
+                <span>Deals 125% 💥</span>
+              </div>
+            </div>
+            The final roll is directly buffed by <span class="info-text">accuracy (precision)</span> and countered by <span class="info-text">dodge (block, reflex, acuity)</span>. As such, advice: anything with at least a <span class="info-text">75% chance to hit</span> can crit.
+            <br><br>
+
+            <span class="text-warning">Damage Mitigation</span>
+            <br>
+            When all else fails, reduce harm. Incoming damage is first multiplied by <span class="info-text">resistance</span>, then subtracted by <span class="info-text">armor (physical)</span> or <span class="info-text">barrier (energy)</span>. Conversely, if a creature is protected by resistance, it is directly countered by <span class="info-text">penetration</span>.
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Activity Selector -->
+    <div class="px-5 pb-1 w-100" style="max-width: 64rem;">
+
+      <!-- Top Help and Menu -->
+      <div class="d-flex flex-wrap justify-content-center gap-1">
+
+        <!-- Skill Icon and Help Button -->
+        <div class="card card-activity align-items-center py-2" style="width: 67px; height: 67px;">
+          <img src="src/assets/12x/questionmark.png" alt="" width="48" height="48">
+          <div class="stretched-link" @click="showGuideModal = true"></div>
+        </div>
+
+        <!-- Menu Selector -->
+        <div class="card flex-grow-1 align-items-center py-2 px-0">
+          <div class="d-flex flex-wrap gap-1 pt-1 px-2">
+
+            <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 150px"
+              @click="toggleMenus(1)">
+              <div class="d-flex justify-content-start">
+                <img src="src/assets/icons/testIcon16.png">Areas
+              </div>
+            </div>
+
+            <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 150px"
+              @click="toggleMenus(2)">
+              <div class="d-flex justify-content-start">
+                <img src="src/assets/icons/testIcon16.png">Sequences
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Area Selector -->
+    <div class="px-5 pb-1 w-100" style="max-width: 64rem;" v-if="shownMenu == 1">
+
+      <div class="d-flex flex-wrap gap-1 pb-1">
+        <!-- Area Selector -->
+        <div class="card pb-1" style="max-width: 630px;">
+          <div class="card-header text-center little-levels py-0">
+            Areas
+          </div>
+
+          <div class="d-flex flex-wrap gap-1 pt-1 px-2">
+
+            <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 150px"
+              @click="shownLocation = -1">
+              <div class="d-flex justify-content-start">
+                <img src="src/assets/icons/testIcon16.png">Home
+              </div>
+            </div>
+
+            <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 150px"
+              @click="shownLocation = 0">
+              <div class="d-flex justify-content-start">
+                <img src="src/assets/icons/area1.png">Glade
+              </div>
+            </div>
+
+            <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 150px"
+              @click="shownLocation = 1">
+              <div class="d-flex justify-content-start">
+                <img src="src/assets/icons/area2.png">Canton
+              </div>
+            </div>
+
+            <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 150px"
+              @click="shownLocation = 2">
+              <div class="d-flex justify-content-start">
+                <img src="src/assets/icons/area3.png">Vale
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Enemy Selector -->
+        <div class="card pb-1 flex-grow-1" style="min-width: 270px; max-width: 300px;">
+          <div class="card-header text-center little-levels py-0">
+            Encounters
+          </div>
+
+          <div class="pt-1 px-1">
+
+            <!-- Common Enemies -->
+            <div class="d-flex gap-1"
+              v-for="activity in combatStore.enemies.filter(temp => temp.location === this.shownLocation)">
+
+              <!-- disabled -->
+
+              <div class="btn sidenav-item px-2 py-1"
+                :class="(explorationStore.activities[activity.location].isSealed) ? '' : ''"
+                style="font-size: 1.2rem; font-weight: 500; width: 100%;" @click="combatStore.setActiveAction(activity)"
+                v-if="activity.location != -1">
+
+                <div class="d-flex justify-content-start">
+                  <img src="src/assets/icons/testIcon16.png">{{ activity.name }}
+                </div>
+              </div>
+
+              <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 100%;"
+                @click="combatStore.setActiveAction(activity)" v-if="activity.location == -1">
+
+                <div class="d-flex justify-content-start">
+                  <img src="src/assets/icons/testIcon16.png">{{ activity.name }}
+                </div>
+              </div>
+
+              <div class="btn align-content-center px-1 py-1" @click="dropsObject = activity; showDropsModal = true">
+                🎁
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Dungeon Selector -->
+    <div class="px-5 pb-2 w-100" style="max-width: 64rem;" v-if="shownMenu == 2">
+
       <div class="card pb-1">
         <div class="card-header text-center little-levels py-0">
-          Areas
+          Sequences
         </div>
 
-        <div class="d-flex flex-wrap gap-1 pt-1 px-2">
-
-          <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 150px"
-            @click="shownLocation = -1">
-            <div class="d-flex justify-content-start">
-              <img src="src/assets/icons/testIcon16.png">Home
-            </div>
-          </div>
-
-          <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 150px"
-            @click="shownLocation = 0">
-            <div class="d-flex justify-content-start">
-              <img src="src/assets/icons/testIcon16.png">Glade
-            </div>
-          </div>
-
-          <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 150px"
-            @click="shownLocation = 1">
-            <div class="d-flex justify-content-start">
-              <img src="src/assets/icons/testIcon16.png">Canton
-            </div>
-          </div>
-
-          <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 150px"
-            @click="shownLocation = 2">
-            <div class="d-flex justify-content-start">
-              <img src="src/assets/icons/testIcon16.png">Vale
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Enemy Selector -->
-      <div class="card pb-1" style="min-width: 250px;">
-        <div class="card-header text-center little-levels py-0">
-          Selection
-        </div>
-
-        <div class="pt-1 px-1">
-
-          <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 100%;"
-            @click="showGuide == true" v-if="shownLocation == -1">
-            <div class="d-flex justify-content-start">
-              <img src="src/assets/icons/testIcon16.png">Guide Book
-            </div>
-          </div>
-
-          <!-- Common Enemies -->
-          <div class="d-flex gap-1"
-            v-for="activity in combatStore.enemies.filter(temp => temp.location === this.shownLocation)">
-
-            <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 100%;"
-              @click="combatStore.setActiveAction(activity)">
-
-              <div class="d-flex justify-content-start">
-                <img src="src/assets/icons/testIcon16.png">{{ activity.name }}
-              </div>
-            </div>
-
-            <div class="btn align-content-center px-1 py-1" @click="dropsObject = activity; showDropsModal = true">
-              🎁
-            </div>
-          </div>
+        <div class="d-flex flex-wrap gap-4 pt-1 px-2">
 
           <!-- Dungeons -->
-          <div class="d-flex gap-1"
-            v-for="dungeon in combatStore.dungeons.filter(temp => temp.location === this.shownLocation)">
+          <div style="width: 285px;" v-for="dungeon in combatStore.dungeons">
+            <div class="d-flex gap-1">
+              <div class="btn sidenav-item px-2 py-1"
+                :class="(explorationStore.activities[dungeon.location].isSealed) ? 'disabled' : ''"
+                style="font-size: 1.2rem; font-weight: 500; width: 100%;"
+                @click="combatStore.setActiveDungeon(dungeon)">
 
-            <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 100%;"
-              @click="combatStore.setActiveDungeon(dungeon)">
-
-              <div class="d-flex justify-content-start">
-                <img src="src/assets/icons/testIcon16.png">{{ dungeon.name }}
+                <div class="d-flex justify-content-start">
+                  <img :src="dungeon.image">{{ dungeon.name }}
+                </div>
               </div>
-            </div>
 
-            <div class="btn align-content-center px-1 py-1" @click="dropsObject = dungeon; showDropsModal = true">
-              🎁
+            </div>
+            <div class="little-levels px-2">
+              <span class="btn px-1 py-1" @click="dropsObject = dungeon; showDropsModal = true">
+                🎁
+              </span>
+              <span>
+                Encounters: {{ dungeon.rounds.reduce((n, { amount }) => n + amount, 0) }}
+              </span>
             </div>
           </div>
 
         </div>
       </div>
+
     </div>
 
     <!-- Main Battle -->
@@ -458,15 +606,34 @@ export default {
 
             <!-- Attack Time and Health -->
             <div style="min-height: 61px;">
-              <!-- Attack Time -->
-              <div class="progress my-1" role="attack time bar" style="height: 9px;">
-                <div class="progress-bar attack-progress" :style="`width: ${this.combatStore.attackPercent}%;`">
-                </div>
-              </div>
+              <div class="d-flex">
 
-              <!-- Health -->
-              <div class="progress my-1" role="health bar" style="height: 14px;">
-                <div class="progress-bar health-progress" :style="`width: ${this.combatStore.currentHealthPercent}%;`">
+                <div class="w-100">
+                  <!-- Attack Time -->
+                  <div class="progress my-1" role="attack time bar" style="height: 9px;">
+                    <div class="progress-bar attack-progress" :style="`width: ${this.combatStore.attackPercent}%;`">
+                    </div>
+                  </div>
+
+                  <!-- Health -->
+                  <div class="progress my-1" role="health bar" style="height: 14px;">
+                    <div class="progress-bar health-progress"
+                      :style="`width: ${this.combatStore.currentHealthPercent}%;`">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Attacking With -->
+                <div class="d-flex align-items-center justify-content-center ps-2" style="min-width: 2rem">
+                  <span v-if="combatStore.bestStyle == 'melee'">
+                    🗡️
+                  </span>
+                  <span v-if="combatStore.bestStyle == 'ranged'">
+                    🏹
+                  </span>
+                  <span v-if="combatStore.bestStyle == 'magic'">
+                    🔥
+                  </span>
                 </div>
               </div>
 
@@ -496,11 +663,15 @@ export default {
 
                 </div>
                 <div>
-                  <div class="badge py-1 px-2 mx-2" :style="{ 'background-color': this.combatStore.dragonHitColor }"
+                  <div class="badge py-1 px-2" :style="{ 'background-color': this.combatStore.dragonHitColor }"
                     v-if="combatStore.dragonHit != -1">
                     {{ combatStore.dragonHit }}
                   </div>
-                  <span>♥ {{ combatStore.currentHealth }}</span>
+
+                  <span v-if="combatStore.currentStatus.poison[0] > 0">☣️</span>
+                  <span v-if="combatStore.currentStatus.shock[0] > 0">⚡</span>
+
+                  <span> ♥ {{ combatStore.currentHealth }}</span>
                   <span class="little-levels">/{{ skillStore.skills[7].level * 5 }}</span>
                 </div>
               </div>
@@ -601,15 +772,33 @@ export default {
 
             <!-- Opponent Attack Time and Health -->
             <div style="min-height: 61px;">
-              <!-- Opponent Attack Time -->
-              <div class="progress my-1" role="opponent attack time bar" style="height: 9px;">
-                <div class="progress-bar attack-progress" :style="`width: ${this.combatStore.eAttackPercent}%;`">
-                </div>
-              </div>
+              <div class="d-flex">
 
-              <!-- Opponent Health -->
-              <div class="progress my-1" role="opponent health bar" style="height: 14px;">
-                <div class="progress-bar health-progress" :style="`width: ${this.combatStore.eHealthPercent}%;`">
+                <!-- Attacking With -->
+                <div class="d-flex align-items-center justify-content-center pe-2" style="min-width: 2rem">
+                  <span v-if="combatStore.eBestStyle == 'melee'">
+                    🗡️
+                  </span>
+                  <span v-if="combatStore.eBestStyle == 'ranged'">
+                    🏹
+                  </span>
+                  <span v-if="combatStore.eBestStyle == 'magic'">
+                    🔥
+                  </span>
+                </div>
+
+                <div class="w-100">
+                  <!-- Opponent Attack Time -->
+                  <div class="progress my-1" role="opponent attack time bar" style="height: 9px;">
+                    <div class="progress-bar attack-progress" :style="`width: ${this.combatStore.eAttackPercent}%;`">
+                    </div>
+                  </div>
+
+                  <!-- Opponent Health -->
+                  <div class="progress my-1" role="opponent health bar" style="height: 14px;">
+                    <div class="progress-bar health-progress" :style="`width: ${this.combatStore.eHealthPercent}%;`">
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -627,9 +816,12 @@ export default {
                   </span>
                   <span class="little-levels" v-else>/-</span>
 
-                  <span> ♥</span>
+                  <span> ♥ </span>
+                  
+                  <span v-if="combatStore.eStatus.poison[0] > 0">☣️</span>
+                  <span v-if="combatStore.eStatus.shock[0] > 0">⚡</span>
 
-                  <div class="badge py-1 px-2 mx-2" :style="{ 'background-color': this.combatStore.eHitColor }"
+                  <div class="badge py-1 px-2" :style="{ 'background-color': this.combatStore.eHitColor }"
                     v-if="combatStore.eHit != -1">
                     {{ combatStore.eHit }}
                   </div>
@@ -667,12 +859,37 @@ export default {
 
               <!-- Enemy Picture -->
               <div style="height: 17rem;">
-                <div class="pb-1" v-if="combatStore.activeObject.stats">
+                <div class="pb-1 tooltip-be3" v-if="combatStore.activeObject.stats">
                   {{ combatStore.activeObject.name }}
+
+                  <span class="little-levels" v-if="combatStore.activeDungeon.id != null">
+                    ({{ combatStore.dungeonEnemyCounter + ' of ' + combatStore.activeDungeon.rounds.reduce((n, { amount
+                    }) => n + amount, 0)}})
+                  </span>
+
+                  <div class="tooltip-text py-1 px-3">
+                    <div class="d-flex justify-content-between little-levels ">
+                      <span>
+                        {{ combatStore.activeObject.flavor }}
+                      </span>
+                    </div>
+                  </div>
+
                 </div>
                 <div class="pb-1" v-else>—</div>
-                <div class="py-1">
-                  <img src="src/assets/icons/testicon16.png" alt="" style="height: 224px; width: 224px;">
+
+                <div class="py-1" v-if="combatStore.activeObject.image">
+
+                  <div class="position-absolute" v-if="combatStore.isFinding == true">
+                    <div class="spinner-border text-secondary"
+                      style="width: 7rem; height: 7rem; border-width: 8px; margin: 50%;"></div>
+                  </div>
+
+                  <img :src="combatStore.activeObject.image" alt="" style="height: 224px; width: 224px; opacity: 0.05;"
+                    v-if="combatStore.isFinding == true">
+
+                  <img :src="combatStore.activeObject.image" alt="" style="height: 224px; width: 224px;" v-else>
+
                 </div>
               </div>
 
@@ -685,6 +902,11 @@ export default {
 
                       <span v-if="combatStore.activeObject.stats.meleeDamage">
                         Melee
+                      </span>
+
+                      <span
+                        v-if="combatStore.activeObject.styles[0] == 'melee' && combatStore.activeObject.styles[1] != null">
+                        /
                       </span>
 
                       <span v-if="combatStore.activeObject.stats.rangedDamage">
@@ -704,39 +926,61 @@ export default {
 
                       <!-- Melee Max Hit, Calculated -->
                       <span
-                        v-if="combatStore.activeObject.stats.meleeDamage && itemStore.equippedStats.resist + itemStore.equippedStats.physicalArmor != 0">
+                        v-if="combatStore.activeObject.stats.meleeDamage && combatStore.activeObject.stats.meleeAccuracy - itemStore.equippedStats.meleeDodge >= 0">
 
-                        ({{ Math.max(1, Math.ceil((1 - itemStore.equippedStats.resist) *
+                        *{{ Math.max(1, Math.ceil((((1 - itemStore.equippedStats.resist) *
                         combatStore.activeObject.stats.meleeDamage)
-                        - itemStore.equippedStats.physicalArmor) }})
+                        - itemStore.equippedStats.physicalArmor) * 1.25)) }}
 
                       </span>
-                      <span v-else>
-                        {{ combatStore.activeObject.stats.meleeDamage }}
+                      <!-- No Crit -->
+                      <span v-else-if="combatStore.activeObject.stats.meleeDamage">
+
+                        {{ Math.max(1, Math.ceil((1 - itemStore.equippedStats.resist) *
+                        combatStore.activeObject.stats.meleeDamage)
+                        - itemStore.equippedStats.physicalArmor) }}
+
                       </span>
 
                       <span
-                        v-if="combatStore.activeObject.stats.rangedDamage && itemStore.equippedStats.resist + itemStore.equippedStats.physicalArmor != 0">
+                        v-if="combatStore.activeObject.styles[0] == 'melee' && combatStore.activeObject.styles[1] != null">
+                        /
+                      </span>
 
-                        ({{ Math.max(1, Math.ceil((1 - itemStore.equippedStats.resist) *
+                      <!-- Ranged Max Hit, Calculated -->
+                      <span
+                        v-if="combatStore.activeObject.stats.rangedDamage && combatStore.activeObject.stats.rangedAccuracy - itemStore.equippedStats.rangedDodge >= 0">
+
+                        *{{ Math.max(1, Math.ceil((((1 - itemStore.equippedStats.resist) *
                         combatStore.activeObject.stats.rangedDamage)
-                        - itemStore.equippedStats.physicalArmor) }})
+                        - itemStore.equippedStats.physicalArmor) * 1.25)) }}
 
                       </span>
-                      <span v-else>
-                        {{ combatStore.activeObject.stats.rangedDamage }}
+                      <!-- No Crit -->
+                      <span v-else-if="combatStore.activeObject.stats.rangedDamage">
+
+                        {{ Math.max(1, Math.ceil((1 - itemStore.equippedStats.resist) *
+                        combatStore.activeObject.stats.rangedDamage)
+                        - itemStore.equippedStats.physicalArmor) }}
+
                       </span>
 
+                      <!-- Magic Max Hit, Calculated -->
                       <span
-                        v-if="combatStore.activeObject.stats.magicDamage && itemStore.equippedStats.resist + itemStore.equippedStats.energyArmor != 0">
+                        v-if="combatStore.activeObject.stats.magicDamage && combatStore.activeObject.stats.magicAccuracy - itemStore.equippedStats.magicDodge >= 0">
 
-                        ({{ Math.max(1, Math.ceil((1 - itemStore.equippedStats.resist) *
+                        *{{ Math.max(1, Math.ceil((((1 - itemStore.equippedStats.resist) *
                         combatStore.activeObject.stats.magicDamage)
-                        - itemStore.equippedStats.energyArmor) }})
+                        - itemStore.equippedStats.energyArmor) * 1.25)) }}
 
                       </span>
-                      <span v-else>
-                        {{ combatStore.activeObject.stats.magicDamage }}
+                      <!-- No Crit -->
+                      <span v-else-if="combatStore.activeObject.stats.magicDamage">
+
+                        {{ Math.max(1, Math.ceil((1 - itemStore.equippedStats.resist) *
+                        combatStore.activeObject.stats.magicDamage)
+                        - itemStore.equippedStats.energyArmor) }}
+
                       </span>
                     </span>
                     <span v-else>—</span>
@@ -750,11 +994,11 @@ export default {
                         {{ combatStore.activeObject.stats.meleeAccuracy }}
                       </span>
 
-                      <span v-if="combatStore.activeObject.stats.rangedAccuracy">
+                      <span v-else-if="combatStore.activeObject.stats.rangedAccuracy">
                         {{ combatStore.activeObject.stats.rangedAccuracy }}
                       </span>
 
-                      <span v-if="combatStore.activeObject.stats.magicAccuracy">
+                      <span v-else-if="combatStore.activeObject.stats.magicAccuracy">
                         {{ combatStore.activeObject.stats.magicAccuracy }}
                       </span>
                     </span>
@@ -780,23 +1024,41 @@ export default {
 
                 <div class="py-2">
                   <div class="d-flex justify-content-between">
-                    <span>Special: </span>
-                    <span v-if="combatStore.activeObject.spec">
-                      Camo
+                    <span>Slayer: </span>
+                    <span v-if="combatStore.activeObject.stats">
+                      <span v-if="combatStore.activeObject.stats.slayer[0] == 0">
+                        Gooey
+                      </span>
+                      <span v-if="combatStore.activeObject.stats.slayer[0] == 1">
+                        Acidic
+                      </span>
+                      <span v-if="combatStore.activeObject.stats.slayer[0] == 2">
+                        Electric
+                      </span>
+
+                      <span v-if="combatStore.activeObject.stats.slayer[0] == -1">—</span>
                     </span>
                     <span v-else>—</span>
                   </div>
                   <div class="d-flex justify-content-between">
                     <span>Intensity: </span>
-                    <span v-if="combatStore.activeObject.specIntense">
-                      15%
+                    <span v-if="combatStore.activeObject.stats">
+                      <span v-if="combatStore.activeObject.stats.slayer[1] > 0">
+                        {{ combatStore.activeObject.stats.slayer[1] * 100 }}%
+                      </span>
+
+                      <span v-else>—</span>
                     </span>
                     <span v-else>—</span>
                   </div>
                   <div class="d-flex justify-content-between">
                     <span>Resistance: </span>
                     <span v-if="combatStore.activeObject.stats">
-                      {{ combatStore.activeObject.stats.resist * 100 }}%
+                      <span v-if="combatStore.activeObject.stats.resist != 0">
+                        {{ combatStore.activeObject.stats.resist * 100 }}%
+                      </span>
+
+                      <span v-else>—</span>
                     </span>
                     <span v-else>—</span>
                   </div>

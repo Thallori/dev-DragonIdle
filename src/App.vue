@@ -543,7 +543,7 @@ export default {
   z-index: 1;
   width: 12rem;
   top: 100%;
-  margin-left: -5rem;
+  margin-left: -6rem;
 }
 .tooltip-br:hover .tooltip-text {
   visibility: visible;
@@ -672,7 +672,7 @@ export default {
   color: lightgray;
   border: 1px solid gray;
   max-width: 95%;
-  margin: 15% auto;
+  margin: 5% auto;
   z-index: 1
 }
 

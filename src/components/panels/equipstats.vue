@@ -1,5 +1,6 @@
 <script>
 import { useItemStore } from '@/stores/inventory';
+import { useCombatStore } from '@/stores/combat';
 import { useSmithingStore } from '@/stores/smithing';
 import { useCookingStore } from '@/stores/cooking';
 
@@ -12,14 +13,10 @@ export default {
   },
   setup() {
     const itemStore = useItemStore()
+    const combatStore = useCombatStore()
     const smithingStore = useSmithingStore()
     const cookingStore = useCookingStore()
-    return { itemStore, smithingStore, cookingStore }
-  },
-  data() {
-    return {
-      equippedback: { width: '400px' }
-    }
+    return { itemStore, combatStore, smithingStore, cookingStore }
   },
   methods: {
     hasCount(temp) {
@@ -126,8 +123,8 @@ export default {
       <div class="card tooltip-br equipment-card" style="width: 58px; height: 58px;"
         @dblclick="itemStore.equipItem(itemStore.equippedCombat.ringSlot)">
 
-        <div class="tooltip-text" v-if="itemStore.equippedCombat.trinketSlot.id">
-          <tooltips :itemObject="itemStore.equippedCombat.trinketSlot" />
+        <div class="tooltip-text" v-if="itemStore.equippedCombat.ringSlot.id">
+          <tooltips :itemObject="itemStore.equippedCombat.ringSlot" />
         </div>
 
         <img class="mx-auto my-auto" :src="itemStore.equippedCombat.ringSlot.image" alt="" width="48" height="48"
@@ -276,21 +273,21 @@ export default {
         </div>
         <div class="d-flex justify-content-between">
           <span>Accuracy: </span>
-          <span>{{ itemStore.equippedStats.meleeAccuracy }} /
-            {{ itemStore.equippedStats.rangedAccuracy }} /
-            {{ itemStore.equippedStats.magicAccuracy }}</span>
+          <span>{{ itemStore.equippedStats.meleeAccuracy.toFixed() }} /
+            {{ itemStore.equippedStats.rangedAccuracy.toFixed() }} /
+            {{ itemStore.equippedStats.magicAccuracy.toFixed() }}</span>
         </div>
         <div class="d-flex justify-content-between">
           <span>Penetration: </span>
-          <span>{{ 100 * itemStore.equippedStats.meleePen }}% /
-            {{ 100 * itemStore.equippedStats.rangedPen }}% /
-            {{ 100 * itemStore.equippedStats.magicPen }}%</span>
+          <span>{{ (100 * itemStore.equippedStats.meleePen).toFixed() }}% /
+            {{ (100 * itemStore.equippedStats.rangedPen).toFixed() }}% /
+            {{ (100 * itemStore.equippedStats.magicPen).toFixed() }}%</span>
         </div>
         <div class="d-flex justify-content-between">
           <span>Speed: </span>
-          <span>{{ itemStore.equippedStats.meleeSpeed.toFixed(2) }}s /
-            {{ itemStore.equippedStats.rangedSpeed.toFixed(2) }}s /
-            {{ itemStore.equippedStats.magicSpeed.toFixed(2) }}s
+          <span>{{ (itemStore.equippedStats.meleeSpeed * combatStore.currentSpeedMod).toFixed(2) }}s /
+            {{ (itemStore.equippedStats.rangedSpeed * combatStore.currentSpeedMod).toFixed(2) }}s /
+            {{ (itemStore.equippedStats.magicSpeed * combatStore.currentSpeedMod).toFixed(2) }}s
           </span>
         </div>
       </div>
@@ -298,30 +295,30 @@ export default {
       <div class="py-2">
         <div class="d-flex justify-content-between">
           <span>Armor: </span>
-          <span>{{ itemStore.equippedStats.physicalArmor }}</span>
+          <span>{{ itemStore.equippedStats.physicalArmor.toFixed() }}</span>
         </div>
         <div class="d-flex justify-content-between">
           <span>Barrier: </span>
-          <span>{{ itemStore.equippedStats.energyArmor }}</span>
+          <span>{{ itemStore.equippedStats.energyArmor.toFixed() }}</span>
         </div>
         <div class="d-flex justify-content-between">
           <span>Resistance: </span>
-          <span>{{ 100 * itemStore.equippedStats.resist }}%</span>
+          <span>{{ (100 * itemStore.equippedStats.resist).toFixed() }}%</span>
         </div>
       </div>
 
       <div class="py-2">
         <div class="d-flex justify-content-between">
           <span>Melee Dodge: </span>
-          <span>{{ Math.ceil(itemStore.equippedStats.meleeDodge) }}</span>
+          <span>{{ Math.ceil(itemStore.equippedStats.meleeDodge).toFixed() }}</span>
         </div>
         <div class="d-flex justify-content-between">
           <span>Ranged Dodge: </span>
-          <span>{{ Math.ceil(itemStore.equippedStats.rangedDodge) }}</span>
+          <span>{{ Math.ceil(itemStore.equippedStats.rangedDodge).toFixed() }}</span>
         </div>
         <div class="d-flex justify-content-between">
           <span>Magic Dodge: </span>
-          <span>{{ Math.ceil(itemStore.equippedStats.magicDodge) }}</span>
+          <span>{{ Math.ceil(itemStore.equippedStats.magicDodge).toFixed() }}</span>
         </div>
       </div>
     </div>

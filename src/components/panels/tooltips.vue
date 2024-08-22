@@ -40,6 +40,15 @@ export default {
         <span>{{ (this.itemObject.toolStats.explorationMulti * 100) }}%</span>
       </div>
 
+      <div class="d-flex justify-content-between" v-if="this.itemObject.toolStats.syphoningTime">
+        <span>Syphoning: </span>
+        <span>{{ this.itemObject.toolStats.syphoningTime.toFixed(2) }}s</span>
+      </div>
+      <div class="d-flex justify-content-between" v-if="this.itemObject.toolStats.baseStabilityBonus">
+        <span>Stability: </span>
+        <span>{{ this.itemObject.toolStats.baseStabilityBonus * 100 }}%</span>
+      </div>
+
       <div class="d-flex justify-content-between" v-if="this.itemObject.toolStats.locatingMultiplierAdd">
         <span>Locating: </span>
         <span>{{ (this.itemObject.toolStats.locatingMultiplierAdd * 100) }}%</span>
@@ -72,75 +81,147 @@ export default {
       </div>
     </div>
 
-    <!-- Combat Stats if not a Tool -->
-    <div v-if="this.itemObject.isCombat && this.itemObject.isTool != true">
+    <!-- Combat Stats-->
+    <div v-if="this.itemObject.isCombat">
 
       <div class="text-warning"
         v-if="this.itemObject.slot == 'meleeSlot' || this.itemObject.slot == 'rangedSlot' || this.itemObject.slot == 'magicSlot'">
         Weapon
       </div>
-      <div class="text-warning"
-        v-else-if="this.itemObject.slot == 'oilSlot' || this.itemObject.slot == 'ammoSlot' || this.itemObject.slot == 'chargeSlot'">
-        Catalyst
+      <div class="text-warning" v-else-if="this.itemObject.slot == 'oilSlot'">
+        Oil
+      </div>
+      <div class="text-warning" v-else-if="this.itemObject.slot == 'ammoSlot'">
+        Ammo
+      </div>
+      <div class="text-warning" v-else-if="this.itemObject.slot == 'chargeSlot'">
+        Charge
+      </div>
+      <div class="text-warning" v-else-if="this.itemObject.slot == 'trinketSlot'">
+        Trinket
+      </div>
+      <div class="text-warning" v-else-if="this.itemObject.slot == 'ringSlot'">
+        Ring
+      </div>
+      <div class="text-warning" v-else-if="this.itemObject.slot == 'ammySlot'">
+        Amulet
       </div>
       <div class="text-warning" v-else>
         Armor
       </div>
 
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.meleeAccuracy != null">
-        <span>🎯 Melee: </span>
+        <span>🗡️ Accuracy: </span>
         <span>
           {{ this.itemObject.stats.meleeAccuracy + bonusSmithingMastery(this.itemObject) }}
         </span>
       </div>
-
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.rangedAccuracy != null">
-        <span>🎯 Ranged: </span>
+        <span>🏹 Accuracy: </span>
         <span>
           {{ this.itemObject.stats.rangedAccuracy }}
         </span>
       </div>
-
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.magicAccuracy != null">
-        <span>🎯 Magic: </span>
+        <span>🔥 Accuracy: </span>
         <span>
           {{ this.itemObject.stats.magicAccuracy }}
         </span>
       </div>
+      <div class="d-flex justify-content-between" v-if="this.itemObject.stats.accuracy != null">
+        <span>🎯All Accuracy: </span>
+        <span>
+          {{ this.itemObject.stats.accuracy }}
+        </span>
+      </div>
 
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.meleeDamage">
-        <span>💥 Melee: </span>
+        <span>🗡️ Damage: </span>
         <span>{{ (this.itemObject.stats.meleeDamage * 100).toFixed() }}%</span>
       </div>
-
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.rangedDamage">
-        <span>💥 Ranged: </span>
+        <span>🏹 Damage: </span>
         <span>{{ this.itemObject.stats.rangedDamage * 100 }}%</span>
       </div>
-
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.magicDamage">
-        <span>💥 Magic: </span>
+        <span>🔥 Damage: </span>
         <span>{{ this.itemObject.stats.magicDamage * 100 }}%</span>
       </div>
+      <div class="d-flex justify-content-between" v-if="this.itemObject.stats.damage">
+        <span>All Damage: </span>
+        <span>{{ this.itemObject.stats.damage * 100 }}%</span>
+      </div>
 
+      <div class="d-flex justify-content-between" v-if="this.itemObject.stats.meleePen">
+        <span>🗡️ Penetration: </span>
+        <span>{{ (this.itemObject.stats.meleePen * 100) }}%</span>
+      </div>
+      <div class="d-flex justify-content-between" v-if="this.itemObject.stats.rangedPen">
+        <span>🏹 Penetration: </span>
+        <span>{{ (this.itemObject.stats.rangedPen * 100) }}%</span>
+      </div>
+      <div class="d-flex justify-content-between" v-if="this.itemObject.stats.magicPen">
+        <span>🔥 Penetration: </span>
+        <span>{{ (this.itemObject.stats.magicPen * 100) }}%</span>
+      </div>
+      <div class="d-flex justify-content-between" v-if="this.itemObject.stats.pen">
+        <span>All Penetration: </span>
+        <span>{{ (this.itemObject.stats.pen * 100) }}%</span>
+      </div>
+
+      <div class="d-flex justify-content-between" v-if="this.itemObject.stats.meleeSpeed">
+        <span>🗡️ Speed: </span>
+        <span>{{ this.itemObject.stats.meleeSpeed.toFixed(2) }}s</span>
+      </div>
+      <div class="d-flex justify-content-between" v-if="this.itemObject.stats.rangedSpeed">
+        <span>🏹 Speed: </span>
+        <span>{{ this.itemObject.stats.rangedSpeed.toFixed(2) }}s</span>
+      </div>
+      <div class="d-flex justify-content-between" v-if="this.itemObject.stats.magicSpeed">
+        <span>🔥 Speed: </span>
+        <span>{{ this.itemObject.stats.magicSpeed.toFixed(2) }}s</span>
+      </div>
+      <div class="d-flex justify-content-between" v-if="this.itemObject.stats.speed">
+        <span>All Speed: </span>
+        <span>{{ this.itemObject.stats.speed.toFixed(2) }}s</span>
+      </div>
 
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.meleeDodge != null">
-        <span>🛡️ Melee: </span>
+        <span>🛡️🗡️ Defense: </span>
         <span>
           {{ this.itemObject.stats.meleeDodge + (bonusSmithingMastery(this.itemObject) / 4) }}
         </span>
       </div>
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.rangedDodge != null">
-        <span>🛡️ Ranged: </span>
+        <span>🛡️🏹 Defense: </span>
         <span>
           {{ this.itemObject.stats.rangedDodge + (bonusSmithingMastery(this.itemObject) / 4) }}
         </span>
       </div>
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.magicDodge != null">
-        <span>🛡️ Magic: </span>
+        <span>🛡️🔥 Defense: </span>
         <span>
           {{ this.itemObject.stats.magicDodge + (bonusSmithingMastery(this.itemObject) / 4) }}
         </span>
+      </div>
+      <div class="d-flex justify-content-between" v-if="this.itemObject.stats.dodge != null">
+        <span>🛡️All Defense: </span>
+        <span>
+          {{ this.itemObject.stats.dodge }}
+        </span>
+      </div>
+
+      <div class="d-flex justify-content-between" v-if="this.itemObject.stats.physicalArmor">
+        <span>Armor: </span>
+        <span>{{ this.itemObject.stats.physicalArmor }}</span>
+      </div>
+      <div class="d-flex justify-content-between" v-if="this.itemObject.stats.energyArmor">
+        <span>Barrier: </span>
+        <span>{{ this.itemObject.stats.energyArmor }}</span>
+      </div>
+      <div class="d-flex justify-content-between" v-if="this.itemObject.stats.resist">
+        <span>Resistance: </span>
+        <span>{{ (this.itemObject.stats.resist * 100) }}%</span>
       </div>
 
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.precision">
@@ -165,28 +246,6 @@ export default {
         <span>{{ this.itemObject.stats.acuity }}</span>
       </div>
 
-      <div class="d-flex justify-content-between" v-if="this.itemObject.stats.critDefense">
-        <span>Crit Defense: </span>
-        <span>{{ (this.itemObject.stats.critDefense * 100) }}</span>
-      </div>
-      <div class="d-flex justify-content-between" v-if="this.itemObject.stats.physicalArmor">
-        <span>Armor: </span>
-        <span>{{ this.itemObject.stats.physicalArmor }}</span>
-      </div>
-      <div class="d-flex justify-content-between" v-if="this.itemObject.stats.resist">
-        <span>Resistance: </span>
-        <span>{{ (this.itemObject.stats.resist * 100) }}%</span>
-      </div>
-
-      <div class="d-flex justify-content-between" v-if="this.itemObject.stats.pen">
-        <span>Penetration: </span>
-        <span>{{ (this.itemObject.stats.pen * 100) }}%</span>
-      </div>
-
-      <div class="d-flex justify-content-between" v-if="this.itemObject.stats.speed">
-        <span>Speed: </span>
-        <span>{{ this.itemObject.stats.speed.toFixed(2) }}s</span>
-      </div>
     </div>
 
     <!-- Food and Potions -->

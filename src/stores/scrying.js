@@ -5,8 +5,8 @@ import { useItemStore } from '@/stores/inventory';
 
 export const useScryingStore = defineStore('scryingStore', {
   state: () => ({
-    progressInterval: 50, // 20 update per second
-    gatherCounter: 0,
+    progressInterval: 200, // 20 update per second
+    syphoningInterval: 2000, // 1 update per 2.0 seconds
     efficency: 2,
 
     activeObject: {},
@@ -28,11 +28,9 @@ export const useScryingStore = defineStore('scryingStore', {
         resourceAmount: 1,
         image: 'src/assets/icons/testIcon16.png',
         levelRequired: 1,
-        xpGain: 4,
-        searchDifficulty: 4.0,
-        gatherDifficulty: 3.0,
-        baseYield: 2,
-        currentYield: 3,
+        xpGain: 3,
+        fortifyTime: 2,
+        baseStability: 0.50,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
@@ -45,11 +43,9 @@ export const useScryingStore = defineStore('scryingStore', {
         resourceAmount: 1,
         image: 'src/assets/icons/testIcon16.png',
         levelRequired: 2,
-        xpGain: 7,
-        searchDifficulty: 8.0,
-        gatherDifficulty: 4.0,
-        baseYield: 2,
-        currentYield: 3,
+        xpGain: 6,
+        fortifyTime: 4,
+        baseStability: 0.45,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
@@ -62,11 +58,9 @@ export const useScryingStore = defineStore('scryingStore', {
         resourceAmount: 1,
         image: 'src/assets/icons/testIcon16.png',
         levelRequired: 3,
-        xpGain: 6,
-        searchDifficulty: 10.0,
-        gatherDifficulty: 3.0,
-        baseYield: 2,
-        currentYield: 3,
+        xpGain: 11,
+        fortifyTime: 8,
+        baseStability: 0.40,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
@@ -79,11 +73,9 @@ export const useScryingStore = defineStore('scryingStore', {
         resourceAmount: 1,
         image: 'src/assets/icons/testIcon16.png',
         levelRequired: 4,
-        xpGain: 11,
-        searchDifficulty: 5.0,
-        gatherDifficulty: 5.0,
-        baseYield: 2,
-        currentYield: 3,
+        xpGain: 9,
+        fortifyTime: 6,
+        baseStability: 0.45,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
@@ -96,11 +88,9 @@ export const useScryingStore = defineStore('scryingStore', {
         resourceAmount: 1,
         image: 'src/assets/icons/testIcon16.png',
         levelRequired: 5,
-        xpGain: 10,
-        searchDifficulty: 14.0,
-        gatherDifficulty: 3.0,
-        baseYield: 2,
-        currentYield: 3,
+        xpGain: 15,
+        fortifyTime: 10,
+        baseStability: 0.40,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
@@ -113,11 +103,9 @@ export const useScryingStore = defineStore('scryingStore', {
         resourceAmount: 1,
         image: 'src/assets/icons/testIcon16.png',
         levelRequired: 6,
-        xpGain: 14,
-        searchDifficulty: 16.0,
-        gatherDifficulty: 4.0,
-        baseYield: 2,
-        currentYield: 3,
+        xpGain: 20,
+        fortifyTime: 12,
+        baseStability: 0.35,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
@@ -130,11 +118,9 @@ export const useScryingStore = defineStore('scryingStore', {
         resourceAmount: 1,
         image: 'src/assets/icons/testIcon16.png',
         levelRequired: 7,
-        xpGain: 12,
-        searchDifficulty: 18.0,
-        gatherDifficulty: 3.0,
-        baseYield: 2,
-        currentYield: 3,
+        xpGain: 25,
+        fortifyTime: 14,
+        baseStability: 0.35,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
@@ -147,11 +133,9 @@ export const useScryingStore = defineStore('scryingStore', {
         resourceAmount: 1,
         image: 'src/assets/icons/testIcon16.png',
         levelRequired: 8,
-        xpGain: 18,
-        searchDifficulty: 12.0,
-        gatherDifficulty: 5.0,
-        baseYield: 2,
-        currentYield: 3,
+        xpGain: 22,
+        fortifyTime: 10,
+        baseStability: 0.30,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
@@ -170,10 +154,11 @@ export const useScryingStore = defineStore('scryingStore', {
         return
       }
 
-      this.gatherCounter = 0
       this.activeProgress = 0
       this.activePercent = 0
       this.activeObject = newActiveActivity
+
+      this.skillStore.cancelCurrentActivity('scry')
       this.skillStore.setCurrentActivity(this.activeObject)
       this.skillStore.setCurrentCat('Scrying: ')
 
@@ -182,29 +167,29 @@ export const useScryingStore = defineStore('scryingStore', {
 
     cancelAction() {
       clearTimeout(this.currentTimeout)
-      this.gatherCounter = 0
       this.activeProgress = 0
       this.activePercent = 0
       this.activeObject = {}
       this.skillStore.setCurrentActivity({ name: 'Nothing' })
       this.skillStore.setCurrentCat('Currently Doing: ')
-
-      console.log('canceling action') //debug
     },
 
     updateProgress() {
+      if (this.activeProgress >= (1000 * this.activeObject.fortifyTime)) {
 
-      if (this.activeProgress >= (1000 * this.activeObject.searchDifficulty * (1 - this.itemStore.equippedTools.scryingTool.toolStats))) {  //toolstats todo
-
-        this.activeProgress = this.activeObject.gatherDifficulty
-        this.gatherCounter = this.activeObject.currentYield
-
+        this.activePercent = 100
         this.tryRepeatGather()
         return
       }
 
       this.activeProgress += this.progressInterval
-      this.activePercent = this.activeProgress / (10 * this.activeObject.searchDifficulty * (1 - this.itemStore.equippedTools.scryingTool.toolStats)) //toolstats todo
+      this.activePercent = (this.activeProgress / (10 * this.activeObject.fortifyTime))
+      this.progressInterval = (Math.random() * 450) + 150
+
+      //don't wait longer than you have to
+      if (this.progressInterval + this.activeProgress >= 1000 * this.activeObject.fortifyTime) {
+        this.progressInterval = (1000 * this.activeObject.fortifyTime) - this.activeProgress
+      }
       this.tryRepeatAction()
     },
     tryRepeatAction() {
@@ -218,24 +203,19 @@ export const useScryingStore = defineStore('scryingStore', {
       this.addMXP(1 * wasEfficent)
       this.itemStore.changeItemCount(this.activeObject.resourceID, (this.activeObject.resourceAmount * wasEfficent), 'resourceItems')
 
-      this.updateEfficency()
-      this.updateYield()
-      console.log('boop')
+      //if a random number between 0 and 1 is greater than stability, crash
+      if (Math.random() > (this.activeObject.baseStability + this.itemStore.equippedTools.scryingTool.toolStats.baseStabilityBonus + (this.activeObject.mLevel * 0.02))) {
 
-      this.gatherCounter -= 1
-      this.activePercent = 100 * this.gatherCounter / this.activeObject.currentYield
-
-      if (this.gatherCounter <= 0) {
-        this.gatherCounter = 0
         this.activeProgress = 0
+        this.activePercent = 0
         this.tryRepeatAction()
         return
       }
+
       this.tryRepeatGather()
     },
     tryRepeatGather() {
-      //gather difficult - tool bonus in seconds
-      this.currentTimeout = setTimeout(this.updateGatherProgress, ((this.activeObject.gatherDifficulty - this.itemStore.equippedTools.scryingTool.toolStats) * 1000)) //toolstats todo
+      this.currentTimeout = setTimeout(this.updateGatherProgress, this.itemStore.equippedTools.scryingTool.toolStats.syphoningTime * 1000)
     },
 
     updateEfficency() {
@@ -249,9 +229,6 @@ export const useScryingStore = defineStore('scryingStore', {
         return 2
       }
       return 1
-    },
-    updateYield() {
-      this.activeObject.currentYield = this.activeObject.baseYield + this.activeObject.mLevel
     },
 
     addMXP(mxpAmount) {

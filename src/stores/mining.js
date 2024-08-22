@@ -61,7 +61,7 @@ export const useMiningStore = defineStore('miningStore', {
         levelRequired: 3,
         xpGain: 14,
         rockHP: 12,
-        rockArmor: 3,
+        rockArmor: 4,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
@@ -76,7 +76,7 @@ export const useMiningStore = defineStore('miningStore', {
         levelRequired: 4,
         xpGain: 32,
         rockHP: 32,
-        rockArmor: 3,
+        rockArmor: 4,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
@@ -91,7 +91,7 @@ export const useMiningStore = defineStore('miningStore', {
         levelRequired: 5,
         xpGain: 37,
         rockHP: 28,
-        rockArmor: 4,
+        rockArmor: 3,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
@@ -120,8 +120,8 @@ export const useMiningStore = defineStore('miningStore', {
         image: 'src/assets/icons/testIcon16.png',
         levelRequired: 7,
         xpGain: 46,
-        rockHP: 38,
-        rockArmor: 4,
+        rockHP: 35,
+        rockArmor: 5,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
@@ -135,8 +135,8 @@ export const useMiningStore = defineStore('miningStore', {
         image: 'src/assets/icons/testIcon16.png',
         levelRequired: 8,
         xpGain: 84,
-        rockHP: 60,
-        rockArmor: 5,
+        rockHP: 48,
+        rockArmor: 7,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
@@ -158,6 +158,8 @@ export const useMiningStore = defineStore('miningStore', {
       this.activePercent = 100
       this.activeObject = newActiveActivity
       this.activeProgress = this.activeObject.rockHP
+
+      this.skillStore.cancelCurrentActivity('mine')
       this.skillStore.setCurrentActivity(this.activeObject)
       this.skillStore.setCurrentCat('Mining: ')
 
@@ -172,8 +174,6 @@ export const useMiningStore = defineStore('miningStore', {
       this.activeObject = {}
       this.skillStore.setCurrentActivity({ name: 'Nothing' })
       this.skillStore.setCurrentCat('Currently Doing: ')
-
-      console.log('canceling action')
     },
 
     updateProgress() {

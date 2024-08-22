@@ -174,6 +174,8 @@ export const useForagingStore = defineStore('foragingStore', {
       this.activeProgress = 0
       this.activePercent = 0
       this.activeObject = newActiveActivity
+
+      this.skillStore.cancelCurrentActivity('forage')
       this.skillStore.setCurrentActivity(this.activeObject)
       this.skillStore.setCurrentCat('Foraging: ')
 
@@ -189,8 +191,6 @@ export const useForagingStore = defineStore('foragingStore', {
       this.skillStore.setCurrentActivity({ name: 'Nothing' })
       this.skillStore.setCurrentCat('Currently Doing: ')
       this.updateEfficency()
-
-      console.log('canceling action') //debug
     },
 
     updateProgress() {

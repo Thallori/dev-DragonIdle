@@ -20,11 +20,12 @@ export default {
     return {
       skillID: 15,
       itemIndexStart: 17, //itemStore.resourceItems.findIndex(t => t.id === this.miningStore[0].resourceID) //this code will get the start index of itemIDs, but I don't know how to run it after everything is loaded. Also, it hardcodes all activity items which could limit further development.
+      showGuideModal: false,
     }
   },
   methods: {
     isNotValidArea(activityObject, activityIndex) {
-      return false
+      // return false
 
       // if skill isn't up to snuff, is never valid
       if (activityObject.levelRequired > this.skillStore.skills[this.skillID].level) {
@@ -59,6 +60,42 @@ export default {
 <template>
   <div class="card pt-4 align-items-center main-window bg-transparent" style="width: 77rem">
 
+    <!-- Guide Modal -->
+    <div class="modal show-modal" v-if="showGuideModal == true">
+      <div class="modal-backing" @click="showGuideModal = false"></div>
+
+      <!-- Guide Content -->
+      <div class="modal-content py-4 px-2" style="width: 23rem;">
+
+        <div class="text-center pb-2">
+          <div class="pb-1">
+            Mining Guide
+          </div>
+
+          <!-- Page 1 -->
+          <div class="little-levels">
+            Some of these walls gleam with hidden treasures.
+            <br><br>
+            
+            <span class="text-warning">Rocks</span>
+            <br>
+            Stones have <span class="info-text">hitpoints</span> (how much damage needs to be done to break one open) and <span class="info-text">hardness</span> (how much less damage a <span class="info-text">pickaxe</span> of weaker hardness does). Don't worry about hitting too hard, <span class="info-text">excess damage overflows</span> to the next rock.
+            <br><br>
+            If a swing would <span class="info-text">not damage</span> a rock, it will be marked by an ❌ and still have a 50% chance of doing 1 point of damage anyway.
+            <br><br>
+            Each <span class="info-text">mastery level</span> increases the chance of a <span class="info-text">critical swing</span> by 3%, hitting for +3 damage.
+            <br><br>
+            
+            <span class="text-warning">Treasure</span>
+            <br>
+            Mining will generally reward <span class="info-text">ore (used for smithing metals and equipment)</span> or other minerals which will have their own uses. Rarely, a <span class="info-text">gem</span> one set higher than usual can be found. 
+            
+          </div>
+        </div>
+
+      </div>
+    </div>
+
     <!-- Top Info -->
     <div class="px-5 pb-3 w-100" style="max-width: 64rem;">
 
@@ -66,8 +103,9 @@ export default {
       <div class="d-flex justify-content-center gap-1 pb-1">
 
         <!-- Skill Icon and Help Button -->
-        <div class="card align-items-center" style="width: 67px; height: 67px;">
-          <!-- <img src="src/assets/icons/testIcon32.png" alt="" width="64" height="64"> -->
+        <div class="card card-activity align-items-center py-2" style="width: 67px; height: 67px;">
+          <img src="src/assets/12x/questionmark.png" alt="" width="48" height="48">
+          <div class="stretched-link" @click="showGuideModal = true"></div>
         </div>
 
         <!-- Level and XP Card -->
