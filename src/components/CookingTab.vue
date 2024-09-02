@@ -23,11 +23,14 @@ export default {
       itemIndexStart: 0, //itemStore.resourceItems.findIndex(t => t.id === this.cookingStore[0].resourceID) //this code will get the start index of itemIDs, but I don't know how to run it after everything is loaded. Also, it hardcodes all activity items which could limit further development.
       shownActivity: {},
       shownCat: 'meat',
+      showGuideModal: false,
     }
   },
   mounted() {
-    // this.shownActivity = this.smithingStore.activities[0]
     this.shownActivity = this.cookingStore.activeObject
+    if (this.cookingStore.activeObject.cat != undefined) {
+      this.shownCat = this.cookingStore.activeObject.cat
+    }
   },
   methods: {
     isNotValidActivity(activityObject) {
@@ -72,6 +75,49 @@ export default {
 <template>
   <div class="card pt-4 align-items-center main-window bg-transparent" style="width: 77rem">
 
+    <!-- Guide Modal -->
+    <div class="modal show-modal" v-if="showGuideModal == true">
+      <div class="modal-backing" @click="showGuideModal = false"></div>
+
+      <!-- Guide Content -->
+      <div class="modal-content py-4 px-2" style="width: 23rem;">
+
+        <div class="text-center pb-2">
+          <div class="pb-1">
+            Cooking Guide
+          </div>
+
+          <!-- Page 1 -->
+          <div class="little-levels">
+            Most problems can be solved with a sizable feast.
+            <br><br>
+
+            <!-- locating/harvesting -->
+            <span class="text-warning">Meals</span>
+            <br>
+
+            <span class="info-text">Food</span> is a basic need for most living creatures. It will <span
+              class="info-text">heal</span> the injured and sate the hungry.
+            <br><br>
+
+            All meals have a <span class="info-text">base healing</span> amount, which is the health threshold <span
+              class="info-text">auto-healing</span> begins. This guarantees the survival of food-eater, provided they
+            are facing a challenge with a <span class="info-text">max hit less than or equal</span> to an equipped
+            food's base healing value.
+            <br><br>
+
+            Meal <span class="info-text">mastery levels</span> give its meal +1 <span class="info-text">bonus
+              healing</span>, providing more healing per meal. This will not increase the auto-healing threshold.
+            <br><br>
+
+            Meat <span class="info-text">mastery levels</span> give 2% faster cooking times.
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
     <!-- Top Info -->
     <div class="px-5 pb-3 w-100" style="max-width: 64rem;">
 
@@ -79,8 +125,9 @@ export default {
       <div class="d-flex justify-content-center gap-1 pb-1">
 
         <!-- Skill Icon and Help Button -->
-        <div class="card align-items-center" style="width: 67px; height: 67px;">
-          <!-- <img src="src/assets/icons/testIcon32.png" alt="" width="64" height="64"> -->
+        <div class="card card-activity align-items-center py-2" style="width: 67px; height: 67px;">
+          <img src="src/assets/12x/questionmark.png" alt="" width="48" height="48">
+          <div class="stretched-link" @click="showGuideModal = true"></div>
         </div>
 
         <!-- Level and XP Card -->
@@ -119,17 +166,28 @@ export default {
           <div class="d-flex justify-content-between py-2 px-2">
 
             <!-- Tool -->
-            <div class="flex-grow-1 px-2">
+            <div class="px-2">
               <span>
-                <img src="src/assets/icons/defaultcook16.png" alt="" width="32" height="32">
-                <span> Fire Pit</span>
+                <div class="tooltip-b">
+                  <img src="src/assets/icons/defaultcook16.png" alt="" width="32" height="32">
+                  <span> Fire Pit</span>
+
+                  <!-- Tooltip -->
+                  <div class="tooltip-text py-1 px-4">
+                    <div class="d-flex justify-content-between little-levels ">
+                      <span>Cook Time:</span>
+                      <span>0%</span>
+                    </div>
+                  </div>
+
+                </div>
               </span>
             </div>
 
             <!-- Efficency % -->
             <div class="tooltip-br">
               {{ cookingStore.efficency }}%
-              <img src="src/assets/icons/testIcon12.png" alt="" width="24" height="24">
+              <img src="src/assets/12x/eff.png" alt="" width="24" height="24">
               <div class="tooltip-text py-1 px-2">
                 <div class="little-levels">
                   Chance of additional instant actions, without using extra resources.
@@ -248,7 +306,7 @@ export default {
               Heals: {{ shownActivityHeals() }}
             </div>
             <div class="little-levels pb-1">
-              {{ shownActivity.xpGain }} XP / {{ shownActivity.cookTime.toFixed(2) }}s
+              {{ shownActivity.xpGain }} XP / {{ (Math.ceil(shownActivity.cookTime * 20) / 20).toFixed(2) }}s
             </div>
 
             <!-- Progress Bar for Activity Completion -->

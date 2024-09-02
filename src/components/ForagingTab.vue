@@ -25,7 +25,7 @@ export default {
   },
   methods: {
     isNotValidArea(activityObject, activityIndex) {
-      return false
+      // return false
 
       // if skill isn't up to snuff, is never valid
       if (activityObject.levelRequired > this.skillStore.skills[this.skillID].level) {
@@ -60,7 +60,6 @@ export default {
 <template>
   <div class="card pt-4 align-items-center main-window bg-transparent" style="width: 77rem">
 
-    
     <!-- Guide Modal -->
     <div class="modal show-modal" v-if="showGuideModal == true">
       <div class="modal-backing" @click="showGuideModal = false"></div>
@@ -75,18 +74,28 @@ export default {
 
           <!-- Page 1 -->
           <div class="little-levels">
-            Some of these walls gleam with hidden treasures.
+            It's life. Very slow, very patience life.
             <br><br>
-            
+
             <!-- locating/harvesting -->
             <span class="text-warning">Plants</span>
             <br>
-            
+            Cutting through wilderness takes time, <span class="info-text">axes</span> help reduce the effort. Either by
+            getting to a resource's <span class="info-text">location</span> faster, or by <span
+              class="info-text">harvesting</span> it more quickly.
             <br><br>
-            Plants have may have more than one use, but generally <span class="info-text">wood</span> can be fletched into weapons and ammo, <span class="info-text">fibers</span> can be tailored into armor, and <span class="info-text">fruit</span> (normally inedible) can be cooked.
+            Once reached, resources have a <span class="info-text">yield</span> which is how much can be harvested
+            before needing to locate a new source. Each <span class="info-text">mastery level</span> increases the <span
+              class="info-text">yield</span> of located resources by 1.
             <br><br>
-            Each <span class="info-text">mastery level</span> increases the <span class="info-text">yield</span> of located plants by 1.
-            
+
+            <span class="text-warning">Produce</span>
+            <br>
+            Plants have may have more than one use, but generally <span class="info-text">wood</span> can be <span
+              class="info-text">fletched into weapons and ammo</span>, <span class="info-text">fibers</span> can be
+            <span class="info-text">tailored into armor</span>, and <span class="info-text">fruit</span> (normally
+            inedible) can be <span class="info-text">cooked</span>.
+
           </div>
         </div>
 
@@ -154,7 +163,7 @@ export default {
                     </div>
                     <div class="d-flex justify-content-between little-levels ">
                       <span>Harvesting: </span>
-                      <span>{{ itemStore.equippedTools.foragingTool.toolStats.harvestingTimeBonus }}s</span>
+                      <span>{{ itemStore.equippedTools.foragingTool.toolStats.harvestingTimeBonus.toFixed(2) }}s</span>
                     </div>
                   </div>
                 </div>
@@ -164,7 +173,7 @@ export default {
             <!-- Efficency % -->
             <div class="tooltip-br">
               {{ explorationStore.activities[0].mLevel + (2 * skillStore.skills[this.skillID].level) }}%
-              <img src="src/assets/icons/testIcon12.png" alt="" width="24" height="24">
+              <img src="src/assets/12x/eff.png" alt="" width="24" height="24">
               <div class="tooltip-text py-1 px-2">
                 <div class="little-levels">
                   Chance of additional instant actions, without using extra resources.

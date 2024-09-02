@@ -76,17 +76,20 @@ export default {
           <div class="little-levels">
             For animals are quite tasty and most are made of meat.
             <br><br>
-            
+
             <span class="text-warning">Prey</span>
             <br>
-            First, a target must be stalked until they're at their most vulnerable. That is the moment to strike. A perfect hit will be <span class="info-text">fatal</span>, otherwise it will take time for them to <span class="info-text">bleed out</span>. 
+            First, a target must be stalked until they're at their most vulnerable. That is the moment to strike. A
+            perfect hit will be <span class="info-text">fatal</span>, otherwise it will take time for them to <span
+              class="info-text">bleed out</span>.
             <br><br>
             Each <span class="info-text">mastery level</span> increases the chance of a fatal strike by 2%.
             <br><br>
-            
+
             <span class="text-warning">Strippings</span>
             <br>
-            A successful hunt will always reward <span class="info-text">food (used for healing or cooking)</span> and usually some manner of <span class="info-text">skin or shell (used for tailoring armor)</span>.
+            A successful hunt will always reward <span class="info-text">food (used for healing or cooking)</span> and
+            usually some manner of <span class="info-text">skin or shell (used for tailoring armor)</span>.
           </div>
         </div>
 
@@ -169,7 +172,7 @@ export default {
             <!-- Efficency % -->
             <div class="tooltip-br">
               {{ huntingStore.efficency }}%
-              <img src="src/assets/icons/testIcon12.png" alt="" width="24" height="24">
+              <img src="src/assets/12x/eff.png" alt="" width="24" height="24">
               <div class="tooltip-text py-1 px-2">
                 <div class="little-levels">
                   Chance of additional instant actions, without using extra resources.

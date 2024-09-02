@@ -20,6 +20,7 @@ export default {
     return {
       skillID: 12,
       itemIndexStart: 1, //itemStore.resourceItems.findIndex(t => t.id === this.scryingStore[0].resourceID) //this code will get the start index of itemIDs, but I don't know how to run it after everything is loaded. Also, it hardcodes all activity items which could limit further development.
+      showGuideModal: false,
     }
   },
   methods: {
@@ -59,6 +60,47 @@ export default {
 <template>
   <div class="card pt-4 align-items-center main-window bg-transparent" style="width: 77rem">
 
+    <!-- Guide Modal -->
+    <div class="modal show-modal" v-if="showGuideModal == true">
+      <div class="modal-backing" @click="showGuideModal = false"></div>
+
+      <!-- Guide Content -->
+      <div class="modal-content py-4 px-2" style="width: 23rem;">
+
+        <div class="text-center pb-2">
+          <div class="pb-1">
+            Scrying Guide
+          </div>
+
+          <!-- Page 1 -->
+          <div class="little-levels">
+            These little delights have a different kind of shine.
+            <br><br>
+
+            <!-- locating/harvesting -->
+            <span class="text-warning">Nodes</span>
+            <br>
+            Delicate <span class="info-text">essence</span> cannot be <span class="info-text">syphoned</span> from
+            their source without ruining the result. <span class="info-text">Fortifying</span> a node with properly
+            drawn signs (and an appropriate <span class="info-text">stylus</span>) bypasses this limitation.
+            <br><br>
+            <span class="info-text">Syphoning</span> has a chance of <span class="info-text">breaking</span> the
+            fortification. If this happens, re-drawing the signs will be necessary. Each <span class="info-text">mastery
+              level</span> increases <span class="info-text">stability</span> of fortified nodes by 2%.
+            <br><br>
+
+            <span class="text-warning">Essence</span>
+            <br>
+            Scrying resources have high energy potentials, giving them a variety of uses. Most especially in the fields
+            of <span class="info-text">artiface (wands and spellcraft)</span> and <span class="info-text">alchemy
+              (potions and weapon oils)</span>.
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
     <!-- Top Info -->
     <div class="px-5 pb-3 w-100" style="max-width: 64rem;">
 
@@ -66,8 +108,9 @@ export default {
       <div class="d-flex justify-content-center gap-1 pb-1">
 
         <!-- Skill Icon and Help Button -->
-        <div class="card align-items-center" style="width: 67px; height: 67px;">
-          <!-- <img src="src/assets/icons/testIcon32.png" alt="" width="64" height="64"> -->
+        <div class="card card-activity align-items-center py-2" style="width: 67px; height: 67px;">
+          <img src="src/assets/12x/questionmark.png" alt="" width="48" height="48">
+          <div class="stretched-link" @click="showGuideModal = true"></div>
         </div>
 
         <!-- Level and XP Card -->
@@ -113,15 +156,17 @@ export default {
 
                   <!-- Tooltip -->
                   <div class="tooltip-text py-1 px-4">
-                    <div class="d-flex justify-content-between little-levels ">
+                    <div class="d-flex justify-content-between little-levels"
+                      v-if="itemStore.equippedTools.scryingTool.toolStats.bonusSyphoningTime">
                       <span>Syphoning: </span>
-                      <span>{{ itemStore.equippedTools.scryingTool.toolStats.syphoningTime.toFixed(2) }}s</span>
+                      <span>{{ itemStore.equippedTools.scryingTool.toolStats.bonusSyphoningTime.toFixed(2) }}s</span>
                     </div>
-                    <div class="d-flex justify-content-between little-levels ">
+                    <div class="d-flex justify-content-between little-levels">
                       <span>Stability: </span>
                       <span>{{ 100 * itemStore.equippedTools.scryingTool.toolStats.baseStabilityBonus }}%</span>
                     </div>
                   </div>
+
                 </div>
               </span>
             </div>
@@ -129,7 +174,7 @@ export default {
             <!-- Efficency % -->
             <div class="tooltip-br">
               {{ explorationStore.activities[2].mLevel + (2 * skillStore.skills[this.skillID].level) }}%
-              <img src="src/assets/icons/testIcon12.png" alt="" width="24" height="24">
+              <img src="src/assets/12x/eff.png" alt="" width="24" height="24">
               <div class="tooltip-text py-1 px-2">
                 <div class="little-levels">
                   Chance of additional instant actions, without using extra resources.
@@ -216,12 +261,14 @@ export default {
             </div>
             <div class="pb-1">
               Syphon: {{ activity.xpGain }} XP / {{ (100 * (activity.baseStability +
-              itemStore.equippedTools.scryingTool.toolStats.baseStabilityBonus + (activity.mLevel * 0.02))).toFixed() }}%
+              itemStore.equippedTools.scryingTool.toolStats.baseStabilityBonus + (activity.mLevel * 0.02))).toFixed()
+              }}%
             </div>
 
             <!-- Progress Bar for Activity Completion -->
             <div class="progress" role="progressbar" style="height: 12px;">
-              <div class="progress-bar xp-progress" :class="(scryingStore.activePercent >= 100) ? 'progress-bar-striped progress-bar-animated' : ''"
+              <div class="progress-bar xp-progress"
+                :class="(scryingStore.activePercent >= 100) ? 'progress-bar-striped progress-bar-animated' : ''"
                 :style="`width: ${scryingStore.activePercent}%;`" v-if="activity.id == scryingStore.activeObject.id">
               </div>
             </div>

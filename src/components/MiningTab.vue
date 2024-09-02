@@ -74,22 +74,29 @@ export default {
 
           <!-- Page 1 -->
           <div class="little-levels">
-            Some of these walls gleam with hidden treasures.
+            Certain walls gleam with hidden treasure.
             <br><br>
-            
+
             <span class="text-warning">Rocks</span>
             <br>
-            Stones have <span class="info-text">hitpoints</span> (how much damage needs to be done to break one open) and <span class="info-text">hardness</span> (how much less damage a <span class="info-text">pickaxe</span> of weaker hardness does). Don't worry about hitting too hard, <span class="info-text">excess damage overflows</span> to the next rock.
+            Stones have <span class="info-text">hitpoints</span> (how much damage needs to be done to break one open)
+            and <span class="info-text">hardness</span> (how much less damage a <span class="info-text">pickaxe</span>
+            of weaker hardness does). Don't worry about hitting too hard, <span class="info-text">excess damage
+              overflows</span> to the next rock.
             <br><br>
-            If a swing would <span class="info-text">not damage</span> a rock, it will be marked by an ❌ and still have a 50% chance of doing 1 point of damage anyway.
+            If a swing would <span class="info-text">not damage</span> a rock, it will be marked by an ❌ and still have
+            a 50% chance of doing 1 point of damage anyway.
             <br><br>
-            Each <span class="info-text">mastery level</span> increases the chance of a <span class="info-text">critical swing</span> by 3%, hitting for +3 damage.
+            Each <span class="info-text">mastery level</span> increases the chance of a <span class="info-text">critical
+              swing</span> by 3%, hitting for +3 damage.
             <br><br>
-            
+
             <span class="text-warning">Treasure</span>
             <br>
-            Mining will generally reward <span class="info-text">ore (used for smithing metals and equipment)</span> or other minerals which will have their own uses. Rarely, a <span class="info-text">gem</span> one set higher than usual can be found. 
-            
+            Mining will generally reward <span class="info-text">ore (used for smithing metals and equipment)</span> or
+            other minerals which will have their own uses. Rarely, a <span class="info-text">gem</span> one set higher
+            than usual can be found.
+
           </div>
         </div>
 
@@ -161,10 +168,10 @@ export default {
                       <span>{{ itemStore.equippedTools.miningTool.toolStats.bonusPen }}</span>
                     </div>
                     <div class="d-flex justify-content-between little-levels"
-                      v-if="itemStore.equippedTools.miningTool.toolStats.miningInterval">
-                      <span>Speed Bonus: </span>
+                      v-if="itemStore.equippedTools.miningTool.toolStats.bonusMiningSpeed">
+                      <span>Mining: </span>
                       <span>
-                        {{ itemStore.equippedTools.miningTool.toolStats.miningInterval.toFixed(2) }}s
+                        {{ itemStore.equippedTools.miningTool.toolStats.bonusMiningSpeed.toFixed(2) }}s
                       </span>
                     </div>
                   </div>
@@ -175,7 +182,7 @@ export default {
             <!-- Efficency % -->
             <div class="tooltip-br">
               {{ explorationStore.activities[1].mLevel + (2 * skillStore.skills[this.skillID].level) }}%
-              <img src="src/assets/icons/testIcon12.png" alt="" width="24" height="24">
+              <img src="src/assets/12x/eff.png" alt="" width="24" height="24">
               <div class="tooltip-text py-1 px-2">
                 <div class="little-levels">
                   Chance of additional instant actions, without using extra resources.

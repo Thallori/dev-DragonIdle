@@ -1,12 +1,12 @@
 <script>
-import { useSkillStore } from '@/stores/skills';
-import { useExplorationStore } from '@/stores/exploration';
-import { useScryingStore } from '@/stores/scrying';
-import { useForagingStore } from '@/stores/foraging';
-import { useHuntingStore } from '@/stores/hunting';
-import { useMiningStore } from '@/stores/mining';
-import { useItemStore } from '@/stores/inventory';
-import areaRequirements from '@/data/areaRequirements';
+import { useSkillStore } from '@/stores/skills'
+import { useExplorationStore } from '@/stores/exploration'
+import { useScryingStore } from '@/stores/scrying'
+import { useForagingStore } from '@/stores/foraging'
+import { useHuntingStore } from '@/stores/hunting'
+import { useMiningStore } from '@/stores/mining'
+import { useItemStore } from '@/stores/inventory'
+import areaRequirements from '@/data/areaRequirements'
 
 export default {
   name: 'ExplorationTab',
@@ -64,7 +64,7 @@ export default {
 
 <template>
   <div class="card pt-4 align-items-center main-window bg-transparent" style="width: 77rem">
-    
+
     <!-- Guide Modal -->
     <div class="modal show-modal" v-if="showGuideModal == true">
       <div class="modal-backing" @click="showGuideModal = false"></div>
@@ -81,19 +81,31 @@ export default {
           <div class="little-levels">
             The world is full of possibilities, just waiting to be found.
             <br><br>
-            
+
             <span class="text-warning">Areas</span>
             <br>
 
-            Regions begin frozen, <span class="info-text">sealed</span> away in time. They are easy enough to release, but as the flow of time returns, the <span class="info-text">stability</span> of this fragile existance will become threatened. Limiting the options for what can be accessed, leaving the rest locked.
+            Regions begin frozen, <span class="info-text">sealed</span> away in time. They are easy enough to release,
+            but as the flow of time returns, the <span class="info-text">stability</span> of this fragile existance will
+            become threatened. Limiting the options for what can be accessed, leaving the rest locked.
             <br><br>
-            Each area has unique resources, enemies, and a <span class="info-text">sequence</span> of encounters that guard something <span class="info-text">special</span>.
+            Each area has unique resources, enemies, and a <span class="info-text">sequence</span> of encounters that
+            guard something <span class="info-text">special</span>.
             <br><br>
-            
+
             <span class="text-warning">Resources</span>
             <br>
 
-            Exploring an area grants <span class="info-text">mastery</span> of it, each level providing something new to <span class="info-text">gather</span> and some <span class="info-text">efficency</span> for that region's primary skill.
+            Exploring an area grants <span class="info-text">mastery</span> of it, each level providing something new to
+            <span class="info-text">gather</span> and some <span class="info-text">efficency</span> for that region's
+            primary skill.
+            <br><br>
+
+            <span class="text-warning">Efficency</span>
+            <br>
+
+            The chance that an action will <span class="info-text">instantly repeat</span> without using any extra
+            resources.
           </div>
         </div>
 
@@ -169,7 +181,7 @@ export default {
             <!-- Efficency % -->
             <div class="tooltip-br">
               {{ explorationStore.efficency }}%
-              <img src="src/assets/icons/testIcon12.png" alt="" width="24" height="24">
+              <img src="src/assets/12x/eff.png" alt="" width="24" height="24">
               <div class="tooltip-text pt-1 pb-2 px-2">
                 <div class="little-levels">
                   Chance of additional instant actions, without using extra resources.
@@ -191,7 +203,7 @@ export default {
     <!-- All Activities -->
     <div style="max-width: 64rem">
 
-      <!-- Activity Set Selector -->
+      <!-- Stability Display -->
       <div class="card py-1 px-1">
         <div class="d-flex justify-content-center gap-1">
 
@@ -322,7 +334,8 @@ export default {
 
             <!-- XP per Completion and Seconds per Complete -->
             <div class="little-levels pb-2">
-              <div class="pb-1">{{ activity.xpGain }} XP / {{ (activity.interval * (1 - itemStore.equippedTools.explorationTool.toolStats.explorationMulti)).toFixed(2) }} Seconds</div>
+              <div class="pb-1">{{ activity.xpGain }} XP / {{ (activity.interval * (1 -
+                itemStore.equippedTools.explorationTool.toolStats.explorationMulti)).toFixed(2) }} Seconds</div>
 
               <!-- Progress Bar for Activity Completion -->
               <div class="progress" role="progressbar" style="height: 12px;">
@@ -335,11 +348,11 @@ export default {
             <div class="d-flex justify-content-center gap-1">
 
               <!-- Explore and Display Common Resources -->
-              <button type="button" class="btn activity" style="width: 50%;"
+              <button type="button" class="btn activity w-100"
                 @click="explorationStore.setActiveAction(activity)">Explore</button>
 
               <!-- It's a button, but it's also going to be a tooltip? Maybe I need to rethink this. -->
-              <button type="button" class="btn activity" style="width: 50%;">Resources</button>
+              <!-- <button type="button" class="btn activity w-100">Resources</button> -->
             </div>
           </div>
 

@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
-import { useSkillStore } from '@/stores/skills';
-import { useItemStore } from '@/stores/inventory';
-
+import { useSkillStore as skillStore } from '@/stores/skills';
+import { useItemStore as itemStore } from '@/stores/inventory';
 
 export const useSmithingStore = defineStore('smithingStore', {
   state: () => ({
@@ -19,8 +18,6 @@ export const useSmithingStore = defineStore('smithingStore', {
 
     //smithing skill is stored as id 16 which is also its index, because I don't know how to do it otherwise
     skillID: 16,
-    skillStore: useSkillStore(),
-    itemStore: useItemStore(),
 
     equipmentMastery: [
       {
@@ -262,7 +259,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 1,
         xpGain: 20,
         heatNeeded: 7,
-        mCat: 4,
+        mCat: 7,
       },
       {
         id: 'copperHelmet',
@@ -274,7 +271,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 1,
         xpGain: 20,
         heatNeeded: 7,
-        mCat: 5,
+        mCat: 8,
       },
 
       //bronze
@@ -336,7 +333,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 3,
         xpGain: 60,
         heatNeeded: 11,
-        mCat: 7,
+        mCat: 4,
       },
       {
         id: 'bronzeMace',
@@ -348,7 +345,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 3,
         xpGain: 60,
         heatNeeded: 11,
-        mCat: 8,
+        mCat: 5,
       },
       {
         id: 'bronzeHeavy',
@@ -360,7 +357,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 3,
         xpGain: 90,
         heatNeeded: 16,
-        mCat: 9,
+        mCat: 6,
       },
       {
         id: 'bronzeGreaves',
@@ -372,7 +369,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 2,
         xpGain: 60,
         heatNeeded: 11,
-        mCat: 4,
+        mCat: 7,
       },
       {
         id: 'bronzeHelmet',
@@ -384,7 +381,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 2,
         xpGain: 60,
         heatNeeded: 11,
-        mCat: 5,
+        mCat: 8,
       },
       {
         id: 'bronzeChainmail',
@@ -396,7 +393,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 2,
         xpGain: 120,
         heatNeeded: 21,
-        mCat: 6,
+        mCat: 9,
       },
       {
         id: 'bronzePlate',
@@ -482,7 +479,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 6,
         xpGain: 110,
         heatNeeded: 15,
-        mCat: 7,
+        mCat: 4,
       },
       {
         id: 'ironMace',
@@ -494,7 +491,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 6,
         xpGain: 110,
         heatNeeded: 15,
-        mCat: 8,
+        mCat: 5,
       },
       {
         id: 'ironHeavy',
@@ -506,7 +503,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 6,
         xpGain: 165,
         heatNeeded: 22,
-        mCat: 9,
+        mCat: 6,
       },
       {
         id: 'ironGreaves',
@@ -518,7 +515,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 4,
         xpGain: 110,
         heatNeeded: 15,
-        mCat: 4,
+        mCat: 7,
       },
       {
         id: 'ironHelmet',
@@ -530,7 +527,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 4,
         xpGain: 110,
         heatNeeded: 15,
-        mCat: 5,
+        mCat: 8,
       },
       {
         id: 'ironChainmail',
@@ -542,7 +539,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 4,
         xpGain: 220,
         heatNeeded: 29,
-        mCat: 6,
+        mCat: 9,
       },
       {
         id: 'ironPlate',
@@ -628,7 +625,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 8,
         xpGain: 160,
         heatNeeded: 19,
-        mCat: 7,
+        mCat: 4,
       },
       {
         id: 'steelMace',
@@ -640,7 +637,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 8,
         xpGain: 160,
         heatNeeded: 19,
-        mCat: 8,
+        mCat: 5,
       },
       {
         id: 'steelHeavy',
@@ -652,7 +649,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 8,
         xpGain: 240,
         heatNeeded: 28,
-        mCat: 9,
+        mCat: 6,
       },
       {
         id: 'steelGreaves',
@@ -664,7 +661,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 7,
         xpGain: 160,
         heatNeeded: 19,
-        mCat: 4,
+        mCat: 7,
       },
       {
         id: 'steelHelmet',
@@ -676,7 +673,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 7,
         xpGain: 160,
         heatNeeded: 19,
-        mCat: 5,
+        mCat: 8,
       },
       {
         id: 'steelChainmail',
@@ -688,7 +685,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 7,
         xpGain: 320,
         heatNeeded: 37,
-        mCat: 6,
+        mCat: 9,
       },
       {
         id: 'steelPlate',
@@ -719,6 +716,51 @@ export const useSmithingStore = defineStore('smithingStore', {
   getters: {
   },
   actions: {
+    saveAll() {
+      localStorage.setItem('smithing-efficency', JSON.stringify(this.efficency))
+      localStorage.setItem('smithing-activeObject', JSON.stringify(this.activeObject))
+
+      for (let i in this.equipmentMastery) {
+        localStorage.setItem('smithing-equipmentMastery-mxp' + i, JSON.stringify(this.equipmentMastery[i].mxp))
+        localStorage.setItem('smithing-equipmentMastery-mLevel' + i, JSON.stringify(this.equipmentMastery[i].mLevel))
+        localStorage.setItem('smithing-equipmentMastery-mxpPrev' + i, JSON.stringify(this.equipmentMastery[i].mxpPrev))
+        localStorage.setItem('smithing-equipmentMastery-mxpNext' + i, JSON.stringify(this.equipmentMastery[i].mxpNext))
+      }
+
+      let tempActivities = this.activities.filter(temp => temp.cat === 'bar')
+      for (let i in tempActivities) {
+        localStorage.setItem('smithing-bar-mxp' + i, JSON.stringify(tempActivities[i].mxp))
+        localStorage.setItem('smithing-bar-mLevel' + i, JSON.stringify(tempActivities[i].mLevel))
+        localStorage.setItem('smithing-bar-mxpPrev' + i, JSON.stringify(tempActivities[i].mxpPrev))
+        localStorage.setItem('smithing-bar-mxpNext' + i, JSON.stringify(tempActivities[i].mxpNext))
+      }
+    },
+    loadAll() {
+      this.efficency = JSON.parse(localStorage.getItem('smithing-efficency'))
+
+      for (let i in this.equipmentMastery) {
+        this.equipmentMastery[i].mxp = JSON.parse(localStorage.getItem('smithing-equipmentMastery-mxp' + i))
+        this.equipmentMastery[i].mLevel = JSON.parse(localStorage.getItem('smithing-equipmentMastery-mLevel' + i))
+        this.equipmentMastery[i].mxpPrev = JSON.parse(localStorage.getItem('smithing-equipmentMastery-mxpPrev' + i))
+        this.equipmentMastery[i].mxpNext = JSON.parse(localStorage.getItem('smithing-equipmentMastery-mxpNext' + i))
+      }
+
+      let tempActivities = this.activities.filter(temp => temp.cat === 'bar')
+      for (let i in tempActivities) {
+        tempActivities[i].mxp = JSON.parse(localStorage.getItem('smithing-bar-mxp' + i))
+        tempActivities[i].mLevel = JSON.parse(localStorage.getItem('smithing-bar-mLevel' + i))
+        tempActivities[i].mxpPrev = JSON.parse(localStorage.getItem('smithing-bar-mxpPrev' + i))
+        tempActivities[i].mxpNext = JSON.parse(localStorage.getItem('smithing-bar-mxpNext' + i))
+      }
+    },
+
+    onLoad() {
+      //localstorage makes the active object a real boy instead of a reference to a real boy
+      this.activeObject = JSON.parse(localStorage.getItem('smithing-activeObject'))
+      this.activeObject = this.activities.find(t => t.id === this.activeObject.id)
+      this.tryRepeatActionHeat()
+    },
+
     setActiveAction(newActiveActivity) {
       clearTimeout(this.currentTimeout)
 
@@ -731,9 +773,9 @@ export const useSmithingStore = defineStore('smithingStore', {
       this.activePercent = 0
       this.activeObject = newActiveActivity
 
-      this.skillStore.cancelCurrentActivity('smith')
-      this.skillStore.setCurrentActivity(this.activeObject)
-      this.skillStore.setCurrentCat('Smithing: ')
+      skillStore().cancelCurrentActivity('smith')
+      skillStore().setCurrentActivity(this.activeObject)
+      skillStore().setCurrentCat('Smithing: ')
       this.tryRepeatActionHeat()
     },
 
@@ -742,8 +784,8 @@ export const useSmithingStore = defineStore('smithingStore', {
       this.activeProgress = 0
       this.activePercent = 0
       this.activeObject = {}
-      this.skillStore.setCurrentActivity({ name: 'Nothing' })
-      this.skillStore.setCurrentCat('Currently Doing: ')
+      skillStore().setCurrentActivity({ name: 'Nothing' })
+      skillStore().setCurrentCat('Currently Doing: ')
     },
 
     updateHeatProgress() {
@@ -752,17 +794,17 @@ export const useSmithingStore = defineStore('smithingStore', {
         if (this.activeObject.cat == 'bar') {
           let wasEfficent = this.efficencyReturn()
 
-          this.skillStore.addXP(this.skillID, (this.activeObject.xpGain * wasEfficent))
+          skillStore().addXP(this.skillID, (this.activeObject.xpGain * wasEfficent))
           this.addMXP(1 * wasEfficent)
-          this.itemStore.changeItemCount(this.activeObject.itemID, (this.activeObject.itemAmount * wasEfficent), 'resourceItems')
+          itemStore().changeItemCount(this.activeObject.itemID, (this.activeObject.itemAmount * wasEfficent), 'resourceItems')
           
           this.updateEfficency()
 
           //remove item(s)
-          this.itemStore.changeItemCount(this.activeObject.neededItem1[0], (0 - this.activeObject.neededItem1[1]), 'resourceItems')
+          itemStore().changeItemCount(this.activeObject.neededItem1[0], (0 - this.activeObject.neededItem1[1]), 'resourceItems')
           //second neededItem
           if (this.activeObject.neededItem2) {
-            this.itemStore.changeItemCount(this.activeObject.neededItem2[0], (0 - this.activeObject.neededItem2[1]), 'resourceItems')
+            itemStore().changeItemCount(this.activeObject.neededItem2[0], (0 - this.activeObject.neededItem2[1]), 'resourceItems')
           }
 
 
@@ -790,16 +832,15 @@ export const useSmithingStore = defineStore('smithingStore', {
       this.tryRepeatActionHeat()
     },
     tryRepeatActionHeat() {
-
       //first neededItem
-      if (this.itemStore.hasItemCount(this.activeObject.neededItem1[0], this.activeObject.neededItem1[1], 'resourceItems') == false) {
+      if (itemStore().hasItemCount(this.activeObject.neededItem1[0], this.activeObject.neededItem1[1], 'resourceItems') == false) {
         this.cancelAction()
         return
       }
 
       //second neededItem
       if (this.activeObject.neededItem2) {
-        if (this.itemStore.hasItemCount(this.activeObject.neededItem2[0], this.activeObject.neededItem2[1], 'resourceItems') == false) {
+        if (itemStore().hasItemCount(this.activeObject.neededItem2[0], this.activeObject.neededItem2[1], 'resourceItems') == false) {
           this.cancelAction()
           return
         }
@@ -813,14 +854,14 @@ export const useSmithingStore = defineStore('smithingStore', {
       if (this.activeProgress <= 1) {
         let wasEfficent = this.efficencyReturn()
 
-        this.skillStore.addXP(this.skillID, (this.activeObject.xpGain * wasEfficent))
+        skillStore().addXP(this.skillID, (this.activeObject.xpGain * wasEfficent))
         this.addMXPCat((1 * wasEfficent), this.activeObject.mCat)
-        this.itemStore.changeItemCount(this.activeObject.itemID, (this.activeObject.itemAmount * wasEfficent), 'equipmentItems')
+        itemStore().changeItemCount(this.activeObject.itemID, (this.activeObject.itemAmount * wasEfficent), 'equipmentItems')
         
         this.updateEfficency()
         
         //remove item(s)
-        this.itemStore.changeItemCount(this.activeObject.neededItem1[0], (0 - this.activeObject.neededItem1[1]), 'resourceItems')
+        itemStore().changeItemCount(this.activeObject.neededItem1[0], (0 - this.activeObject.neededItem1[1]), 'resourceItems')
 
         console.log('boop')
         this.activeProgress = 0
@@ -838,7 +879,7 @@ export const useSmithingStore = defineStore('smithingStore', {
     },
 
     updateEfficency() {
-      this.efficency = 2 * this.skillStore.skills[this.skillID].level
+      this.efficency = 2 * skillStore().skills[this.skillID].level
     },
     //TODO make efficency > 100 meaningful
     efficencyReturn() {

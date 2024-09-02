@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia'
-import { useSkillStore } from '@/stores/skills';
-import { useExplorationStore } from '@/stores/exploration';
-import { useItemStore } from '@/stores/inventory';
+import { useSkillStore as skillStore } from '@/stores/skills';
+import { useExplorationStore as explorationStore } from '@/stores/exploration';
+import { useItemStore as itemStore } from '@/stores/inventory';
 
 export const useScryingStore = defineStore('scryingStore', {
   state: () => ({
-    progressInterval: 200, // 20 update per second
-    syphoningInterval: 2000, // 1 update per 2.0 seconds
+    progressInterval: 200, //will get randomized
+    baseSyphoningInterval: 2, //seconds
     efficency: 2,
 
     activeObject: {},
@@ -16,9 +16,6 @@ export const useScryingStore = defineStore('scryingStore', {
 
     //scrying skill is stored as id 12 which is also its index, because I don't know how to do it otherwise
     skillID: 12,
-    skillStore: useSkillStore(),
-    explorationStore: useExplorationStore(),
-    itemStore: useItemStore(),
 
     activities: [
       {
@@ -146,6 +143,35 @@ export const useScryingStore = defineStore('scryingStore', {
   getters: {
   },
   actions: {
+    saveAll() {
+      localStorage.setItem('scrying-efficency', JSON.stringify(this.efficency))
+      localStorage.setItem('scrying-activeObject', JSON.stringify(this.activeObject))
+
+      for (let i in this.activities) {
+        localStorage.setItem('scrying-mxp' + i, JSON.stringify(this.activities[i].mxp))
+        localStorage.setItem('scrying-mLevel' + i, JSON.stringify(this.activities[i].mLevel))
+        localStorage.setItem('scrying-mxpPrev' + i, JSON.stringify(this.activities[i].mxpPrev))
+        localStorage.setItem('scrying-mxpNext' + i, JSON.stringify(this.activities[i].mxpNext))
+      }
+    },
+    loadAll() {
+      this.efficency = JSON.parse(localStorage.getItem('scrying-efficency'))
+
+      for (let i in this.activities) {
+        this.activities[i].mxp = JSON.parse(localStorage.getItem('scrying-mxp' + i))
+        this.activities[i].mLevel = JSON.parse(localStorage.getItem('scrying-mLevel' + i))
+        this.activities[i].mxpPrev = JSON.parse(localStorage.getItem('scrying-mxpPrev' + i))
+        this.activities[i].mxpNext = JSON.parse(localStorage.getItem('scrying-mxpNext' + i))
+      }
+    },
+
+    onLoad() {
+      //localstorage makes the active object a real boy instead of a reference to a real boy
+      this.activeObject = JSON.parse(localStorage.getItem('scrying-activeObject'))
+      this.activeObject = this.activities[this.activeObject.id]
+      this.tryRepeatAction()
+    },
+
     setActiveAction(newActiveActivity) {
       clearTimeout(this.currentTimeout)
 
@@ -158,9 +184,9 @@ export const useScryingStore = defineStore('scryingStore', {
       this.activePercent = 0
       this.activeObject = newActiveActivity
 
-      this.skillStore.cancelCurrentActivity('scry')
-      this.skillStore.setCurrentActivity(this.activeObject)
-      this.skillStore.setCurrentCat('Scrying: ')
+      skillStore().cancelCurrentActivity('scry')
+      skillStore().setCurrentActivity(this.activeObject)
+      skillStore().setCurrentCat('Scrying: ')
 
       this.tryRepeatAction()
     },
@@ -170,8 +196,8 @@ export const useScryingStore = defineStore('scryingStore', {
       this.activeProgress = 0
       this.activePercent = 0
       this.activeObject = {}
-      this.skillStore.setCurrentActivity({ name: 'Nothing' })
-      this.skillStore.setCurrentCat('Currently Doing: ')
+      skillStore().setCurrentActivity({ name: 'Nothing' })
+      skillStore().setCurrentCat('Currently Doing: ')
     },
 
     updateProgress() {
@@ -199,12 +225,12 @@ export const useScryingStore = defineStore('scryingStore', {
     updateGatherProgress() {
       let wasEfficent = this.efficencyReturn()
 
-      this.skillStore.addXP(this.skillID, (this.activeObject.xpGain * wasEfficent))
+      skillStore().addXP(this.skillID, (this.activeObject.xpGain * wasEfficent))
       this.addMXP(1 * wasEfficent)
-      this.itemStore.changeItemCount(this.activeObject.resourceID, (this.activeObject.resourceAmount * wasEfficent), 'resourceItems')
+      itemStore().changeItemCount(this.activeObject.resourceID, (this.activeObject.resourceAmount * wasEfficent), 'resourceItems')
 
       //if a random number between 0 and 1 is greater than stability, crash
-      if (Math.random() > (this.activeObject.baseStability + this.itemStore.equippedTools.scryingTool.toolStats.baseStabilityBonus + (this.activeObject.mLevel * 0.02))) {
+      if (Math.random() > (this.activeObject.baseStability + itemStore().equippedTools.scryingTool.toolStats.baseStabilityBonus + (this.activeObject.mLevel * 0.02))) {
 
         this.activeProgress = 0
         this.activePercent = 0
@@ -215,12 +241,12 @@ export const useScryingStore = defineStore('scryingStore', {
       this.tryRepeatGather()
     },
     tryRepeatGather() {
-      this.currentTimeout = setTimeout(this.updateGatherProgress, this.itemStore.equippedTools.scryingTool.toolStats.syphoningTime * 1000)
+      this.currentTimeout = setTimeout(this.updateGatherProgress, (this.baseSyphoningInterval - itemStore().equippedTools.scryingTool.toolStats.bonusSyphoningTime) * 1000)
     },
 
     updateEfficency() {
-      this.efficency = 2 * this.skillStore.skills[this.skillID].level
-      this.efficency += this.explorationStore.activities[2].mLevel //vibrant vale
+      this.efficency = 2 * skillStore().skills[this.skillID].level
+      this.efficency += explorationStore().activities[2].mLevel //vibrant vale
     },
     //TODO make efficency > 100 meaningful
     efficencyReturn() {

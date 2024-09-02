@@ -23,18 +23,25 @@ export default {
       itemIndexStart: 0, //itemStore.resourceItems.findIndex(t => t.id === this.smithingStore[0].resourceID) //this code will get the start index of itemIDs, but I don't know how to run it after everything is loaded. Also, it hardcodes all activity items which could limit further development.
       shownActivity: {},
       shownCat: 'bar',
+      showGuideModal: false,
     }
   },
   mounted() {
-    // this.shownActivity = this.smithingStore.activities[0]
     this.shownActivity = this.smithingStore.activeObject
+    if (this.smithingStore.activeObject.cat != undefined) {
+      this.shownCat = this.smithingStore.activeObject.cat
+    }
   },
   methods: {
     isNotValidActivity(activityObject) {
       // return false
 
-      // if skill isn't up to snuff, is never valid
+      //if skill isn't up to snuff, is never valid
       if (activityObject.levelRequired > this.skillStore.skills[this.skillID].level) {
+        return true
+      }
+      //if heavy weapon, is never valid
+      if (activityObject.mCat == 6) {
         return true
       }
       //is valid
@@ -72,6 +79,49 @@ export default {
 <template>
   <div class="card pt-4 align-items-center main-window bg-transparent" style="width: 77rem">
 
+    <!-- Guide Modal -->
+    <div class="modal show-modal" v-if="showGuideModal == true">
+      <div class="modal-backing" @click="showGuideModal = false"></div>
+
+      <!-- Guide Content -->
+      <div class="modal-content py-4 px-2" style="width: 23rem;">
+
+        <div class="text-center pb-2">
+          <div class="pb-1">
+            Smithing Guide
+          </div>
+
+          <!-- Page 1 -->
+          <div class="little-levels">
+            Metals may not be alive, but they will certainly outlive everything else.
+            <br><br>
+
+            <!-- locating/harvesting -->
+            <span class="text-warning">Forge</span>
+            <br>
+            The art of refining <span class="info-text">ore</span> begins with the excessive application of <span
+              class="info-text">heat</span>. Melting stone into <span class="info-text">ingots</span> takes time. <span
+              class="info-text">Working</span> those ingots into shape takes considerably more time.
+            <br><br>
+            Each ingot <span class="info-text">mastery level</span> increases <span class="info-text">heat rate</span>
+            by 0.1 (from a base rate of 2).
+            <br><br>
+
+            <span class="text-warning">Equipment</span>
+            <br>
+            To work an ingot, hit it with a <span class="info-text">hammer</span> when it's glowing hot. The amount of
+            <span class="info-text">heat</span> required is always equal to its <span class="info-text">work</span>.
+            <br><br>
+            Equipment <span class="info-text">mastery levels</span> increase a <span class="info-text">weapon's
+              accuracy</span> by 1, and an <span class="info-text">armor's melee/ranged dodge</span> stats by 0.25 per
+            level.
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
     <!-- Top Info -->
     <div class="px-5 pb-3 w-100" style="max-width: 64rem;">
 
@@ -79,8 +129,9 @@ export default {
       <div class="d-flex justify-content-center gap-1 pb-1">
 
         <!-- Skill Icon and Help Button -->
-        <div class="card align-items-center" style="width: 67px; height: 67px;">
-          <!-- <img src="src/assets/icons/testIcon32.png" alt="" width="64" height="64"> -->
+        <div class="card card-activity align-items-center py-2" style="width: 67px; height: 67px;">
+          <img src="src/assets/12x/questionmark.png" alt="" width="48" height="48">
+          <div class="stretched-link" @click="showGuideModal = true"></div>
         </div>
 
         <!-- Level and XP Card -->
@@ -119,17 +170,32 @@ export default {
           <div class="d-flex justify-content-between py-2 px-2">
 
             <!-- Tool -->
-            <div class="flex-grow-1 px-2">
+            <div class="px-2">
               <span>
-                <img src="src/assets/icons/defaulthammer16.png" alt="" width="32" height="32">
-                <span> Hammer</span>
+                <div class="tooltip-b">
+                  <img src="src/assets/icons/defaulthammer16.png" alt="" width="32" height="32">
+                  <span> Hammer</span>
+
+                  <!-- Tooltip -->
+                  <div class="tooltip-text py-1 px-4">
+                    <!-- <div class="d-flex justify-content-between little-levels">
+                      <span>Striking:</span>
+                      <span>0.20s</span>
+                    </div> -->
+                    <div class="d-flex justify-content-between little-levels">
+                      <span>Work:</span>
+                      <span>1</span>
+                    </div>
+                  </div>
+
+                </div>
               </span>
             </div>
 
             <!-- Efficency % -->
             <div class="tooltip-br">
               {{ smithingStore.efficency }}%
-              <img src="src/assets/icons/testIcon16.png" alt="" width="32" height="32">
+              <img src="src/assets/12x/eff.png" alt="" width="24" height="24">
               <div class="tooltip-text py-1 px-2">
                 <div class="little-levels">
                   Chance of additional instant actions, without using extra resources.
@@ -331,8 +397,6 @@ export default {
 
         </div>
 
-        <!-- Crafting and Activities Selector -->
-
         <!-- Crafting Options -->
         <div class="d-flex crafting-activities align-content-start flex-wrap gap-1 pb-3">
 
@@ -398,16 +462,17 @@ export default {
             <div class="card-footer pt-0" v-else>
 
               <div class="d-flex justify-content-between little-levels">
-                <div>LVL: {{ smithingStore.equipmentMastery[index].mLevel }}</div>
+                <div>LVL: {{ smithingStore.equipmentMastery[activity.mCat].mLevel }}</div>
 
                 <div>
-                  {{ smithingStore.equipmentMastery[index].mxp }}/{{ smithingStore.equipmentMastery[index].mxpNext }}
+                  {{ smithingStore.equipmentMastery[activity.mCat].mxp }}/{{
+                  smithingStore.equipmentMastery[activity.mCat].mxpNext }}
                 </div>
               </div>
 
               <div class="progress" role="progressbar" style="height: 8px">
                 <div class="progress-bar mastery-progress"
-                  :style="`width: ${(smithingStore.equipmentMastery[index].mxp - smithingStore.equipmentMastery[index].mxpPrev) / (smithingStore.equipmentMastery[index].mxpNext - smithingStore.equipmentMastery[index].mxpPrev) * 100}%;`">
+                  :style="`width: ${(smithingStore.equipmentMastery[activity.mCat].mxp - smithingStore.equipmentMastery[activity.mCat].mxpPrev) / (smithingStore.equipmentMastery[activity.mCat].mxpNext - smithingStore.equipmentMastery[activity.mCat].mxpPrev) * 100}%;`">
                 </div>
               </div>
             </div>

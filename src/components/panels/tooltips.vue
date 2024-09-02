@@ -1,6 +1,6 @@
 <script>
-import { useSmithingStore } from '@/stores/smithing';
-import { useCookingStore } from '@/stores/cooking';
+import { useSmithingStore } from '@/stores/smithing'
+import { useCookingStore } from '@/stores/cooking'
 
 export default {
   name: 'tooltips',
@@ -40,9 +40,9 @@ export default {
         <span>{{ (this.itemObject.toolStats.explorationMulti * 100) }}%</span>
       </div>
 
-      <div class="d-flex justify-content-between" v-if="this.itemObject.toolStats.syphoningTime">
+      <div class="d-flex justify-content-between" v-if="this.itemObject.toolStats.bonusSyphoningTime">
         <span>Syphoning: </span>
-        <span>{{ this.itemObject.toolStats.syphoningTime.toFixed(2) }}s</span>
+        <span>{{ this.itemObject.toolStats.bonusSyphoningTime.toFixed(2) }}s</span>
       </div>
       <div class="d-flex justify-content-between" v-if="this.itemObject.toolStats.baseStabilityBonus">
         <span>Stability: </span>
@@ -55,7 +55,7 @@ export default {
       </div>
       <div class="d-flex justify-content-between" v-if="this.itemObject.toolStats.harvestingTimeBonus">
         <span>Harvesting: </span>
-        <span>{{ this.itemObject.toolStats.harvestingTimeBonus }}s</span>
+        <span>{{ this.itemObject.toolStats.harvestingTimeBonus.toFixed(2) }}s</span>
       </div>
 
       <div class="d-flex justify-content-between little-levels" v-if="this.itemObject.toolStats.bleeding">
@@ -75,9 +75,9 @@ export default {
         <span>Hardness: </span>
         <span>{{ this.itemObject.toolStats.bonusPen }}</span>
       </div>
-      <div class="d-flex justify-content-between" v-if="this.itemObject.toolStats.miningInterval">
-        <span>Speed Bonus: </span>
-        <span>{{ this.itemObject.toolStats.miningInterval.toFixed(2) }}s</span>
+      <div class="d-flex justify-content-between" v-if="this.itemObject.toolStats.bonusMiningSpeed">
+        <span>Mining: </span>
+        <span>{{ this.itemObject.toolStats.bonusMiningSpeed.toFixed(2) }}s</span>
       </div>
     </div>
 
@@ -141,15 +141,15 @@ export default {
       </div>
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.rangedDamage">
         <span>🏹 Damage: </span>
-        <span>{{ this.itemObject.stats.rangedDamage * 100 }}%</span>
+        <span>{{ (this.itemObject.stats.rangedDamage * 100).toFixed() }}%</span>
       </div>
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.magicDamage">
         <span>🔥 Damage: </span>
-        <span>{{ this.itemObject.stats.magicDamage * 100 }}%</span>
+        <span>{{ (this.itemObject.stats.magicDamage * 100).toFixed() }}%</span>
       </div>
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.damage">
         <span>All Damage: </span>
-        <span>{{ this.itemObject.stats.damage * 100 }}%</span>
+        <span>{{ (this.itemObject.stats.damage * 100).toFixed() }}%</span>
       </div>
 
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.meleePen">
@@ -201,7 +201,7 @@ export default {
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.magicDodge != null">
         <span>🛡️🔥 Defense: </span>
         <span>
-          {{ this.itemObject.stats.magicDodge + (bonusSmithingMastery(this.itemObject) / 4) }}
+          {{ this.itemObject.stats.magicDodge }}
         </span>
       </div>
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.dodge != null">
@@ -224,7 +224,7 @@ export default {
         <span>{{ (this.itemObject.stats.resist * 100) }}%</span>
       </div>
 
-      <div class="d-flex justify-content-between" v-if="this.itemObject.stats.precision">
+      <!-- <div class="d-flex justify-content-between" v-if="this.itemObject.stats.precision">
         <span>Precision: </span>
         <span>{{ this.itemObject.stats.precision }}</span>
       </div>
@@ -244,7 +244,7 @@ export default {
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.acuity">
         <span>Acuity: </span>
         <span>{{ this.itemObject.stats.acuity }}</span>
-      </div>
+      </div> -->
 
     </div>
 

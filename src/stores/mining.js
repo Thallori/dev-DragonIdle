@@ -1,12 +1,11 @@
 import { defineStore } from 'pinia'
-import { useSkillStore } from '@/stores/skills';
-import { useExplorationStore } from '@/stores/exploration';
-import { useItemStore } from '@/stores/inventory';
-
+import { useSkillStore as skillStore } from '@/stores/skills'
+import { useExplorationStore as explorationStore } from '@/stores/exploration'
+import { useItemStore as itemStore } from '@/stores/inventory'
 
 export const useMiningStore = defineStore('miningStore', {
   state: () => ({
-    pickaxeInterval: 2000, // 1 update per 2.0 seconds
+    baseMiningInterval: 2, //seconds
     toRockDamage: 0,
     efficency: 2,
 
@@ -17,9 +16,8 @@ export const useMiningStore = defineStore('miningStore', {
 
     //mining skill is stored as id 15 which is also its index, because I don't know how to do it otherwise
     skillID: 15,
-    skillStore: useSkillStore(),
-    explorationStore: useExplorationStore(),
-    itemStore: useItemStore(),
+    gems1: ['yellowGem', 'pinkGem'],
+    gems2: ['redGem', 'greenGem', 'blueGem'],
 
     activities: [
       {
@@ -147,6 +145,37 @@ export const useMiningStore = defineStore('miningStore', {
   getters: {
   },
   actions: {
+    saveAll() {
+      localStorage.setItem('mining-efficency', JSON.stringify(this.efficency))
+      localStorage.setItem('mining-activeObject', JSON.stringify(this.activeObject))
+
+      for (let i in this.activities) {
+        localStorage.setItem('mining-mxp' + i, JSON.stringify(this.activities[i].mxp))
+        localStorage.setItem('mining-mLevel' + i, JSON.stringify(this.activities[i].mLevel))
+        localStorage.setItem('mining-mxpPrev' + i, JSON.stringify(this.activities[i].mxpPrev))
+        localStorage.setItem('mining-mxpNext' + i, JSON.stringify(this.activities[i].mxpNext))
+      }
+    },
+    loadAll() {
+      this.efficency = JSON.parse(localStorage.getItem('mining-efficency'))
+
+      for (let i in this.activities) {
+        this.activities[i].mxp = JSON.parse(localStorage.getItem('mining-mxp' + i))
+        this.activities[i].mLevel = JSON.parse(localStorage.getItem('mining-mLevel' + i))
+        this.activities[i].mxpPrev = JSON.parse(localStorage.getItem('mining-mxpPrev' + i))
+        this.activities[i].mxpNext = JSON.parse(localStorage.getItem('mining-mxpNext' + i))
+      }
+    },
+
+    onLoad() {
+      //localstorage makes the active object a real boy instead of a reference to a real boy
+      this.activeObject = JSON.parse(localStorage.getItem('mining-activeObject'))
+      this.activeObject = this.activities[this.activeObject.id]
+      this.activeProgress = this.activeObject.rockHP
+      this.activePercent = 100
+      this.tryRepeatAction()
+    },
+
     setActiveAction(newActiveActivity) {
       clearTimeout(this.currentTimeout)
       if (newActiveActivity.id == this.activeObject.id) {
@@ -159,9 +188,9 @@ export const useMiningStore = defineStore('miningStore', {
       this.activeObject = newActiveActivity
       this.activeProgress = this.activeObject.rockHP
 
-      this.skillStore.cancelCurrentActivity('mine')
-      this.skillStore.setCurrentActivity(this.activeObject)
-      this.skillStore.setCurrentCat('Mining: ')
+      skillStore().cancelCurrentActivity('mine')
+      skillStore().setCurrentActivity(this.activeObject)
+      skillStore().setCurrentCat('Mining: ')
 
       this.tryRepeatAction()
     },
@@ -172,16 +201,16 @@ export const useMiningStore = defineStore('miningStore', {
       this.activeProgress = 0
       this.activePercent = 0
       this.activeObject = {}
-      this.skillStore.setCurrentActivity({ name: 'Nothing' })
-      this.skillStore.setCurrentCat('Currently Doing: ')
+      skillStore().setCurrentActivity({ name: 'Nothing' })
+      skillStore().setCurrentCat('Currently Doing: ')
     },
 
     updateProgress() {
       //pickaxe penetrates armor, overpenetration does nothing
-      this.toRockDamage = Math.max(0, (this.activeObject.rockArmor - this.itemStore.equippedTools.miningTool.toolStats.bonusPen))
+      this.toRockDamage = Math.max(0, (this.activeObject.rockArmor - itemStore().equippedTools.miningTool.toolStats.bonusPen))
 
       //pickaxe does damage - remaining rock armor, no negative damage
-      this.toRockDamage = Math.max(0, (this.itemStore.equippedTools.miningTool.toolStats.bonusDamage - this.toRockDamage))
+      this.toRockDamage = Math.max(0, (itemStore().equippedTools.miningTool.toolStats.bonusDamage - this.toRockDamage))
 
       //crit chance, 3*mLevel / 100
       //TODO make way to increase crit damage later?
@@ -203,9 +232,15 @@ export const useMiningStore = defineStore('miningStore', {
       if (this.activeProgress <= 0) {
         let wasEfficent = this.efficencyReturn()
 
-        this.skillStore.addXP(this.skillID, (this.activeObject.xpGain * wasEfficent))
+        skillStore().addXP(this.skillID, (this.activeObject.xpGain * wasEfficent))
         this.addMXP(1 * wasEfficent)
-        this.itemStore.changeItemCount(this.activeObject.resourceID, (this.activeObject.resourceAmount * wasEfficent), 'resourceItems')
+        itemStore().changeItemCount(this.activeObject.resourceID, (this.activeObject.resourceAmount * wasEfficent), 'resourceItems')
+
+        //gemchance, ugly TODO rewrite maybe
+        this.gemChance()
+        if (wasEfficent > 1) {
+          this.gemChance()
+        }
 
         this.updateEfficency()
         console.log('boop')
@@ -222,12 +257,36 @@ export const useMiningStore = defineStore('miningStore', {
       this.tryRepeatAction()
     },
     tryRepeatAction() {
-      this.currentTimeout = setTimeout(this.updateProgress, this.pickaxeInterval)
+      this.currentTimeout = setTimeout(this.updateProgress, (this.baseMiningInterval - itemStore().equippedTools.miningTool.toolStats.bonusMiningSpeed) * 1000)
+    },
+
+    //ugly TODO rewrite maybe
+    gemChance() {
+      //if beadstone
+      if (this.activeObject.id == 7) {
+        //15% of the time, give okay gem
+        if (Math.random() < 0.15) {
+          itemStore().changeItemCount(this.gems2[Math.floor(Math.random() * this.gems2.length)], 1, 'resourceItems')
+          return
+        }
+        //otherwise, give bad gem
+        itemStore().changeItemCount(this.gems1[Math.floor(Math.random() * this.gems1.length)], 1, 'resourceItems')
+        return
+      }
+
+      //99% of the time, do nothing
+      if (Math.random() < 0.99) {
+        return
+      }
+      if (this.activeObject.id < 7) {
+        itemStore().changeItemCount(this.gems1[Math.floor(Math.random() * this.gems1.length)], 1, 'resourceItems')
+        return
+      }
     },
 
     updateEfficency() {
-      this.efficency = 2 * this.skillStore.skills[this.skillID].level
-      this.efficency += this.explorationStore.activities[1].mLevel //cassit canton
+      this.efficency = 2 * skillStore().skills[this.skillID].level
+      this.efficency += explorationStore().activities[1].mLevel //cassit canton
     },
     //TODO make efficency > 100 meaningful
     efficencyReturn() {

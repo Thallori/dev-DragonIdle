@@ -1,23 +1,29 @@
 <script>
-import { useSkillStore } from './stores/skills';
+import { useSkillStore } from './stores/skills'
+import { useCombatStore } from './stores/combat'
+import { useDiaStore } from './stores/dialog'
 
-import InventoryTab from './components/InventoryTab.vue';
-import CombatTab from './components/CombatTab.vue';
-import ExplorationTab from './components/ExplorationTab.vue';
-import ScryingTab from './components/ScryingTab.vue';
-import ForagingTab from './components/ForagingTab.vue';
-import HuntingTab from './components/HuntingTab.vue';
-import MiningTab from './components/MiningTab.vue';
-import SmithingTab from './components/SmithingTab.vue';
-import CookingTab from './components/CookingTab.vue';
+import InventoryTab from './components/InventoryTab.vue'
+import ShopTab from './components/ShopTab.vue'
+import CombatTab from './components/CombatTab.vue'
+import ExplorationTab from './components/ExplorationTab.vue'
+import ScryingTab from './components/ScryingTab.vue'
+import ForagingTab from './components/ForagingTab.vue'
+import HuntingTab from './components/HuntingTab.vue'
+import MiningTab from './components/MiningTab.vue'
+import SmithingTab from './components/SmithingTab.vue'
+import CookingTab from './components/CookingTab.vue'
+import SettingsTab from './components/SettingsTab.vue'
 
 export default {
   components: {
-    InventoryTab, CombatTab, ExplorationTab, ScryingTab, ForagingTab, HuntingTab, MiningTab, SmithingTab, CookingTab
+    InventoryTab, ShopTab, CombatTab, ExplorationTab, ScryingTab, ForagingTab, HuntingTab, MiningTab, SmithingTab, CookingTab, SettingsTab
   },
   setup() {
     const skillStore = useSkillStore()
-    return { skillStore }
+    const combatStore = useCombatStore()
+    const diaStore = useDiaStore()
+    return { skillStore, combatStore, diaStore }
   },
   data() {
     return {
@@ -28,15 +34,15 @@ export default {
       showSidenav: true,
       showAllAffinities: true,
       showAllSkills: true,
-      // currentViewedWindow: 'ExplorationTab'
-
-      currentViewedWindow: 'CombatTab'
+      currentViewedWindow: 'ExplorationTab',
     }
   },
 
   mounted() {
     window.addEventListener('resize', this.onResize);
     this.onResize();
+    this.combatStore.hpRegen()
+    this.skillStore.timeUpdate()
   },
   unmounted() {
     window.removeEventListener('resize', this.onResize);
@@ -72,12 +78,68 @@ export default {
     debuggingBoop: function () {
       console.log('boop')
     },
+
+    nextDia() {
+      this.currentDiaCount += 1
+      if (this.currentDiaCount + 1 >= this.currentDiaArray.length) {
+        this.showEndChoice = 2
+      }
+    },
+    finalWord(temp) {
+      this.currentDiaArray[0] = temp
+      this.currentDiaCount = 0
+      this.showEndChoice = 0
+      setTimeout(this.waiting, 2800)
+    },
+    waiting() {
+      this.showDialogueModal = false
+    },
   }
 }
 </script>
 
 <template>
   <div class="main" id="idMain">
+
+    <!-- Dialogue Modal -->
+    <div class="modal show-modal" v-if="diaStore.showDia == true">
+      <div class="modal-backing"></div>
+
+      <!-- Dialogue Content -->
+      <div class="d-flex modal-content user-select-none text-center py-2 px-2"
+        style="margin-top: 8%; width: 23rem; min-height: 15rem;">
+
+        <!-- Skip -->
+        <div class="card equipment-card text-center little-levels ms-auto px-2" @click="diaStore.skipDia()"
+          v-if="diaStore.showSkip == true">
+          >SKIP
+        </div>
+
+        <!-- Dialogue -->
+        <div class="mt-4">
+          {{ diaStore.currentMessage }}
+        </div>
+
+        <!-- Next and Choice Buttons -->
+        <div class="d-flex justify-content-around gap-5 px-2 mt-auto">
+
+          <div class="card equipment-card text-center mx-auto w-50" @click="diaStore.nextDia()" v-if="diaStore.showOK">
+            OK
+          </div>
+
+          <div class="card equipment-card text-center mb-5 mx-auto w-50"
+            @click="diaStore.nextDia(diaStore.activeStep.r1)" v-if="undefined !== diaStore.activeStep.r1">
+            {{ diaStore.activeStep.r1[0] }}
+          </div>
+
+          <div class="card equipment-card text-center mb-5 mx-auto w-50"
+            @click="diaStore.nextDia(diaStore.activeStep.r2)" v-if="undefined !== diaStore.activeStep.r2">
+            {{ diaStore.activeStep.r2[0] }}
+          </div>
+
+        </div>
+      </div>
+    </div>
 
     <!-- Sidenav -->
     <div class="sidenav position-relatives" id="idSidenav">
@@ -89,21 +151,26 @@ export default {
       </div>
 
       <!-- Inventory -->
-      <div class="sidenav-item d-flex align-items-center" @click="currentViewedWindow = 'InventoryTab'">
+      <div class="sidenav-item d-flex align-items-center" @click="currentViewedWindow = 'InventoryTab'"
+        v-if="skillStore.flags.showHoard == true">
         <img src="src/assets/12x/coins.png" alt="" style="height: 24px; width: 24px;">
         <span>Hoard</span>
       </div>
-      <div class="sidenav-item d-flex align-items-center">
+
+      <div class="sidenav-item d-flex align-items-center" @click="currentViewedWindow = 'ShopTab'"
+        v-if="skillStore.flags.showHoard == true">
         <img src="src/assets/12x/shop.png" alt="" style="height: 24px; width: 24px;">
         <span>Shops</span>
       </div>
 
       <!-- Combat -->
-      <div class="sidenav-category card-button" @click="showAllAffinities = !showAllAffinities">
+      <div class="sidenav-category card-button" @click="showAllAffinities = !showAllAffinities"
+        v-if="skillStore.flags.showCombat == true">
         <span>Affinities </span>
       </div>
 
-      <div class="sidenav-item d-flex align-items-center" @click="currentViewedWindow = 'CombatTab'">
+      <div class="sidenav-item d-flex align-items-center" @click="currentViewedWindow = 'CombatTab'"
+        v-if="skillStore.flags.showCombat == true">
         <img src="src/assets/12x/combat.png" alt="" style="height: 24px; width: 24px;">
         <span>Combat</span>
       </div>
@@ -172,7 +239,7 @@ export default {
       </div>
 
       <!-- Auxiliary -->
-      <div class="sidenav-category">
+      <div class="sidenav-category" v-if="skillStore.flags.showAux == true">
         <span>Auxiliary </span>
       </div>
 
@@ -184,11 +251,11 @@ export default {
         <img src="src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
         <span>Wiki</span>
       </div> -->
-      <div class="sidenav-item d-flex align-items-center justify-content-start">
+      <div class="sidenav-item d-flex align-items-center justify-content-start" v-if="skillStore.flags.showAux == true">
         <img src="src/assets/12x/discord.png" alt="" style="height: 24px; width: 24px;">
         <span>Discord</span>
       </div>
-      <div class="sidenav-item d-flex align-items-center justify-content-start">
+      <div class="sidenav-item d-flex align-items-center justify-content-start" v-if="skillStore.flags.showAux == true">
         <img src="src/assets/12x/about.png" alt="" style="height: 24px; width: 24px;">
         <span>About</span>
       </div>
@@ -196,7 +263,7 @@ export default {
       <!-- Settings Footer -->
       <div class="sidenav-category"></div>
 
-      <div class="sidenav-footer rounded-top">
+      <div class="sidenav-footer rounded-top" @click="currentViewedWindow = 'SettingsTab'">
         <div class="content-container d-flex align-items-center justify-content-start">
           <img src="src/assets/12x/settings.png" alt="" style="height: 24px; width: 24px;">
           <span>Settings</span>

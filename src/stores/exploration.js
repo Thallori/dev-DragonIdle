@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
-import { useSkillStore } from '@/stores/skills';
-import { useItemStore } from '@/stores/inventory';
+import { useItemStore as itemStore } from '@/stores/inventory'
+import { useSkillStore as skillStore } from '@/stores/skills'
 //exploration skill is stored as id 9 which is also its index, because I don't know how to do it otherwise
 
 export const useExplorationStore = defineStore('explorationStore', {
@@ -18,8 +18,6 @@ export const useExplorationStore = defineStore('explorationStore', {
 
     //exploration skill is stored as id 9 which is also its index, because I don't know how to do it otherwise
     skillID: 9,
-    skillStore: useSkillStore(),
-    itemStore: useItemStore(),
 
     activities: [
       {
@@ -35,7 +33,7 @@ export const useExplorationStore = defineStore('explorationStore', {
         mxpNext: 10,
         isSealed: true,
         requiresAnyFlags: 'tbd',
-        efficencySkill: 'Foraging',
+        efficencySkill: 'Hunting',
         uniqueFeature1: ['Foraging', 0, 'src/assets/icons/oak.png'], //oak
         uniqueFeature2: ['Hunting', 2, 'src/assets/icons/bird.png'], //phesant
       },
@@ -141,8 +139,43 @@ export const useExplorationStore = defineStore('explorationStore', {
   getters: {
   },
   actions: {
-    setActiveAction(newActiveActivity) {
+    saveAll() {
+      localStorage.setItem('exploration-efficency', JSON.stringify(this.efficency))
+      localStorage.setItem('exploration-maxUnsealedAreas', JSON.stringify(this.maxUnsealedAreas))
+      localStorage.setItem('exploration-currentUnsealedAreas', JSON.stringify(this.currentUnsealedAreas))
+      localStorage.setItem('exploration-activeObject', JSON.stringify(this.activeObject))
 
+      for (let i in this.activities) {
+        localStorage.setItem('exploration-xpGain' + i, JSON.stringify(this.activities[i].xpGain))
+        localStorage.setItem('exploration-mxp' + i, JSON.stringify(this.activities[i].mxp))
+        localStorage.setItem('exploration-mLevel' + i, JSON.stringify(this.activities[i].mLevel))
+        localStorage.setItem('exploration-mxpPrev' + i, JSON.stringify(this.activities[i].mxpPrev))
+        localStorage.setItem('exploration-mxpNext' + i, JSON.stringify(this.activities[i].mxpNext))
+        localStorage.setItem('exploration-isSealed' + i, JSON.stringify(this.activities[i].isSealed))
+      }
+    },
+    loadAll() {
+      this.efficency = JSON.parse(localStorage.getItem('exploration-efficency'))
+      this.maxUnsealedAreas = JSON.parse(localStorage.getItem('exploration-maxUnsealedAreas'))
+      this.currentUnsealedAreas = JSON.parse(localStorage.getItem('exploration-currentUnsealedAreas'))
+
+      for (let i in this.activities) {
+        this.activities[i].mxp = JSON.parse(localStorage.getItem('exploration-mxp' + i))
+        this.activities[i].mLevel = JSON.parse(localStorage.getItem('exploration-mLevel' + i))
+        this.activities[i].mxpPrev = JSON.parse(localStorage.getItem('exploration-mxpPrev' + i))
+        this.activities[i].mxpNext = JSON.parse(localStorage.getItem('exploration-mxpNext' + i))
+        this.activities[i].isSealed = JSON.parse(localStorage.getItem('exploration-isSealed' + i))
+      }
+    },
+
+    onLoad() {
+      //localstorage makes the active object a real boy instead of a reference to a real boy
+      this.activeObject = JSON.parse(localStorage.getItem('exploration-activeObject'))
+      this.activeObject = this.activities[this.activeObject.id]
+      this.tryRepeatAction()
+    },
+    
+    setActiveAction(newActiveActivity) {
       clearTimeout(this.currentTimeout)
       if (newActiveActivity.id == this.activeObject.id) {
         this.cancelAction()
@@ -153,9 +186,9 @@ export const useExplorationStore = defineStore('explorationStore', {
       this.activeProgress = 0
       this.activeObject = newActiveActivity
 
-      this.skillStore.cancelCurrentActivity('explore')
-      this.skillStore.setCurrentActivity(this.activeObject)
-      this.skillStore.setCurrentCat('Exploring: ')
+      skillStore().cancelCurrentActivity('explore')
+      skillStore().setCurrentActivity(this.activeObject)
+      skillStore().setCurrentCat('Exploring: ')
       this.updateEfficency()
 
       this.tryRepeatAction()
@@ -166,19 +199,21 @@ export const useExplorationStore = defineStore('explorationStore', {
       this.activeProgress = 0
       this.activePercent = 0
       this.activeObject = {}
-      this.skillStore.setCurrentActivity({ name: 'Nothing' })
-      this.skillStore.setCurrentCat('Currently Doing: ')
+      skillStore().setCurrentActivity({ name: 'Nothing' })
+      skillStore().setCurrentCat('Currently Doing: ')
     },
 
     updateProgress() {
-      if (this.activeProgress >= (1000 * this.activeObject.interval * (1 - this.itemStore.equippedTools.explorationTool.toolStats.explorationMulti))) {
+
+      if (this.activeProgress >= (1000 * this.activeObject.interval * (1 - itemStore().equippedTools.explorationTool.toolStats.explorationMulti))) {
         let wasEfficent = this.efficencyReturn()
 
-        this.skillStore.addXP(this.skillID, (this.activeObject.xpGain * wasEfficent))
+        skillStore().addXP(this.skillID, (this.activeObject.xpGain * wasEfficent))
         this.addMXP(1 * wasEfficent)
 
+        this.updateFlags()
         this.updateEfficency()
-        console.log('boop')
+        // console.log('boop, action done')
 
         this.activeProgress = 0
       }
@@ -192,7 +227,7 @@ export const useExplorationStore = defineStore('explorationStore', {
     },
 
     updateEfficency() {
-      this.efficency = 2 * this.skillStore.skills[this.skillID].level
+      this.efficency = 2 * skillStore().skills[this.skillID].level
     },
     //TODO make efficency > 100 meaningful
     efficencyReturn() {
@@ -214,6 +249,36 @@ export const useExplorationStore = defineStore('explorationStore', {
       this.currentUnsealedAreas = 0
     },
 
+    updateFlags() {
+      //hunting
+      if (this.activeObject.id == 0 && this.activeObject.mLevel == 1) {
+        skillStore().unlockSkill(14)
+        return
+      }
+      //mining
+      if (this.activeObject.id == 0 && this.activeObject.mLevel == 2) {
+        skillStore().unlockSkill(15)
+        return
+      }
+      //foraging
+      if (this.activeObject.id == 0 && this.activeObject.mLevel == 3) {
+        skillStore().unlockSkill(13)
+        return
+      }
+      //scrying
+      if (this.activeObject.id == 2 && this.activeObject.mLevel == 1) {
+        skillStore().unlockSkill(12)
+        return
+      }
+      //backup to unlock gathering skills
+      if (skillStore().skills[13].locked == true && skillStore().skills[this.skillID].level > 1) {
+        skillStore().unlockSkill(13)
+        skillStore().unlockSkill(15)
+        skillStore().unlockSkill(14)
+        return
+      }
+    },
+
     addMXP(mxpAmount) {
       let maxMLevel = 20
       if (this.activeObject.mLevel >= maxMLevel) {
@@ -232,7 +297,7 @@ export const useExplorationStore = defineStore('explorationStore', {
       this.activeObject.mxpPrev = mxpFromLevel(this.activeObject.mLevel)
       this.activeObject.mxpNext = mxpFromLevel(this.activeObject.mLevel + 1)
     },
-  }
+  },
 })
 
 export function levelFromMXP(mxp) {

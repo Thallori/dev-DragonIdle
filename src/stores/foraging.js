@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
-import { useSkillStore } from '@/stores/skills';
-import { useExplorationStore } from '@/stores/exploration';
-import { useItemStore } from '@/stores/inventory';
+import { useItemStore as itemStore } from '@/stores/inventory'
+import { useSkillStore as skillStore } from '@/stores/skills'
+import { useExplorationStore as ExplorationStore } from '@/stores/exploration'
 
 export const useForagingStore = defineStore('foragingStore', {
   state: () => ({
@@ -16,9 +16,6 @@ export const useForagingStore = defineStore('foragingStore', {
 
     //foraging skill is stored as id 13 which is also its index, because I don't know how to do it otherwise
     skillID: 13,
-    skillStore: useSkillStore(),
-    explorationStore: useExplorationStore(),
-    itemStore: useItemStore(),
 
     activities: [
       {
@@ -162,6 +159,37 @@ export const useForagingStore = defineStore('foragingStore', {
   getters: {
   },
   actions: {
+    saveAll() {
+      localStorage.setItem('foraging-efficency', JSON.stringify(this.efficency))
+      localStorage.setItem('foraging-activeObject', JSON.stringify(this.activeObject))
+
+      for (let i in this.activities) {
+        localStorage.setItem('foraging-currentYield' + i, JSON.stringify(this.activities[i].currentYield))
+        localStorage.setItem('foraging-mxp' + i, JSON.stringify(this.activities[i].mxp))
+        localStorage.setItem('foraging-mLevel' + i, JSON.stringify(this.activities[i].mLevel))
+        localStorage.setItem('foraging-mxpPrev' + i, JSON.stringify(this.activities[i].mxpPrev))
+        localStorage.setItem('foraging-mxpNext' + i, JSON.stringify(this.activities[i].mxpNext))
+      }
+    },
+    loadAll() {
+      this.efficency = JSON.parse(localStorage.getItem('foraging-efficency'))
+
+      for (let i in this.activities) {
+        this.activities[i].currentYield = JSON.parse(localStorage.getItem('foraging-currentYield' + i))
+        this.activities[i].mxp = JSON.parse(localStorage.getItem('foraging-mxp' + i))
+        this.activities[i].mLevel = JSON.parse(localStorage.getItem('foraging-mLevel' + i))
+        this.activities[i].mxpPrev = JSON.parse(localStorage.getItem('foraging-mxpPrev' + i))
+        this.activities[i].mxpNext = JSON.parse(localStorage.getItem('foraging-mxpNext' + i))
+      }
+    },
+
+    onLoad() {
+      //localstorage makes the active object a real boy instead of a reference to a real boy
+      this.activeObject = JSON.parse(localStorage.getItem('foraging-activeObject'))
+      this.activeObject = this.activities[this.activeObject.id]
+      this.tryRepeatAction()
+    },
+
     setActiveAction(newActiveActivity) {
       clearTimeout(this.currentTimeout)
 
@@ -175,9 +203,9 @@ export const useForagingStore = defineStore('foragingStore', {
       this.activePercent = 0
       this.activeObject = newActiveActivity
 
-      this.skillStore.cancelCurrentActivity('forage')
-      this.skillStore.setCurrentActivity(this.activeObject)
-      this.skillStore.setCurrentCat('Foraging: ')
+      skillStore().cancelCurrentActivity('forage')
+      skillStore().setCurrentActivity(this.activeObject)
+      skillStore().setCurrentCat('Foraging: ')
 
       this.tryRepeatAction()
     },
@@ -188,14 +216,13 @@ export const useForagingStore = defineStore('foragingStore', {
       this.activeProgress = 0
       this.activePercent = 0
       this.activeObject = {}
-      this.skillStore.setCurrentActivity({ name: 'Nothing' })
-      this.skillStore.setCurrentCat('Currently Doing: ')
+      skillStore().setCurrentActivity({ name: 'Nothing' })
+      skillStore().setCurrentCat('Currently Doing: ')
       this.updateEfficency()
     },
 
     updateProgress() {
-
-      if (this.activeProgress >= (1000 * this.activeObject.searchDifficulty * (1 - this.itemStore.equippedTools.foragingTool.toolStats.locatingMultiplierAdd))) {
+      if (this.activeProgress >= (1000 * this.activeObject.searchDifficulty * (1 - itemStore().equippedTools.foragingTool.toolStats.locatingMultiplierAdd))) {
 
         this.activeProgress = this.activeObject.gatherDifficulty
         this.activePercent = 100
@@ -207,7 +234,7 @@ export const useForagingStore = defineStore('foragingStore', {
       }
 
       this.activeProgress += this.progressInterval
-      this.activePercent = this.activeProgress / (10 * this.activeObject.searchDifficulty * (1 - this.itemStore.equippedTools.foragingTool.toolStats.locatingMultiplierAdd))
+      this.activePercent = this.activeProgress / (10 * this.activeObject.searchDifficulty * (1 - itemStore().equippedTools.foragingTool.toolStats.locatingMultiplierAdd))
 
       this.tryRepeatAction()
     },
@@ -228,15 +255,15 @@ export const useForagingStore = defineStore('foragingStore', {
     },
     tryRepeatGather() {
       //gather difficult - tool bonus in seconds
-      this.currentTimeout = setTimeout(this.updateGatherProgress, ((this.activeObject.gatherDifficulty - this.itemStore.equippedTools.foragingTool.toolStats.harvestingTimeBonus) * 1000))
+      this.currentTimeout = setTimeout(this.updateGatherProgress, ((this.activeObject.gatherDifficulty - itemStore().equippedTools.foragingTool.toolStats.harvestingTimeBonus) * 1000))
     },
 
     actionSuccess() {
       let wasEfficent = this.efficencyReturn()
 
-      this.skillStore.addXP(this.skillID, (this.activeObject.xpGain * wasEfficent))
+      skillStore().addXP(this.skillID, (this.activeObject.xpGain * wasEfficent))
       this.addMXP(1 * wasEfficent)
-      this.itemStore.changeItemCount(this.activeObject.resourceID, (this.activeObject.resourceAmount * wasEfficent), 'resourceItems')
+      itemStore().changeItemCount(this.activeObject.resourceID, (this.activeObject.resourceAmount * wasEfficent), 'resourceItems')
 
       this.updateEfficency()
       this.updateYield()
@@ -247,8 +274,8 @@ export const useForagingStore = defineStore('foragingStore', {
     },
 
     updateEfficency() {
-      this.efficency = 2 * this.skillStore.skills[this.skillID].level
-      this.efficency += this.explorationStore.activities[0].mLevel //gleaming grove
+      this.efficency = 2 * skillStore().skills[this.skillID].level
+      // this.efficency += explorationStore().activities[3].mLevel //area4
     },
     //TODO make efficency > 100 meaningful
     efficencyReturn() {

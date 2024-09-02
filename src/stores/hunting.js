@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
-import { useSkillStore } from '@/stores/skills';
-import { useItemStore } from '@/stores/inventory';
+import { useItemStore as itemStore } from '@/stores/inventory'
+import { useSkillStore as skillStore } from '@/stores/skills'
+import { useExplorationStore as explorationStore } from '@/stores/exploration'
 
 export const useHuntingStore = defineStore('huntingStore', {
   state: () => ({
@@ -15,8 +16,6 @@ export const useHuntingStore = defineStore('huntingStore', {
     
     //hunting skill is stored as id 14 which is also its index, because I don't know how to do it otherwise
     skillID: 14,
-    skillStore: useSkillStore(),
-    itemStore: useItemStore(),
 
     activities: [
       {
@@ -175,6 +174,35 @@ export const useHuntingStore = defineStore('huntingStore', {
   getters: {
   },
   actions: {
+    saveAll() {
+      localStorage.setItem('hunting-efficency', JSON.stringify(this.efficency))
+      localStorage.setItem('hunting-activeObject', JSON.stringify(this.activeObject))
+
+      for (let i in this.activities) {
+        localStorage.setItem('hunting-mxp' + i, JSON.stringify(this.activities[i].mxp))
+        localStorage.setItem('hunting-mLevel' + i, JSON.stringify(this.activities[i].mLevel))
+        localStorage.setItem('hunting-mxpPrev' + i, JSON.stringify(this.activities[i].mxpPrev))
+        localStorage.setItem('hunting-mxpNext' + i, JSON.stringify(this.activities[i].mxpNext))
+      }
+    },
+    loadAll() {
+      this.efficency = JSON.parse(localStorage.getItem('hunting-efficency'))
+
+      for (let i in this.activities) {
+        this.activities[i].mxp = JSON.parse(localStorage.getItem('hunting-mxp' + i))
+        this.activities[i].mLevel = JSON.parse(localStorage.getItem('hunting-mLevel' + i))
+        this.activities[i].mxpPrev = JSON.parse(localStorage.getItem('hunting-mxpPrev' + i))
+        this.activities[i].mxpNext = JSON.parse(localStorage.getItem('hunting-mxpNext' + i))
+      }
+    },
+
+    onLoad() {
+      //localstorage makes the active object a real boy instead of a reference to a real boy
+      this.activeObject = JSON.parse(localStorage.getItem('hunting-activeObject'))
+      this.activeObject = this.activities[this.activeObject.id]
+      this.tryRepeatAction()
+    },
+
     setActiveAction(newActiveActivity) {
       clearTimeout(this.currentTimeout)
 
@@ -188,9 +216,9 @@ export const useHuntingStore = defineStore('huntingStore', {
       this.activePercent = 0
       this.activeObject = newActiveActivity
 
-      this.skillStore.cancelCurrentActivity('hunt')
-      this.skillStore.setCurrentActivity(this.activeObject)
-      this.skillStore.setCurrentCat('Hunting: ')
+      skillStore().cancelCurrentActivity('hunt')
+      skillStore().setCurrentActivity(this.activeObject)
+      skillStore().setCurrentCat('Hunting: ')
 
       this.tryRepeatAction()
     },
@@ -201,8 +229,8 @@ export const useHuntingStore = defineStore('huntingStore', {
       this.activeProgress = 0
       this.activePercent = 0
       this.activeObject = {}
-      this.skillStore.setCurrentActivity({ name: 'Nothing' })
-      this.skillStore.setCurrentCat('Currently Doing: ')
+      skillStore().setCurrentActivity({ name: 'Nothing' })
+      skillStore().setCurrentCat('Currently Doing: ')
     },
 
     updateProgress() {
@@ -235,7 +263,7 @@ export const useHuntingStore = defineStore('huntingStore', {
         return
       }
 
-      this.activeProgress -= this.progressInterval * this.itemStore.equippedTools.huntingTool.toolStats.bleeding
+      this.activeProgress -= this.progressInterval * itemStore().equippedTools.huntingTool.toolStats.bleeding
 
       this.activePercent = this.activeProgress / (10 * this.activeObject.hp)
 
@@ -248,7 +276,7 @@ export const useHuntingStore = defineStore('huntingStore', {
     actionSuccess() {
       let wasEfficent = this.efficencyReturn()
       
-      this.skillStore.addXP(this.skillID, (this.activeObject.xpGain * wasEfficent))
+      skillStore().addXP(this.skillID, (this.activeObject.xpGain * wasEfficent))
       this.addMXP(1 * wasEfficent)
 
       //there is always a meat
@@ -256,11 +284,11 @@ export const useHuntingStore = defineStore('huntingStore', {
       let rangeRoll = this.randomIntRange(this.activeObject.itemMeatRange[0], this.activeObject.itemMeatRange[1])
       let rangeRoll2 = this.randomIntRange(this.activeObject.itemMeatRange[0], this.activeObject.itemMeatRange[1])
 
-      this.itemStore.changeItemCount(this.activeObject.itemMeatID, (rangeRoll + (rangeRoll2 * (wasEfficent - 1))), 'consumableItems')
+      itemStore().changeItemCount(this.activeObject.itemMeatID, (rangeRoll + (rangeRoll2 * (wasEfficent - 1))), 'consumableItems')
 
       //if there are bones, there is only one
       if (this.activeObject.itemBonesID) {
-        this.itemStore.changeItemCount(this.activeObject.itemBonesID, (1 * wasEfficent), 'resourceItems')
+        itemStore().changeItemCount(this.activeObject.itemBonesID, (1 * wasEfficent), 'resourceItems')
       }
 
       // if there is a hide, there is a range for hide, roll and give it
@@ -268,7 +296,7 @@ export const useHuntingStore = defineStore('huntingStore', {
         let rangeRoll = this.randomIntRange(this.activeObject.itemHideRange[0], this.activeObject.itemHideRange[1])
         let rangeRoll2 = this.randomIntRange(this.activeObject.itemHideRange[0], this.activeObject.itemHideRange[1])
 
-        this.itemStore.changeItemCount(this.activeObject.itemHideID, (rangeRoll + (rangeRoll2 * (wasEfficent - 1))), 'resourceItems')
+        itemStore().changeItemCount(this.activeObject.itemHideID, (rangeRoll + (rangeRoll2 * (wasEfficent - 1))), 'resourceItems')
       }
 
       // if there is an extra, there is a range for extra, roll and give it
@@ -276,7 +304,7 @@ export const useHuntingStore = defineStore('huntingStore', {
         let rangeRoll = this.randomIntRange(this.activeObject.itemExtraRange[0], this.activeObject.itemExtraRange[1])
         let rangeRoll2 = this.randomIntRange(this.activeObject.itemExtraRange[0], this.activeObject.itemExtraRange[1])
 
-        this.itemStore.changeItemCount(this.activeObject.itemExtraID, (rangeRoll + (rangeRoll2 * (wasEfficent - 1))), 'resourceItems')
+        itemStore().changeItemCount(this.activeObject.itemExtraID, (rangeRoll + (rangeRoll2 * (wasEfficent - 1))), 'resourceItems')
       }
 
       this.activeProgress = 0
@@ -289,7 +317,7 @@ export const useHuntingStore = defineStore('huntingStore', {
     },
 
     instaKill() {
-      if (((this.activeObject.mLevel * 0.02) + this.itemStore.equippedTools.huntingTool.toolStats.instaKill) >= Math.random()) {
+      if (((this.activeObject.mLevel * 0.02) + itemStore().equippedTools.huntingTool.toolStats.instaKill) >= Math.random()) {
         console.log('fatal strike!')
         return true
       }
@@ -297,7 +325,8 @@ export const useHuntingStore = defineStore('huntingStore', {
     },
 
     updateEfficency() {
-      this.efficency = 2 * this.skillStore.skills[this.skillID].level
+      this.efficency = 2 * skillStore().skills[this.skillID].level
+      this.efficency += explorationStore().activities[0].mLevel //gleaming glade
     },
     //TODO make efficency > 100 meaningful
     efficencyReturn() {

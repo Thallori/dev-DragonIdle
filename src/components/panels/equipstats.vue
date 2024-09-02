@@ -171,7 +171,7 @@ export default {
 
       <!-- meleeSlot -->
       <div class="card tooltip-br equipment-card" style="width: 58px; height: 58px;"
-        @dblclick="itemStore.equipItem(itemStore.equippedCombat.meleeSlot)">
+        @dblclick="itemStore.equipCombatTool(itemStore.equippedCombat.meleeSlot)">
 
         <div class="tooltip-text" v-if="itemStore.equippedCombat.meleeSlot.id">
           <tooltips :itemObject="itemStore.equippedCombat.meleeSlot" />
@@ -186,7 +186,7 @@ export default {
 
       <!-- rangedSlot -->
       <div class="card tooltip-br equipment-card" style="width: 58px; height: 58px;"
-        @dblclick="itemStore.equipItem(itemStore.equippedCombat.rangedSlot)">
+        @dblclick="itemStore.equipCombatTool(itemStore.equippedCombat.rangedSlot)">
 
         <div class="tooltip-text" v-if="itemStore.equippedCombat.rangedSlot.id">
           <tooltips :itemObject="itemStore.equippedCombat.rangedSlot" />
@@ -201,7 +201,7 @@ export default {
 
       <!-- magicSlot -->
       <div class="card tooltip-br equipment-card" style="width: 58px; height: 58px;"
-        @dblclick="itemStore.equipItem(itemStore.equippedCombat.magicSlot)">
+        @dblclick="itemStore.equipCombatTool(itemStore.equippedCombat.magicSlot)">
 
         <div class="tooltip-text" v-if="itemStore.equippedCombat.magicSlot.id">
           <tooltips :itemObject="itemStore.equippedCombat.magicSlot" />
@@ -267,9 +267,21 @@ export default {
         <div class="text-warning">Melee / Ranged / Magic</div>
         <div class="d-flex justify-content-between">
           <span>Max Hit: </span>
-          <span>{{ itemStore.equippedStats.meleeDamage.toFixed(2).replace(/\.00$/, '') }} /
+
+          <!-- Max Hit, Calculated -->
+          <!-- <span v-if="combatStore.activeObject.stats">
+            <span v-if="combatStore.activeObject.stats.resist != 0">
+              {{ (itemStore.equippedStats.meleeDamage * (1 - Math.max(0, combatStore.activeObject.stats.resist - itemStore.equippedStats.meleePen))).toFixed(2).replace(/\.00$/, '') }} /
+              {{ (itemStore.equippedStats.rangedDamage * (1 - Math.max(0, combatStore.activeObject.stats.resist - itemStore.equippedStats.rangedPen))).toFixed(2).replace(/\.00$/, '') }} /
+              {{ (itemStore.equippedStats.magicDamage * (1 - Math.max(0, combatStore.activeObject.stats.resist - itemStore.equippedStats.magicPen))).toFixed(2).replace(/\.00$/, '') }}
+            </span>
+          </span> -->
+
+          <span>
+            {{ itemStore.equippedStats.meleeDamage.toFixed(2).replace(/\.00$/, '') }} /
             {{ itemStore.equippedStats.rangedDamage.toFixed(2).replace(/\.00$/, '') }} /
-            {{ itemStore.equippedStats.magicDamage.toFixed(2).replace(/\.00$/, '') }}</span>
+            {{ itemStore.equippedStats.magicDamage.toFixed(2).replace(/\.00$/, '') }}
+          </span>
         </div>
         <div class="d-flex justify-content-between">
           <span>Accuracy: </span>
@@ -285,9 +297,10 @@ export default {
         </div>
         <div class="d-flex justify-content-between">
           <span>Speed: </span>
-          <span>{{ (itemStore.equippedStats.meleeSpeed * combatStore.currentSpeedMod).toFixed(2) }}s /
-            {{ (itemStore.equippedStats.rangedSpeed * combatStore.currentSpeedMod).toFixed(2) }}s /
-            {{ (itemStore.equippedStats.magicSpeed * combatStore.currentSpeedMod).toFixed(2) }}s
+          <span>
+            {{ (Math.ceil(itemStore.equippedStats.meleeSpeed * combatStore.currentSpeedMod * 20) / 20).toFixed(2) }}s /
+            {{ (Math.ceil(itemStore.equippedStats.rangedSpeed * combatStore.currentSpeedMod * 20) / 20).toFixed(2) }}s /
+            {{ (Math.ceil(itemStore.equippedStats.magicSpeed * combatStore.currentSpeedMod * 20) / 20).toFixed(2) }}s
           </span>
         </div>
       </div>

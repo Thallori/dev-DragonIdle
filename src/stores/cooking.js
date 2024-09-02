@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
-import { useSkillStore } from '@/stores/skills';
-import { useItemStore } from '@/stores/inventory';
+import { useItemStore as itemStore } from '@/stores/inventory'
+import { useSkillStore as skillStore } from '@/stores/skills'
 
 export const useCookingStore = defineStore('cookingStore', {
   state: () => ({
@@ -14,12 +14,10 @@ export const useCookingStore = defineStore('cookingStore', {
 
     //cooking skill is stored as id 20 which is also its index, because I don't know how to do it otherwise
     skillID: 20,
-    skillStore: useSkillStore(),
-    itemStore: useItemStore(),
 
     activities: [
       {
-        id: '0',
+        id: 'friedChops',
         cat: 'meat',
         name: 'Fried Chops',
         itemID: 'friedChops',
@@ -27,13 +25,14 @@ export const useCookingStore = defineStore('cookingStore', {
         levelRequired: 1,
         xpGain: 3,
         cookTime: 2.75,
+        baseCookTime: 2.75,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
         mxpNext: 10,
       },
       {
-        id: '1',
+        id: 'searedGame',
         cat: 'meat',
         name: 'Seared Game',
         itemID: 'searedGame',
@@ -41,13 +40,14 @@ export const useCookingStore = defineStore('cookingStore', {
         levelRequired: 3,
         xpGain: 5,
         cookTime: 4.25,
+        baseCookTime: 4.25,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
         mxpNext: 10,
       },
       {
-        id: '2',
+        id: 'flankSteak',
         cat: 'meat',
         name: 'Flank Steak',
         itemID: 'flankSteak',
@@ -55,13 +55,14 @@ export const useCookingStore = defineStore('cookingStore', {
         levelRequired: 5,
         xpGain: 7,
         cookTime: 5.50,
+        baseCookTime: 5.50,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
         mxpNext: 10,
       },
       {
-        id: '3',
+        id: 'shelledCrisps',
         cat: 'meat',
         name: 'Shelled Crisps',
         itemID: 'shelledCrisps',
@@ -69,13 +70,14 @@ export const useCookingStore = defineStore('cookingStore', {
         levelRequired: 8,
         xpGain: 10,
         cookTime: 6.75,
+        baseCookTime: 6.75,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
         mxpNext: 10,
       },
       {
-        id: '4',
+        id: 'meal1',
         cat: 'meal',
         name: 'Barkchew',
         itemID: 'meal1',
@@ -83,13 +85,14 @@ export const useCookingStore = defineStore('cookingStore', {
         levelRequired: 1,
         xpGain: 3,
         cookTime: 2.00,
+        baseCookTime: 2.00,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
         mxpNext: 10,
       },
       {
-        id: '5',
+        id: 'meal2',
         cat: 'meal',
         name: 'Flax Bread',
         itemID: 'meal2',
@@ -97,13 +100,14 @@ export const useCookingStore = defineStore('cookingStore', {
         levelRequired: 2,
         xpGain: 5,
         cookTime: 3.25,
+        baseCookTime: 3.25,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
         mxpNext: 10,
       },
       {
-        id: '6',
+        id: 'meal3',
         cat: 'meal',
         name: 'Berry Pie',
         itemID: 'meal3',
@@ -112,13 +116,14 @@ export const useCookingStore = defineStore('cookingStore', {
         levelRequired: 3,
         xpGain: 9,
         cookTime: 4.50,
+        baseCookTime: 4.50,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
         mxpNext: 10,
       },
       {
-        id: '7',
+        id: 'meal4',
         cat: 'meal',
         name: 'Glazed Chops',
         itemID: 'meal4',
@@ -127,13 +132,14 @@ export const useCookingStore = defineStore('cookingStore', {
         levelRequired: 4,
         xpGain: 12,
         cookTime: 5.75,
+        baseCookTime: 5.75,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
         mxpNext: 10,
       },
       {
-        id: '8',
+        id: 'meal5',
         cat: 'meal',
         name: 'Flatcake',
         itemID: 'meal5',
@@ -142,13 +148,14 @@ export const useCookingStore = defineStore('cookingStore', {
         levelRequired: 5,
         xpGain: 17,
         cookTime: 7.00,
+        baseCookTime: 7.00,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
         mxpNext: 10,
       },
       {
-        id: '9',
+        id: 'meal6',
         cat: 'meal',
         name: 'Sticky Game',
         itemID: 'meal6',
@@ -157,13 +164,14 @@ export const useCookingStore = defineStore('cookingStore', {
         levelRequired: 6,
         xpGain: 22,
         cookTime: 8.25,
+        baseCookTime: 8.25,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
         mxpNext: 10,
       },
       {
-        id: '10',
+        id: 'meal7',
         cat: 'meal',
         name: 'Flank Bun',
         itemID: 'meal7',
@@ -172,13 +180,14 @@ export const useCookingStore = defineStore('cookingStore', {
         levelRequired: 7,
         xpGain: 25,
         cookTime: 9.50,
+        baseCookTime: 9.50,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
         mxpNext: 10,
       },
       {
-        id: '11',
+        id: 'meal8',
         cat: 'meal',
         name: 'Shell Cake',
         itemID: 'meal8',
@@ -188,6 +197,7 @@ export const useCookingStore = defineStore('cookingStore', {
         levelRequired: 8,
         xpGain: 32,
         cookTime: 10.75,
+        baseCookTime: 10.75,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
@@ -198,6 +208,57 @@ export const useCookingStore = defineStore('cookingStore', {
   getters: {
   },
   actions: {
+    saveAll() {
+      localStorage.setItem('cooking-efficency', JSON.stringify(this.efficency))
+      localStorage.setItem('cooking-activeObject', JSON.stringify(this.activeObject))
+
+      let tempActivities = this.activities.filter(temp => temp.cat === 'meat')
+      for (let i in tempActivities) {
+        localStorage.setItem('cooking-meat-cookTime' + i, JSON.stringify(tempActivities[i].cookTime))
+        localStorage.setItem('cooking-meat-mxp' + i, JSON.stringify(tempActivities[i].mxp))
+        localStorage.setItem('cooking-meat-mLevel' + i, JSON.stringify(tempActivities[i].mLevel))
+        localStorage.setItem('cooking-meat-mxpPrev' + i, JSON.stringify(tempActivities[i].mxpPrev))
+        localStorage.setItem('cooking-meat-mxpNext' + i, JSON.stringify(tempActivities[i].mxpNext))
+      }
+
+      tempActivities = this.activities.filter(temp => temp.cat === 'meal')
+      for (let i in tempActivities) {
+        localStorage.setItem('cooking-meal-cookTime' + i, JSON.stringify(tempActivities[i].cookTime))
+        localStorage.setItem('cooking-meal-mxp' + i, JSON.stringify(tempActivities[i].mxp))
+        localStorage.setItem('cooking-meal-mLevel' + i, JSON.stringify(tempActivities[i].mLevel))
+        localStorage.setItem('cooking-meal-mxpPrev' + i, JSON.stringify(tempActivities[i].mxpPrev))
+        localStorage.setItem('cooking-meal-mxpNext' + i, JSON.stringify(tempActivities[i].mxpNext))
+      }
+    },
+    loadAll() {
+      this.efficency = JSON.parse(localStorage.getItem('cooking-efficency'))
+
+      let tempActivities = this.activities.filter(temp => temp.cat === 'meat')
+      for (let i in tempActivities) {
+        tempActivities[i].cookTime = JSON.parse(localStorage.getItem('cooking-meat-cookTime' + i))
+        tempActivities[i].mxp = JSON.parse(localStorage.getItem('cooking-meat-mxp' + i))
+        tempActivities[i].mLevel = JSON.parse(localStorage.getItem('cooking-meat-mLevel' + i))
+        tempActivities[i].mxpPrev = JSON.parse(localStorage.getItem('cooking-meat-mxpPrev' + i))
+        tempActivities[i].mxpNext = JSON.parse(localStorage.getItem('cooking-meat-mxpNext' + i))
+      }
+
+      tempActivities = this.activities.filter(temp => temp.cat === 'meal')
+      for (let i in tempActivities) {
+        tempActivities[i].cookTime = JSON.parse(localStorage.getItem('cooking-meal-cookTime' + i))
+        tempActivities[i].mxp = JSON.parse(localStorage.getItem('cooking-meal-mxp' + i))
+        tempActivities[i].mLevel = JSON.parse(localStorage.getItem('cooking-meal-mLevel' + i))
+        tempActivities[i].mxpPrev = JSON.parse(localStorage.getItem('cooking-meal-mxpPrev' + i))
+        tempActivities[i].mxpNext = JSON.parse(localStorage.getItem('cooking-meal-mxpNext' + i))
+      }
+    },
+    
+    onLoad() {
+      //localstorage makes the active object a real boy instead of a reference to a real boy
+      this.activeObject = JSON.parse(localStorage.getItem('cooking-activeObject'))
+      this.activeObject = this.activities.find(t => t.id === this.activeObject.id)
+      this.tryRepeatActionCook()
+    },
+
     setActiveAction(newActiveActivity) {
       clearTimeout(this.currentTimeout)
 
@@ -210,9 +271,9 @@ export const useCookingStore = defineStore('cookingStore', {
       this.activePercent = 0
       this.activeObject = newActiveActivity
 
-      this.skillStore.cancelCurrentActivity('cook')
-      this.skillStore.setCurrentActivity(this.activeObject)
-      this.skillStore.setCurrentCat('Cooking: ')
+      skillStore().cancelCurrentActivity('cook')
+      skillStore().setCurrentActivity(this.activeObject)
+      skillStore().setCurrentCat('Cooking: ')
       this.tryRepeatActionCook()
     },
 
@@ -221,31 +282,35 @@ export const useCookingStore = defineStore('cookingStore', {
       this.activeProgress = 0
       this.activePercent = 0
       this.activeObject = {}
-      this.skillStore.setCurrentActivity({ name: 'Nothing' })
-      this.skillStore.setCurrentCat('Currently Doing: ')
+      skillStore().setCurrentActivity({ name: 'Nothing' })
+      skillStore().setCurrentCat('Currently Doing: ')
     },
 
     updateCookProgress() {
       if (this.activeProgress >= (this.activeObject.cookTime * 1000)) {
         let wasEfficent = this.efficencyReturn()
 
-        this.skillStore.addXP(this.skillID, (this.activeObject.xpGain * wasEfficent))
+        skillStore().addXP(this.skillID, (this.activeObject.xpGain * wasEfficent))
         this.addMXP(1 * wasEfficent)
-        this.itemStore.changeItemCount(this.activeObject.itemID, (1 * wasEfficent), 'consumableItems')
+        itemStore().changeItemCount(this.activeObject.itemID, (1 * wasEfficent), 'consumableItems')
 
         this.updateEfficency()
+        //update meat cook time
+        if (this.activeObject.cat == 'meat') {
+          this.activeObject.cookTime = this.activeObject.baseCookTime * (1 - (this.activeObject.mLevel * 0.02))
+        }
 
         //first meat item
         if (this.activeObject.neededMeatItem1) {
-          this.itemStore.changeItemCount(this.activeObject.neededMeatItem1, -1, 'consumableItems')
+          itemStore().changeItemCount(this.activeObject.neededMeatItem1, -1, 'consumableItems')
         }
         //first resource item
         if (this.activeObject.neededItem1) {
-          this.itemStore.changeItemCount(this.activeObject.neededItem1, -1, 'resourceItems')
+          itemStore().changeItemCount(this.activeObject.neededItem1, -1, 'resourceItems')
         }
         //second resource item
         if (this.activeObject.neededItem2) {
-          this.itemStore.changeItemCount(this.activeObject.neededItem2, -1, 'resourceItems')
+          itemStore().changeItemCount(this.activeObject.neededItem2, -1, 'resourceItems')
         }
 
         console.log('boop')
@@ -260,24 +325,23 @@ export const useCookingStore = defineStore('cookingStore', {
       this.tryRepeatActionCook()
     },
     tryRepeatActionCook() {
-
       //first meat item
       if (this.activeObject.neededMeatItem1) {
-        if (this.itemStore.hasItemCount(this.activeObject.neededMeatItem1, 1, 'consumableItems') == false) {
+        if (itemStore().hasItemCount(this.activeObject.neededMeatItem1, 1, 'consumableItems') == false) {
           this.cancelAction()
           return
         }
       }
       //first resource item
       if (this.activeObject.neededItem1) {
-        if (this.itemStore.hasItemCount(this.activeObject.neededItem1, 1, 'resourceItems') == false) {
+        if (itemStore().hasItemCount(this.activeObject.neededItem1, 1, 'resourceItems') == false) {
           this.cancelAction()
           return
         }
       }
       //second resource item
       if (this.activeObject.neededItem2) {
-        if (this.itemStore.hasItemCount(this.activeObject.neededItem2, 1, 'resourceItems') == false) {
+        if (itemStore().hasItemCount(this.activeObject.neededItem2, 1, 'resourceItems') == false) {
           this.cancelAction()
           return
         }
@@ -288,7 +352,7 @@ export const useCookingStore = defineStore('cookingStore', {
     },
 
     updateEfficency() {
-      this.efficency = 2 * this.skillStore.skills[this.skillID].level
+      this.efficency = 2 * skillStore().skills[this.skillID].level
     },
     //TODO make efficency > 100 meaningful
     efficencyReturn() {
