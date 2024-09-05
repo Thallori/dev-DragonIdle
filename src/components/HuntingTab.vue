@@ -58,7 +58,7 @@ export default {
 </script>
 
 <template>
-  <div class="card pt-4 align-items-center main-window bg-transparent" style="width: 77rem">
+  <div class="card py-4 align-items-center main-window bg-transparent" style="width: 77rem">
 
     <!-- Guide Modal -->
     <div class="modal show-modal" v-if="showGuideModal == true">
@@ -104,7 +104,7 @@ export default {
 
         <!-- Skill Icon and Help Button -->
         <div class="card card-activity align-items-center py-2" style="width: 67px; height: 67px;">
-          <img src="src/assets/12x/questionmark.png" alt="" width="48" height="48">
+          <img src="/src/assets/12x/questionmark.png" alt="" width="48" height="48">
           <div class="stretched-link" @click="showGuideModal = true"></div>
         </div>
 
@@ -154,7 +154,7 @@ export default {
                     <div class="d-flex justify-content-between little-levels ">
                       <span>Bleed: </span>
                       <span>
-                        {{ itemStore.equippedTools.huntingTool.toolStats.bleeding }}
+                        {{ itemStore.equippedTools.huntingTool.toolStats.bleeding }} HP/s
                       </span>
                     </div>
                     <div class="d-flex justify-content-between little-levels ">
@@ -170,13 +170,13 @@ export default {
             </div>
 
             <!-- Efficency % -->
-            <div class="tooltip-br">
+            <div class="tooltip-bl">
               {{ huntingStore.efficency }}%
-              <img src="src/assets/12x/eff.png" alt="" width="24" height="24">
+              <img src="/src/assets/12x/eff.png" alt="" width="24" height="24">
               <div class="tooltip-text py-1 px-2">
                 <div class="little-levels">
                   Chance of additional instant actions, without using extra resources.
-                  <hr>
+                  <br><br>
                   Typically gained from skill levels and area unlocks.
                 </div>
               </div>
@@ -186,7 +186,7 @@ export default {
 
         <!-- Boost -->
         <div class="card align-items-center" style="width: 50px; height: 50px;">
-          <!-- <img src="src/assets/icons/testIcon32.png" alt="" width="64" height="64"> -->
+          <!-- <img src="/src/assets/icons/testIcon32.png" alt="" width="64" height="64"> -->
         </div>
       </div>
     </div>
@@ -248,16 +248,17 @@ export default {
           <!-- XP per Completion and Seconds per Complete -->
           <div class="little-levels pb-0">
             <div>
-              Stalking: {{ activity.stalking }}s
+              Stalking: {{ activity.xpGain }} XP / {{ activity.stalking }}s
             </div>
             <div class="pb-1">
-              Strike: {{ activity.xpGain }} XP / {{ activity.hp }} HP
+              Strike: {{ activity.hp }} HP / {{ ((itemStore.equippedTools.huntingTool.toolStats.instaKill +
+              (activity.mLevel * 0.02)) * 100).toFixed() }}%
             </div>
 
             <!-- Progress Bar for Activity Completion -->
             <div class="progress" role="progressbar" style="height: 12px;">
               <div class="progress-bar xp-progress"
-                :style="`width: ${huntingStore.activePercent}%; background-color: ${huntingStore.activeColor};`"
+                :style="`width: ${huntingStore.activePercent.a}%; background-color: ${huntingStore.activePercent.c};`"
                 v-if="activity.id == huntingStore.activeObject.id">
               </div>
             </div>

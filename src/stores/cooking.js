@@ -9,7 +9,7 @@ export const useCookingStore = defineStore('cookingStore', {
 
     activeObject: {},
     activeProgress: 0,
-    activePercent: 0,
+    activePercent: { a: 0, b: false, c: '#04AA6D' },
     currentTimeout: 0,
 
     //cooking skill is stored as id 20 which is also its index, because I don't know how to do it otherwise
@@ -256,6 +256,8 @@ export const useCookingStore = defineStore('cookingStore', {
       //localstorage makes the active object a real boy instead of a reference to a real boy
       this.activeObject = JSON.parse(localStorage.getItem('cooking-activeObject'))
       this.activeObject = this.activities.find(t => t.id === this.activeObject.id)
+      skillStore().activePercent = this.activePercent
+      this.updateEfficency()
       this.tryRepeatActionCook()
     },
 
@@ -268,19 +270,21 @@ export const useCookingStore = defineStore('cookingStore', {
       }
 
       this.activeProgress = 0
-      this.activePercent = 0
+      this.activePercent.a = 0
       this.activeObject = newActiveActivity
 
       skillStore().cancelCurrentActivity('cook')
       skillStore().setCurrentActivity(this.activeObject)
       skillStore().setCurrentCat('Cooking: ')
+      skillStore().activePercent = this.activePercent
+      this.updateEfficency()
       this.tryRepeatActionCook()
     },
 
     cancelAction() {
       clearTimeout(this.currentTimeout)
       this.activeProgress = 0
-      this.activePercent = 0
+      this.activePercent.a = 0
       this.activeObject = {}
       skillStore().setCurrentActivity({ name: 'Nothing' })
       skillStore().setCurrentCat('Currently Doing: ')
@@ -313,15 +317,14 @@ export const useCookingStore = defineStore('cookingStore', {
           itemStore().changeItemCount(this.activeObject.neededItem2, -1, 'resourceItems')
         }
 
-        console.log('boop')
         this.activeProgress = 0
-        this.activePercent = 0
+        this.activePercent.a = 0
         this.tryRepeatActionCook()
         return
       }
 
       this.activeProgress += this.progressInterval
-      this.activePercent = this.activeProgress / (this.activeObject.cookTime * 10)
+      this.activePercent.a = this.activeProgress / (this.activeObject.cookTime * 10)
       this.tryRepeatActionCook()
     },
     tryRepeatActionCook() {
@@ -353,14 +356,25 @@ export const useCookingStore = defineStore('cookingStore', {
 
     updateEfficency() {
       this.efficency = 2 * skillStore().skills[this.skillID].level
-    },
-    //TODO make efficency > 100 meaningful
-    efficencyReturn() {
-      if (this.efficency >= (Math.random() * 100)) {
-        console.log('efficent!')
-        return 2
+      if (skillStore().totalOffline >= 1000) {
+        this.efficency += 50
       }
-      return 1
+    },
+    efficencyReturn() {
+      let a = 1 + Math.floor(this.efficency / 100)
+      if (this.efficency % 100 >= (Math.random() * 100)) {
+        a += 1
+      }
+      if (a == 2) {
+        console.log('efficent!')
+      }
+      if (a == 3) {
+        console.log('double efficent!')
+      }
+      if (a == 4) {
+        console.log('triple efficent!')
+      }
+      return a
     },
 
     addMXPCat(mxpAmount, mCatIndex) {

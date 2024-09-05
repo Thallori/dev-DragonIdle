@@ -4,7 +4,7 @@ import { useCombatStore } from '@/stores/combat';
 import { useSmithingStore } from '@/stores/smithing';
 import { useCookingStore } from '@/stores/cooking';
 
-import tooltips from './tooltips.vue';
+import tooltips from './tooltips.vue'
 
 export default {
   name: 'equipstats',
@@ -278,9 +278,12 @@ export default {
           </span> -->
 
           <span>
-            {{ itemStore.equippedStats.meleeDamage.toFixed(2).replace(/\.00$/, '') }} /
-            {{ itemStore.equippedStats.rangedDamage.toFixed(2).replace(/\.00$/, '') }} /
-            {{ itemStore.equippedStats.magicDamage.toFixed(2).replace(/\.00$/, '') }}
+            {{ (itemStore.equippedStats.meleeDamage * (1 - (0.5 * Math.min(1,
+            combatStore.currentStatus.maimed)))).toFixed(2).replace(/\.00$/, '') }} /
+            {{ (itemStore.equippedStats.rangedDamage * (1 - (0.5 * Math.min(1,
+            combatStore.currentStatus.maimed)))).toFixed(2).replace(/\.00$/, '') }} /
+            {{ (itemStore.equippedStats.magicDamage * (1 - (0.5 * Math.min(1,
+            combatStore.currentStatus.maimed)))).toFixed(2).replace(/\.00$/, '') }}
           </span>
         </div>
         <div class="d-flex justify-content-between">

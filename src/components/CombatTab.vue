@@ -7,11 +7,13 @@ import { useCookingStore } from '@/stores/cooking';
 import { useItemStore } from '@/stores/inventory';
 
 import equipstats from './panels/equipstats.vue';
+import tooltips from './panels/tooltips.vue';
 
 export default {
   name: 'CombatTab',
   components: {
-    equipstats
+    equipstats,
+    tooltips,
   },
   setup() {
     const skillStore = useSkillStore()
@@ -90,18 +92,6 @@ export default {
         this.dropsObject = this.combatStore.activeObject
         this.showDropsModal = true
       }
-    },
-
-    bonusSmithingMastery(temp) {
-      if (temp.mSmithing) {
-        temp = this.smithingStore.equipmentMastery.find(blep => blep.id === temp.mSmithing)
-        return temp.mLevel
-      }
-      return 0
-    },
-    bonusHeals(temp) {
-      temp = this.cookingStore.activities.find(blep => blep.itemID === temp.id)
-      return temp.mLevel
     },
   },
 }
@@ -195,26 +185,31 @@ export default {
 
             <span class="text-warning">Vitality</span>
             <br>
-            The essense of life. It grows with every blow taken. <span class="info-text">Food</span> is a primary
+            The essense of life. It grows with every <span class="info-text tooltip-t">blow taken<span
+                class="tooltip-text">1xp per damage recieved</span></span>. <span class="info-text">Food</span> is a
+            primary
             assitant, <span class="info-text">equipped meals</span> will be automatically eaten when health reaches
             the
             <span class="info-text">meal's base heal stat</span>. If a dragon recieves more damage than this, the
             dragon
-            will be <span class="info-text">maimed</span>.
+            will be <span class="info-text tooltip-t">maimed<span class="tooltip-text">Damaged halved for 5
+                minutes</span></span>.
             <br><br>
 
             <span class="text-warning">Style</span>
             <br>
             When attacking, <span class="info-text">style (precise, aggressive, defensive)</span> determines what kind
-            of <span class="info-text">combat XP</span> is awarded, along with some bonus stats. <span
-              class="info-text">Precision</span> is shared among all styles, but <span class="info-text">damage
-              and dodge</span> are their own skill.
+            of <span class="info-text tooltip-t">combat XP<span class="tooltip-text">4xp per damage
+                dealt</span></span> is
+            awarded, along with some bonus stats. <span class="info-text">Precision</span> is shared among all styles,
+            but <span class="info-text tooltip-t">damaging
+              and dodging<span class="tooltip-text">Damaging affinities: strength, markship,
+                spirit<br><br>Dodging affinities: block, reflex, acuity</span></span> are seperate skills.
             <br><br>
 
             <span class="text-warning">Max Hit</span>
             <br>
             The worst a creature can do. Damage comes from an <span class="info-text">affinity (strength, markship,
-              or
               spirit)</span> multiplied by equipment bonuses.
             <br><br>
 
@@ -265,17 +260,19 @@ export default {
             <span class="text-warning">Damage Mitigation</span>
             <br>
             When all else fails, reduce harm. Incoming damage is first multiplied by <span
-              class="info-text">resistance</span>, then subtracted by <span class="info-text">armor
-              (physical)</span>
-            or
-            <span class="info-text">barrier (energy)</span>. Conversely, if a creature is protected by <span
-              class="info-text">resistance</span>, it is directly countered by <span
-              class="info-text">penetration</span>.
+              class="info-text tooltip-t">resistance<span class="tooltip-text">hit *
+                resist</span></span>,
+            then subtracted by <span class="info-text tooltip-t">armor (physical) or barrier (energy)<span
+                class="tooltip-text">hit - armor</span></span>. Conversely, if a creature is protected by
+            <span class="info-text">resistance</span>, it is directly countered by <span
+              class="info-text tooltip-t">penetration<span class="tooltip-text">resist - pen</span></span>.
+            Overpenetration does nothing.
             <br><br>
 
             <span class="text-warning">Rocks and Fire</span>
             <br>
-            Some weapons <span class="info-text">require ammo</span>, others do not. When without, targets can always be
+            Some weapons <span class="info-text tooltip-t">require ammo<span class="tooltip-text">bows and
+                arrows, orbs and charge spells</span></span>, others do not. When without, targets can always be
             bit with <span class="info-text">fangs</span>,
             hit by <span class="info-text">rocks</span>, or puffed in <span class="info-text">flame</span>.
 
@@ -293,7 +290,7 @@ export default {
 
         <!-- Skill Icon and Help Button -->
         <div class="card card-activity align-items-center py-2" style="width: 67px; height: 67px;">
-          <img src="src/assets/12x/questionmark.png" alt="" width="48" height="48">
+          <img src="/src/assets/12x/questionmark.png" alt="" width="48" height="48">
           <div class="stretched-link" @click="showGuideModal = true"></div>
         </div>
 
@@ -304,14 +301,14 @@ export default {
             <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 150px"
               @click="toggleMenus(1)">
               <div class="d-flex justify-content-start">
-                <img src="src/assets/icons/defaultmap.png" alt="" width="32" height="32">Areas
+                <img src="/src/assets/icons/defaultmap.png" alt="" width="32" height="32">Areas
               </div>
             </div>
 
             <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 150px"
               @click="toggleMenus(2)">
               <div class="d-flex justify-content-start">
-                <img src="src/assets/icons/steelsword16.png" alt="" width="32" height="32">Sequences
+                <img src="/src/assets/icons/steelsword16.png" alt="" width="32" height="32">Sequences
               </div>
             </div>
 
@@ -335,28 +332,30 @@ export default {
             <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 150px"
               @click="shownLocation = -1">
               <div class="d-flex justify-content-start">
-                <img src="src/assets/icons/area0.png" alt="" width="32" height="32">Home
+                <img src="/src/assets/icons/area0.png" alt="" width="32" height="32">Home
               </div>
             </div>
 
             <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 150px"
               @click="shownLocation = 0">
               <div class="d-flex justify-content-start">
-                <img src="src/assets/icons/area1.png" alt="" width="32" height="32">Glade
+                <img src="/src/assets/icons/area1.png" alt="" width="32" height="32">Glade
               </div>
             </div>
 
             <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 150px"
               @click="shownLocation = 1">
               <div class="d-flex justify-content-start">
-                <img src="src/assets/icons/area2.png" alt="" width="32" height="32">Canton
+                <img src="/src/assets/icons/area2.png" alt="" width="32" height="32"
+                  v-if="skillStore.skills[9].level > 1">Canton
               </div>
             </div>
 
             <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 150px"
               @click="shownLocation = 2">
               <div class="d-flex justify-content-start">
-                <img src="src/assets/icons/area3.png" alt="" width="32" height="32">Vale
+                <img src="/src/assets/icons/area3.png" alt="" width="32" height="32"
+                  v-if="skillStore.skills[9].level > 2">Vale
               </div>
             </div>
 
@@ -375,10 +374,9 @@ export default {
             <div class="d-flex gap-1"
               v-for="activity in combatStore.enemies.filter(temp => temp.location === this.shownLocation)">
 
-              <!-- disabled -->
-
+              <!-- Can Disable disabled for Debug -->
               <div class="btn sidenav-item px-2 py-1"
-                :class="(explorationStore.activities[activity.location].isSealed) ? '' : ''"
+                :class="(explorationStore.activities[activity.location].isSealed) ? 'disabled' : ''"
                 style="font-size: 1.2rem; font-weight: 500; width: 100%;" @click="combatStore.setActiveAction(activity)"
                 v-if="activity.location != -1">
 
@@ -396,7 +394,7 @@ export default {
               </div>
 
               <div class="btn align-content-center px-1 py-1" @click="dropsObject = activity; showDropsModal = true">
-                🎁
+                📦
               </div>
             </div>
 
@@ -420,22 +418,22 @@ export default {
           <div style="width: 285px;" v-for="dungeon in combatStore.dungeons">
             <div class="d-flex gap-1">
 
-              <!-- disabled -->
-
+              <!-- Can Disable disabled for Debug -->
               <div class="btn sidenav-item px-2 py-1"
-                :class="(explorationStore.activities[dungeon.location].isSealed) ? 'disabled-goes-here' : ''"
+                :class="(explorationStore.activities[dungeon.location].isSealed) ? 'disabled' : ''"
                 style="font-size: 1.2rem; font-weight: 500; width: 100%;"
                 @click="combatStore.setActiveDungeon(dungeon)">
 
                 <div class="d-flex justify-content-start">
-                  <img :src="dungeon.image" alt="" width="32" height="32">{{ dungeon.name }}
+                  <img :src="dungeon.image" alt="" width="32" height="32"
+                    v-if="skillStore.skills[9].level > dungeon.id">{{ dungeon.name }}
                 </div>
               </div>
 
             </div>
             <div class="little-levels px-2">
               <span class="btn px-1 py-1" @click="dropsObject = dungeon; showDropsModal = true">
-                🎁
+                📦
               </span>
               <span>
                 Encounters: {{ dungeon.rounds.reduce((n, { amount }) => n + amount, 0) }}
@@ -516,7 +514,7 @@ export default {
 
               <div class="card equipment-card mb-1"
                 @click="combatStore.currentStyle = 'best'; showAllStyles = false; combatStore.resetDragonAttack()"
-                v-if="skillStore.flags.sequence3 == true">
+                v-if="skillStore.flags.showBest == true">
 
                 <div class="d-flex justify-content-center py-2">
                   <span>🐉 Best</span>
@@ -551,8 +549,14 @@ export default {
             </div>
 
             <!-- Show All Styles -->
-            <div class="card equipment-card mt-1" style="min-width: 2rem; height: fit-content" @click="toggleStyles()"
+            <div class="card equipment-card mt-1 tooltip-bcf" style="min-width: 2rem; height: fit-content"
+              @click="toggleStyles()"
               v-if="skillStore.skills[2].locked == false || skillStore.skills[3].locked == false || skillStore.flags.showHug == true">
+
+              <div class="tooltip-text bg-secondary py-2">
+                View All Styles
+              </div>
+
               <div class="d-flex justify-content-center align-content-center py-2">
                 ▼
               </div>
@@ -621,7 +625,13 @@ export default {
             </div>
 
             <!-- Show All Stances -->
-            <div class="card equipment-card my-1" style="min-width: 2rem; height: fit-content" @click="toggleStances()">
+            <div class="card equipment-card my-1 tooltip-bcf" style="min-width: 2rem; height: fit-content"
+              @click="toggleStances()">
+
+              <div class="tooltip-text bg-secondary py-2">
+                View All Stances
+              </div>
+
               <div class="d-flex justify-content-center py-2">
                 ▼
               </div>
@@ -634,7 +644,7 @@ export default {
         <div class="px-2 pt-1">
 
           <!-- Component Selector -->
-          <div class="d-flex justify-content-center gap-1 my-1">
+          <!-- <div class="d-flex justify-content-center gap-1 my-1">
             <div class="card equipment-card px-2">
               🧪
             </div>
@@ -644,11 +654,11 @@ export default {
             <div class="card equipment-card px-2">
               🔮
             </div>
-          </div>
+          </div> -->
 
           <!-- Info Panel -->
           <div class="card text-center little-levels my-1 p-2">
-            UNDER CONSTRUCTION BLEPBLEPBLEPBLEPBLEPBLEPBLEP
+            THERE WILL BE SOMETHING NEW HERE IN A FUTURE UPDATE BLEPBLEPBLEPBLEPBLEPBLEPBLEP
           </div>
         </div>
       </div>
@@ -670,6 +680,7 @@ export default {
               <div class="card equipment-card flex-grow-1 my-1"
                 @click="combatStore.healByObject(itemStore.equippedCombat.foodSlot); combatStore.resetDragonAttack()"
                 v-if="itemStore.equippedCombat.foodSlot.heals">
+
                 <div class="d-flex justify-content-center align-items-center gap-1 py-2">
 
                   <span class="align-content-center little-levels px-1 mt-1">
@@ -686,14 +697,21 @@ export default {
               </div>
 
               <!-- No Food Equipped Button -->
-              <div class="card equipment-card flex-grow-1 my-1" @click="showAllFood = !showAllFood" v-else>
+              <div class="card equipment-card flex-grow-1 my-1 tooltip-bcf" @click="showAllFood = !showAllFood" v-else>
+
                 <div class="d-flex justify-content-center py-2">
                   <span>No Food</span>
                 </div>
               </div>
 
               <!-- Food Selector -->
-              <div class="card equipment-card my-1" @click="showAllFood = !showAllFood" style="min-width: 2rem;">
+              <div class="card equipment-card my-1 tooltip-bcf" @click="showAllFood = !showAllFood"
+                style="min-width: 2rem;">
+
+                <div class="tooltip-text bg-secondary py-2">
+                  View Available Food
+                </div>
+
                 <div class="d-flex justify-content-center py-2">
                   ▼
                 </div>
@@ -718,7 +736,7 @@ export default {
                   <!-- Health -->
                   <div class="progress my-1" role="health bar" style="height: 14px;">
                     <div class="progress-bar health-progress"
-                      :style="`width: ${this.combatStore.currentHealthPercent}%;`">
+                      :style="`width: ${this.combatStore.currentHealthPercent.a}%;`">
                     </div>
                   </div>
                 </div>
@@ -755,17 +773,17 @@ export default {
                       100%
                     </span>
 
-                    <span v-if="combatStore.currentStyle == 'melee'">
+                    <span v-if="combatStore.bestStyle == 'melee'">
                       {{ 75 + itemStore.equippedStats.meleeAccuracy -
                       combatStore.activeObject.stats.meleeDodge }}%
                     </span>
 
-                    <span v-if="combatStore.currentStyle == 'ranged'">
+                    <span v-if="combatStore.bestStyle == 'ranged'">
                       {{ 75 + itemStore.equippedStats.rangedAccuracy -
                       combatStore.activeObject.stats.rangedDodge }}%
                     </span>
 
-                    <span v-if="combatStore.currentStyle == 'magic'">
+                    <span v-if="combatStore.bestStyle == 'magic'">
                       {{ 75 + itemStore.equippedStats.magicAccuracy -
                       combatStore.activeObject.stats.magicDodge }}%
                     </span>
@@ -836,7 +854,7 @@ export default {
               <div class="d-flex flex-wrap gap-1" style="width: 16rem; padding-left: 0.5rem;">
 
                 <div class="mx-auto mt-2" v-if="itemStore.getAllFoodWithCount.length == 0">
-                  NO FOOD IN HOARD
+                  No Food in Hoard
                 </div>
 
                 <div class="mt-2" v-for="inventoryItem in itemStore.getAllFoodWithCount">
@@ -847,24 +865,7 @@ export default {
 
                     <!-- Tooltip -->
                     <div class="tooltip-text">
-                      <div class="card-header py-1">{{ inventoryItem.name }} </div>
-                      <div class="py-1 mx-3 little-levels">
-
-                        <div class="text-warning">
-                          Food
-                        </div>
-
-                        <div>
-                          <span>Heals: </span>
-                          <span>{{ inventoryItem.heals }}</span>
-
-                          <div v-if="inventoryItem.dcat == 'cookedFood'">
-                            <span>Bonus Healing: </span>
-                            <span>{{ bonusHeals(inventoryItem) }}</span>
-                          </div>
-                        </div>
-
-                      </div>
+                      <tooltips :itemObject="itemStore.getItemData(inventoryItem.id)" />
                     </div>
 
                     <!-- Image of Food -->
@@ -1031,8 +1032,15 @@ export default {
             </div>
 
             <!-- Drops -->
-            <div class="card equipment-card text-center" @click="maybeShowDrops()">
-              Drops 🎁
+            <div class="d-flex gap-1">
+              <div class="card equipment-card text-center w-100" @click="maybeShowDrops()">
+                Drops 📦
+              </div>
+              <div class="card equipment-card text-center w-100"
+                @click="dropsObject = combatStore.activeDungeon; showDropsModal = true"
+                v-if="combatStore.activeDungeon.id">
+                Sequence 📦
+              </div>
             </div>
 
             <!-- Enemy Picture and Stats -->
@@ -1040,7 +1048,7 @@ export default {
 
               <!-- Enemy Picture -->
               <div style="height: 17rem;">
-                <div class="pb-1 tooltip-be3" v-if="combatStore.activeObject.stats">
+                <div class="pb-1 tooltip-t2" v-if="combatStore.activeObject.stats">
                   {{ combatStore.activeObject.name }}
 
                   <span class="little-levels" v-if="combatStore.activeDungeon.id != null">
@@ -1048,12 +1056,10 @@ export default {
                     }) => n + amount, 0)}})
                   </span>
 
-                  <div class="tooltip-text py-1 px-3">
-                    <div class="d-flex justify-content-between little-levels ">
-                      <span>
-                        {{ combatStore.activeObject.flavor }}
-                      </span>
-                    </div>
+                  <div class="tooltip-text little-levels text-white bg-secondary py-1 px-3">
+                    <span>
+                      {{ combatStore.activeObject.flavor }}
+                    </span>
                   </div>
 
                 </div>
@@ -1106,20 +1112,64 @@ export default {
                     <span v-if="combatStore.activeObject.stats">
 
                       <!-- Melee Max Hit, Calculated -->
-                      <span
+                      <span class="tooltip-tl"
                         v-if="combatStore.activeObject.stats.meleeDamage && combatStore.activeObject.stats.meleeAccuracy - itemStore.equippedStats.meleeDodge >= 0">
 
                         *{{ Math.max(1, Math.ceil((((1 - itemStore.equippedStats.resist) *
                         combatStore.activeObject.stats.meleeDamage)
                         - itemStore.equippedStats.physicalArmor) * 1.25)) }}
 
+                        <span class="tooltip-text px-3">
+
+                          <div class="d-flex justify-content-between">
+                            <span>
+                              Base Max Hit:
+                            </span>
+                            <span>
+                              {{ combatStore.activeObject.stats.meleeDamage }}
+                            </span>
+                          </div>
+
+                          <div class="d-flex justify-content-between">
+                            <span>
+                              Base Crit:
+                            </span>
+                            <span>
+                              {{ Math.ceil(combatStore.activeObject.stats.meleeDamage * 1.25) }}
+                            </span>
+                          </div>
+
+                        </span>
+
                       </span>
                       <!-- No Crit -->
-                      <span v-else-if="combatStore.activeObject.stats.meleeDamage">
+                      <span class="tooltip-tl" v-else-if="combatStore.activeObject.stats.meleeDamage">
 
                         {{ Math.max(1, Math.ceil((1 - itemStore.equippedStats.resist) *
                         combatStore.activeObject.stats.meleeDamage)
                         - itemStore.equippedStats.physicalArmor) }}
+
+                        <span class="tooltip-text px-3">
+
+                          <div class="d-flex justify-content-between">
+                            <span>
+                              Base Max Hit:
+                            </span>
+                            <span>
+                              {{ combatStore.activeObject.stats.meleeDamage }}
+                            </span>
+                          </div>
+
+                          <div class="d-flex justify-content-between">
+                            <span>
+                              Base Crit:
+                            </span>
+                            <span>
+                              {{ Math.ceil(combatStore.activeObject.stats.meleeDamage * 1.25) }}
+                            </span>
+                          </div>
+
+                        </span>
 
                       </span>
 
@@ -1129,38 +1179,126 @@ export default {
                       </span>
 
                       <!-- Ranged Max Hit, Calculated -->
-                      <span
+                      <span class="tooltip-tl"
                         v-if="combatStore.activeObject.stats.rangedDamage && combatStore.activeObject.stats.rangedAccuracy - itemStore.equippedStats.rangedDodge >= 0">
 
                         *{{ Math.max(1, Math.ceil((((1 - itemStore.equippedStats.resist) *
                         combatStore.activeObject.stats.rangedDamage)
                         - itemStore.equippedStats.physicalArmor) * 1.25)) }}
 
+                        <span class="tooltip-text px-3">
+
+                          <div class="d-flex justify-content-between">
+                            <span>
+                              Base Max Hit:
+                            </span>
+                            <span>
+                              {{ combatStore.activeObject.stats.rangedDamage }}
+                            </span>
+                          </div>
+
+                          <div class="d-flex justify-content-between">
+                            <span>
+                              Base Crit:
+                            </span>
+                            <span>
+                              {{ Math.ceil(combatStore.activeObject.stats.rangedDamage * 1.25) }}
+                            </span>
+                          </div>
+
+                        </span>
+
                       </span>
                       <!-- No Crit -->
-                      <span v-else-if="combatStore.activeObject.stats.rangedDamage">
+                      <span class="tooltip-tl" v-else-if="combatStore.activeObject.stats.rangedDamage">
 
                         {{ Math.max(1, Math.ceil((1 - itemStore.equippedStats.resist) *
                         combatStore.activeObject.stats.rangedDamage)
                         - itemStore.equippedStats.physicalArmor) }}
 
+                        <span class="tooltip-text px-3">
+
+                          <div class="d-flex justify-content-between">
+                            <span>
+                              Base Max Hit:
+                            </span>
+                            <span>
+                              {{ combatStore.activeObject.stats.rangedDamage }}
+                            </span>
+                          </div>
+
+                          <div class="d-flex justify-content-between">
+                            <span>
+                              Base Crit:
+                            </span>
+                            <span>
+                              {{ Math.ceil(combatStore.activeObject.stats.rangedDamage * 1.25) }}
+                            </span>
+                          </div>
+
+                        </span>
+
                       </span>
 
                       <!-- Magic Max Hit, Calculated -->
-                      <span
+                      <span class="tooltip-tl"
                         v-if="combatStore.activeObject.stats.magicDamage && combatStore.activeObject.stats.magicAccuracy - itemStore.equippedStats.magicDodge >= 0">
 
                         *{{ Math.max(1, Math.ceil((((1 - itemStore.equippedStats.resist) *
                         combatStore.activeObject.stats.magicDamage)
                         - itemStore.equippedStats.energyArmor) * 1.25)) }}
 
+                        <span class="tooltip-text px-3">
+
+                          <div class="d-flex justify-content-between">
+                            <span>
+                              Base Max Hit:
+                            </span>
+                            <span>
+                              {{ combatStore.activeObject.stats.magicDamage }}
+                            </span>
+                          </div>
+
+                          <div class="d-flex justify-content-between">
+                            <span>
+                              Base Crit:
+                            </span>
+                            <span>
+                              {{ Math.ceil(combatStore.activeObject.stats.magicDamage * 1.25) }}
+                            </span>
+                          </div>
+
+                        </span>
+
                       </span>
                       <!-- No Crit -->
-                      <span v-else-if="combatStore.activeObject.stats.magicDamage">
+                      <span class="tooltip-tl" v-else-if="combatStore.activeObject.stats.magicDamage">
 
                         {{ Math.max(1, Math.ceil((1 - itemStore.equippedStats.resist) *
                         combatStore.activeObject.stats.magicDamage)
                         - itemStore.equippedStats.energyArmor) }}
+
+                        <span class="tooltip-text px-3">
+
+                          <div class="d-flex justify-content-between">
+                            <span>
+                              Base Max Hit:
+                            </span>
+                            <span>
+                              {{ combatStore.activeObject.stats.magicDamage }}
+                            </span>
+                          </div>
+
+                          <div class="d-flex justify-content-between">
+                            <span>
+                              Base Crit:
+                            </span>
+                            <span>
+                              {{ Math.ceil(combatStore.activeObject.stats.magicDamage * 1.25) }}
+                            </span>
+                          </div>
+
+                        </span>
 
                       </span>
                     </span>

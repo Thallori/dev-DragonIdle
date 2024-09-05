@@ -63,7 +63,7 @@ export default {
 </script>
 
 <template>
-  <div class="card pt-4 align-items-center main-window bg-transparent" style="width: 77rem">
+  <div class="card py-4 align-items-center main-window bg-transparent" style="width: 77rem">
 
     <!-- Guide Modal -->
     <div class="modal show-modal" v-if="showGuideModal == true">
@@ -120,7 +120,7 @@ export default {
 
         <!-- Skill Icon and Help Button -->
         <div class="card card-activity align-items-center py-2" style="width: 67px; height: 67px;">
-          <img src="src/assets/12x/questionmark.png" alt="" width="48" height="48">
+          <img src="/src/assets/12x/questionmark.png" alt="" width="48" height="48">
           <div class="stretched-link" @click="showGuideModal = true"></div>
         </div>
 
@@ -168,7 +168,7 @@ export default {
                   <!-- Tooltip -->
                   <div class="tooltip-text py-1 px-3">
                     <div class="d-flex justify-content-between little-levels ">
-                      <span>Exploring: </span>
+                      <span>Explore Time: </span>
                       <span>
                         {{ itemStore.equippedTools.explorationTool.toolStats.explorationMulti * 100 }}%
                       </span>
@@ -179,13 +179,13 @@ export default {
             </div>
 
             <!-- Efficency % -->
-            <div class="tooltip-br">
+            <div class="tooltip-bl">
               {{ explorationStore.efficency }}%
-              <img src="src/assets/12x/eff.png" alt="" width="24" height="24">
+              <img src="/src/assets/12x/eff.png" alt="" width="24" height="24">
               <div class="tooltip-text pt-1 pb-2 px-2">
                 <div class="little-levels">
                   Chance of additional instant actions, without using extra resources.
-                  <hr>
+                  <br><br>
                   Typically gained from skill levels.
                 </div>
               </div>
@@ -195,7 +195,7 @@ export default {
 
         <!-- Boost -->
         <div class="card align-items-center" style="width: 50px; height: 50px;">
-          <!-- <img src="src/assets/icons/testIcon32.png" alt="" width="64" height="64"> -->
+          <!-- <img src="/src/assets/icons/testIcon32.png" alt="" width="64" height="64"> -->
         </div>
       </div>
     </div>
@@ -217,7 +217,7 @@ export default {
       </div>
 
       <!-- Activity Cards -->
-      <div class="d-flex gap-1 flex-wrap justify-content-center pt-1">
+      <div class="d-flex gap-1 flex-wrap pt-1">
         <div class="card border-dark text-center" style="width: 15.2rem; height: 20.5rem;"
           v-for="activity in explorationStore.activities">
 
@@ -232,11 +232,91 @@ export default {
 
             <!-- Sealed -->
             <div v-else-if="activity.isSealed == true">
-              <div class="badge bg-secondary">
+              <div class="badge mb-3 bg-secondary">
                 SEALED
               </div>
-              <div class="p-5" v-if="explorationStore.currentUnsealedAreas < explorationStore.maxUnsealedAreas">
-                <button type="button" class="btn activity w-100 mt-4 p-3"
+
+              <!-- Unique Features -->
+              <div class="pt-4 pb-1">
+                <span>Unique Features</span>
+              </div>
+
+              <div class="d-flex justify-content-center gap-3">
+
+                <!-- Image and Tooltip of Dungeon -->
+                <span class="tooltip-be" v-if="activity.dungeon">
+
+                </span>
+
+                <!-- Image and Tooltip of Activity 1 -->
+                <span class="tooltip-be" v-if="activity.uniqueFeature1">
+                  <img :src="activity.uniqueFeature1[2]" alt="" width="32" height="32">
+
+                  <!-- Name of Activity 1 -->
+                  <div class="tooltip-text">
+                    <div class="card-header py-1">
+                      <span>
+                        {{ findUniqueFeatureObject(activity.uniqueFeature1[0], activity.uniqueFeature1[1]).name }}
+                      </span>
+                    </div>
+
+                    <!-- Subtext Skill and Level Needed -->
+                    <div class="py-1 mx-4 little-levels">
+                      <div class="d-flex justify-content-between">
+                        <span>Skill: </span>
+                        <span>
+                          {{ activity.uniqueFeature1[0] }}
+                        </span>
+                      </div>
+
+                      <div class="d-flex justify-content-between">
+                        <span>Level: </span>
+                        <span>
+                          {{ findUniqueFeatureObject(activity.uniqueFeature1[0],
+                          activity.uniqueFeature1[1]).levelRequired
+                          }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </span>
+
+                <!-- Image and Tooltip of Activity 2 -->
+                <span class="tooltip-be" v-if="activity.uniqueFeature2">
+                  <img :src="activity.uniqueFeature2[2]" alt="" width="32" height="32">
+
+                  <!-- Name of Activity 2 -->
+                  <div class="tooltip-text">
+                    <div class="card-header py-1">
+                      <span>
+                        {{ findUniqueFeatureObject(activity.uniqueFeature2[0], activity.uniqueFeature2[1]).name }}
+                      </span>
+                    </div>
+
+                    <!-- Subtext Skill and Level Needed -->
+                    <div class="py-1 mx-4 little-levels">
+                      <div class="d-flex justify-content-between">
+                        <span>Skill: </span>
+                        <span>
+                          {{ activity.uniqueFeature2[0] }}
+                        </span>
+                      </div>
+
+                      <div class="d-flex justify-content-between">
+                        <span>Level: </span>
+                        <span>
+                          {{ findUniqueFeatureObject(activity.uniqueFeature2[0],
+                          activity.uniqueFeature2[1]).levelRequired
+                          }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </span>
+              </div>
+
+              <div class="pt-4 px-4" v-if="explorationStore.currentUnsealedAreas < explorationStore.maxUnsealedAreas">
+                <button type="button" class="btn activity w-100"
                   @click="explorationStore.unsealArea(activity)">RELEASE</button>
               </div>
             </div>
@@ -339,7 +419,7 @@ export default {
 
               <!-- Progress Bar for Activity Completion -->
               <div class="progress" role="progressbar" style="height: 12px;">
-                <div class="progress-bar xp-progress" :style="`width: ${explorationStore.activePercent}%;`"
+                <div class="progress-bar xp-progress" :style="`width: ${explorationStore.activePercent.a}%;`"
                   v-if="activity.id == explorationStore.activeObject.id">
                 </div>
               </div>

@@ -58,7 +58,7 @@ export default {
 </script>
 
 <template>
-  <div class="card pt-4 align-items-center main-window bg-transparent" style="width: 77rem">
+  <div class="card py-4 align-items-center main-window bg-transparent" style="width: 77rem">
 
     <!-- Guide Modal -->
     <div class="modal show-modal" v-if="showGuideModal == true">
@@ -91,7 +91,7 @@ export default {
 
             <span class="text-warning">Essence</span>
             <br>
-            Scrying resources have high energy potentials, giving them a variety of uses. Most especially in the fields
+            Scrying resources have high energy potentials, giving them a variety of uses. Especially in the fields
             of <span class="info-text">artiface (wands and spellcraft)</span> and <span class="info-text">alchemy
               (potions and weapon oils)</span>.
 
@@ -109,7 +109,7 @@ export default {
 
         <!-- Skill Icon and Help Button -->
         <div class="card card-activity align-items-center py-2" style="width: 67px; height: 67px;">
-          <img src="src/assets/12x/questionmark.png" alt="" width="48" height="48">
+          <img src="/src/assets/12x/questionmark.png" alt="" width="48" height="48">
           <div class="stretched-link" @click="showGuideModal = true"></div>
         </div>
 
@@ -157,9 +157,9 @@ export default {
                   <!-- Tooltip -->
                   <div class="tooltip-text py-1 px-4">
                     <div class="d-flex justify-content-between little-levels"
-                      v-if="itemStore.equippedTools.scryingTool.toolStats.bonusSyphoningTime">
-                      <span>Syphoning: </span>
-                      <span>{{ itemStore.equippedTools.scryingTool.toolStats.bonusSyphoningTime.toFixed(2) }}s</span>
+                      v-if="undefined != itemStore.equippedTools.scryingTool.toolStats.bonusSyphoningTime">
+                      <span>Syphon Time: </span>
+                      <span>{{ (2 - itemStore.equippedTools.scryingTool.toolStats.bonusSyphoningTime).toFixed(2) }}s</span>
                     </div>
                     <div class="d-flex justify-content-between little-levels">
                       <span>Stability: </span>
@@ -172,13 +172,13 @@ export default {
             </div>
 
             <!-- Efficency % -->
-            <div class="tooltip-br">
-              {{ explorationStore.activities[2].mLevel + (2 * skillStore.skills[this.skillID].level) }}%
-              <img src="src/assets/12x/eff.png" alt="" width="24" height="24">
+            <div class="tooltip-bl">
+              {{ scryingStore.efficency }}%
+              <img src="/src/assets/12x/eff.png" alt="" width="24" height="24">
               <div class="tooltip-text py-1 px-2">
                 <div class="little-levels">
                   Chance of additional instant actions, without using extra resources.
-                  <hr>
+                  <br><br>
                   Typically gained from skill levels and area unlocks.
                 </div>
               </div>
@@ -188,7 +188,7 @@ export default {
 
         <!-- Boost -->
         <div class="card align-items-center" style="width: 50px; height: 50px;">
-          <!-- <img src="src/assets/icons/testIcon32.png" alt="" width="64" height="64"> -->
+          <!-- <img src="/src/assets/icons/testIcon32.png" alt="" width="64" height="64"> -->
         </div>
       </div>
     </div>
@@ -268,8 +268,8 @@ export default {
             <!-- Progress Bar for Activity Completion -->
             <div class="progress" role="progressbar" style="height: 12px;">
               <div class="progress-bar xp-progress"
-                :class="(scryingStore.activePercent >= 100) ? 'progress-bar-striped progress-bar-animated' : ''"
-                :style="`width: ${scryingStore.activePercent}%;`" v-if="activity.id == scryingStore.activeObject.id">
+                :class="(scryingStore.activePercent.b == true) ? 'progress-bar-striped progress-bar-animated' : ''"
+                :style="`width: ${scryingStore.activePercent.a}%;`" v-if="activity.id == scryingStore.activeObject.id">
               </div>
             </div>
           </div>

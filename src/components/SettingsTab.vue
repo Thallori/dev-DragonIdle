@@ -1,13 +1,15 @@
 <script>
 import { useSkillStore } from '@/stores/skills'
 import { useItemStore } from '@/stores/inventory'
+import { useExplorationStore } from '@/stores/exploration'
 
 export default {
   name: 'SettingsTab',
   setup() {
     const skillStore = useSkillStore()
     const itemStore = useItemStore()
-    return { skillStore, itemStore }
+    const explorationStore = useExplorationStore()
+    return { skillStore, itemStore, explorationStore }
   },
   data() {
     return {
@@ -52,13 +54,31 @@ export default {
         temp[i].count += 20
       }
     },
+    reverseDumpAllItems() {
+      let temp = this.itemStore.getAllEquipment
+      for (let i in temp) {
+        temp[i].count -= 20
+      }
+      temp = this.itemStore.getAllConsumable
+      for (let i in temp) {
+        temp[i].count -= 20
+      }
+      temp = this.itemStore.getAllResources
+      for (let i in temp) {
+        temp[i].count -= 20
+      }
+      temp = this.itemStore.getAllMechanics
+      for (let i in temp) {
+        temp[i].count -= 20
+      }
+    },
   },
 }
 </script>
 
 <template>
   <!-- Main Window -->
-  <div class="card pt-4 align-items-center main-window bg-transparent" style="width: 77rem">
+  <div class="card py-4 align-items-center main-window bg-transparent" style="width: 77rem">
 
     <!-- Confirm Modal -->
     <div class="modal show-modal" v-if="showConfirmModal == true">
@@ -91,6 +111,7 @@ export default {
 
         <!-- Menu Selector -->
         <div class="card flex-grow-1 px-0">
+
           <div class="d-flex flex-wrap justify-content-center gap-2 p-1">
 
             <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 150px"
@@ -135,8 +156,18 @@ export default {
             </div>
 
             <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 200px"
-              @click="dumpAllItems()">
+              @click="explorationStore.sealAllAreas()">
+              Seal All Areas
+            </div>
+
+            <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 200px"
+              @click="dumpAllItems(); skillStore.flags.showMechanics = true">
               Get All Items
+            </div>
+
+            <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 200px"
+              @click="reverseDumpAllItems(); skillStore.flags.showMechanics = false">
+              -20 All Items
             </div>
 
           </div>

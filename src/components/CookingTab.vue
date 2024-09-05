@@ -1,9 +1,9 @@
 <script>
-import { useSkillStore } from '@/stores/skills';
-import { useCookingStore } from '@/stores/cooking';
-import { useItemStore } from '@/stores/inventory';
+import { useSkillStore } from '@/stores/skills'
+import { useCookingStore } from '@/stores/cooking'
+import { useItemStore } from '@/stores/inventory'
 
-import tooltips from './panels/tooltips.vue';
+import tooltips from './panels/tooltips.vue'
 
 export default {
   name: 'CookingTab',
@@ -20,7 +20,6 @@ export default {
   data() {
     return {
       skillID: 20,
-      itemIndexStart: 0, //itemStore.resourceItems.findIndex(t => t.id === this.cookingStore[0].resourceID) //this code will get the start index of itemIDs, but I don't know how to run it after everything is loaded. Also, it hardcodes all activity items which could limit further development.
       shownActivity: {},
       shownCat: 'meat',
       showGuideModal: false,
@@ -44,28 +43,23 @@ export default {
       return false
     },
     shownActivityMeatItem1() {
-      let temp
-      temp = this.itemStore.consumableItems.find(({ id }) => id === this.shownActivity.neededMeatItem1)
+      let temp = this.itemStore.consumableItems.find(({ id }) => id === this.shownActivity.neededMeatItem1)
       return temp.count
     },
     shownActivityItem1() {
-      let temp
-      temp = this.itemStore.resourceItems.find(({ id }) => id === this.shownActivity.neededItem1)
+      let temp = this.itemStore.resourceItems.find(({ id }) => id === this.shownActivity.neededItem1)
       return temp.count
     },
     shownActivityItem2() {
-      let temp
-      temp = this.itemStore.resourceItems.find(({ id }) => id === this.shownActivity.neededItem2)
+      let temp = this.itemStore.resourceItems.find(({ id }) => id === this.shownActivity.neededItem2)
       return temp.count
     },
     shownActivityMadeItemC() {
-      let temp
-      temp = this.itemStore.consumableItems.find(({ id }) => id === this.shownActivity.itemID)
+      let temp = this.itemStore.consumableItems.find(({ id }) => id === this.shownActivity.itemID)
       return temp.count
     },
     shownActivityHeals() {
-      let temp
-      temp = this.itemStore.consumableItems.find(({ id }) => id === this.shownActivity.itemID)
+      let temp = this.itemStore.consumableItems.find(({ id }) => id === this.shownActivity.itemID)
       return temp.heals
     },
   }
@@ -73,7 +67,7 @@ export default {
 </script>
 
 <template>
-  <div class="card pt-4 align-items-center main-window bg-transparent" style="width: 77rem">
+  <div class="card py-4 align-items-center main-window bg-transparent" style="width: 77rem">
 
     <!-- Guide Modal -->
     <div class="modal show-modal" v-if="showGuideModal == true">
@@ -110,7 +104,8 @@ export default {
               healing</span>, providing more healing per meal. This will not increase the auto-healing threshold.
             <br><br>
 
-            Meat <span class="info-text">mastery levels</span> give 2% faster cooking times.
+            Meat <span class="info-text">mastery levels</span> are different, instead they give its food 2% faster
+            cooking times.
 
           </div>
         </div>
@@ -126,7 +121,7 @@ export default {
 
         <!-- Skill Icon and Help Button -->
         <div class="card card-activity align-items-center py-2" style="width: 67px; height: 67px;">
-          <img src="src/assets/12x/questionmark.png" alt="" width="48" height="48">
+          <img src="/src/assets/12x/questionmark.png" alt="" width="48" height="48">
           <div class="stretched-link" @click="showGuideModal = true"></div>
         </div>
 
@@ -169,7 +164,7 @@ export default {
             <div class="px-2">
               <span>
                 <div class="tooltip-b">
-                  <img src="src/assets/icons/defaultcook16.png" alt="" width="32" height="32">
+                  <img src="/src/assets/icons/defaultcook16.png" alt="" width="32" height="32">
                   <span> Fire Pit</span>
 
                   <!-- Tooltip -->
@@ -185,13 +180,13 @@ export default {
             </div>
 
             <!-- Efficency % -->
-            <div class="tooltip-br">
+            <div class="tooltip-bl">
               {{ cookingStore.efficency }}%
-              <img src="src/assets/12x/eff.png" alt="" width="24" height="24">
+              <img src="/src/assets/12x/eff.png" alt="" width="24" height="24">
               <div class="tooltip-text py-1 px-2">
                 <div class="little-levels">
                   Chance of additional instant actions, without using extra resources.
-                  <hr>
+                  <br><br>
                   Typically gained from skill levels.
                 </div>
               </div>
@@ -201,7 +196,7 @@ export default {
 
         <!-- Boost -->
         <div class="card align-items-center" style="width: 50px; height: 50px;">
-          <!-- <img src="src/assets/icons/testIcon32.png" alt="" width="64" height="64"> -->
+          <!-- <img src="/src/assets/icons/testIcon32.png" alt="" width="64" height="64"> -->
         </div>
       </div>
     </div>
@@ -215,14 +210,14 @@ export default {
           <div class="btn sidenav-item" style="font-size: 1.2rem; font-weight: 500; width: 150px"
             @click="shownCat = 'meat'">
             <div class="d-flex justify-content-start">
-              <img src="src/assets/icons/cookedsteak.png">Meat
+              <img src="/src/assets/icons/cookedsteak.png">Meat
             </div>
           </div>
 
           <div class="btn sidenav-item" style="font-size: 1.2rem; font-weight: 500; width: 150px"
             @click="shownCat = 'meal'">
             <div class="d-flex justify-content-start">
-              <img src="src/assets/icons/berrypie.png">Meals
+              <img src="/src/assets/icons/berrypie.png">Meals
             </div>
           </div>
 
@@ -258,8 +253,6 @@ export default {
                   </span>
                 </div>
               </div>
-
-              <div class="little-levels pb-2">Requires</div>
 
               <!-- Image(s) of Required Items -->
               <div class="d-flex justify-content-center align-items-center gap-3 pb-3">
@@ -299,6 +292,9 @@ export default {
                 </div>
 
               </div>
+
+              <div class="little-levels pb-2">Requires</div>
+
             </div>
 
             <!-- XP per Completion and Seconds per Complete -->
@@ -311,7 +307,7 @@ export default {
 
             <!-- Progress Bar for Activity Completion -->
             <div class="progress" role="progressbar" style="height: 12px;">
-              <div class="progress-bar xp-progress" :style="`width: ${this.cookingStore.activePercent}%;`"
+              <div class="progress-bar xp-progress" :style="`width: ${this.cookingStore.activePercent.a}%;`"
                 v-if="this.cookingStore.activeObject.id == shownActivity.id">
               </div>
             </div>

@@ -77,7 +77,7 @@ export default {
 </script>
 
 <template>
-  <div class="card pt-4 align-items-center main-window bg-transparent" style="width: 77rem">
+  <div class="card py-4 align-items-center main-window bg-transparent" style="width: 77rem">
 
     <!-- Guide Modal -->
     <div class="modal show-modal" v-if="showGuideModal == true">
@@ -103,8 +103,9 @@ export default {
               class="info-text">heat</span>. Melting stone into <span class="info-text">ingots</span> takes time. <span
               class="info-text">Working</span> those ingots into shape takes considerably more time.
             <br><br>
-            Each ingot <span class="info-text">mastery level</span> increases <span class="info-text">heat rate</span>
-            by 0.1 (from a base rate of 2).
+            Each ingot <span class="info-text">mastery level</span> increases its <span class="info-text">heat
+              rate</span>
+            by 0.1 (from a base rate of 2 per second).
             <br><br>
 
             <span class="text-warning">Equipment</span>
@@ -130,7 +131,7 @@ export default {
 
         <!-- Skill Icon and Help Button -->
         <div class="card card-activity align-items-center py-2" style="width: 67px; height: 67px;">
-          <img src="src/assets/12x/questionmark.png" alt="" width="48" height="48">
+          <img src="/src/assets/12x/questionmark.png" alt="" width="48" height="48">
           <div class="stretched-link" @click="showGuideModal = true"></div>
         </div>
 
@@ -173,7 +174,7 @@ export default {
             <div class="px-2">
               <span>
                 <div class="tooltip-b">
-                  <img src="src/assets/icons/defaulthammer16.png" alt="" width="32" height="32">
+                  <img src="/src/assets/icons/defaulthammer16.png" alt="" width="32" height="32">
                   <span> Hammer</span>
 
                   <!-- Tooltip -->
@@ -182,6 +183,10 @@ export default {
                       <span>Striking:</span>
                       <span>0.20s</span>
                     </div> -->
+                    <div class="d-flex justify-content-between little-levels">
+                      <span>Work Time:</span>
+                      <span>2.00s</span>
+                    </div>
                     <div class="d-flex justify-content-between little-levels">
                       <span>Work:</span>
                       <span>1</span>
@@ -193,13 +198,13 @@ export default {
             </div>
 
             <!-- Efficency % -->
-            <div class="tooltip-br">
+            <div class="tooltip-bl">
               {{ smithingStore.efficency }}%
-              <img src="src/assets/12x/eff.png" alt="" width="24" height="24">
+              <img src="/src/assets/12x/eff.png" alt="" width="24" height="24">
               <div class="tooltip-text py-1 px-2">
                 <div class="little-levels">
                   Chance of additional instant actions, without using extra resources.
-                  <hr>
+                  <br><br>
                   Typically gained from skill levels.
                 </div>
               </div>
@@ -209,7 +214,7 @@ export default {
 
         <!-- Boost -->
         <div class="card align-items-center" style="width: 50px; height: 50px;">
-          <!-- <img src="src/assets/icons/testIcon32.png" alt="" width="64" height="64"> -->
+          <!-- <img src="/src/assets/icons/testIcon32.png" alt="" width="64" height="64"> -->
         </div>
       </div>
     </div>
@@ -223,35 +228,35 @@ export default {
           <div class="btn sidenav-item" style="font-size: 1.2rem; font-weight: 500; width: 150px"
             @click="shownCat = 'bar'">
             <div class="d-flex justify-content-start">
-              <img src="src/assets/icons/tempkiln16.png">Ingots
+              <img src="/src/assets/icons/tempkiln16.png">Ingots
             </div>
           </div>
 
           <div class="btn sidenav-item" style="font-size: 1.2rem; font-weight: 500; width: 150px"
             @click="shownCat = 'copper'">
             <div class="d-flex justify-content-start">
-              <img src="src/assets/icons/copperingot16.png">Copper
+              <img src="/src/assets/icons/copperingot16.png">Copper
             </div>
           </div>
 
           <div class="btn sidenav-item" style="font-size: 1.2rem; font-weight: 500; width: 150px"
             @click="shownCat = 'bronze'">
             <div class=" d-flex justify-content-start">
-              <img src="src/assets/icons/bronzeingot16.png">Bronze
+              <img src="/src/assets/icons/bronzeingot16.png">Bronze
             </div>
           </div>
 
           <div class="btn sidenav-item" style="font-size: 1.2rem; font-weight: 500; width: 150px"
             @click="shownCat = 'iron'">
             <div class="d-flex justify-content-start">
-              <img src="src/assets/icons/ironingot16.png">Iron
+              <img src="/src/assets/icons/ironingot16.png">Iron
             </div>
           </div>
 
           <div class="btn sidenav-item" style="font-size: 1.2rem; font-weight: 500; width: 150px"
             @click="shownCat = 'steel'">
             <div class="d-flex justify-content-start">
-              <img src="src/assets/icons/steelingot16.png">Steel
+              <img src="/src/assets/icons/steelingot16.png">Steel
             </div>
           </div>
         </div>
@@ -294,8 +299,6 @@ export default {
                   </span>
                 </div>
               </div>
-
-              <div class="little-levels pb-2">Requires</div>
 
               <!-- Image(s) of Required Items -->
               <div class="d-flex justify-content-center align-items-center gap-3 pb-3">
@@ -356,6 +359,8 @@ export default {
                 </div>
               </div>
 
+              <div class="little-levels pb-2">Requires</div>
+
             </div>
 
             <!-- Derived Time to Complete -->
@@ -381,7 +386,7 @@ export default {
 
             <!-- Progress Bar for Activity Completion -->
             <div class="progress" role="progressbar" style="height: 12px;">
-              <div class="progress-bar xp-progress" :style="`width: ${this.smithingStore.activePercent}%;`"
+              <div class="progress-bar xp-progress" :style="`width: ${this.smithingStore.activePercent.a}%;`"
                 v-if="this.smithingStore.activeObject.id == shownActivity.id">
               </div>
             </div>
@@ -404,7 +409,14 @@ export default {
             v-for="(activity, index) in smithingStore.activities.filter(temp => temp.cat === this.shownCat)">
 
             <!-- Not Enough Levels or Area Access for Activity -->
-            <div class="card-body pt-2 pb-0" v-if="isNotValidActivity(activity)">
+            <div class="card-body pt-2 pb-0 tooltip-be3" v-if="isNotValidActivity(activity)">
+
+              <!-- Heavy Weapon Tooltip -->
+              <div class="tooltip-text bg-secondary py-2 w-100"
+                v-if="activity.mCat == 6 && activity.levelRequired <= skillStore.skills[this.skillID].level">
+                Recipe Located in Sequence 8
+              </div>
+
               <div class="d-flex justify-content-around align-items-center">
 
                 <div class="d-flex flex-grow-1">

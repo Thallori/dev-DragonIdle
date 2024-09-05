@@ -1,211 +1,267 @@
 <script>
 import { useSkillStore } from '@/stores/skills'
 import { useItemStore } from '@/stores/inventory'
+import { useShopStore } from '@/stores/shop'
+
+import skillbuy from './panels/skillbuy.vue'
+import tooltips from './panels/tooltips.vue'
 
 export default {
   name: 'ShopTab',
+  components: {
+    tooltips,
+    skillbuy,
+  },
   setup() {
     const skillStore = useSkillStore()
     const itemStore = useItemStore()
-    return { skillStore, itemStore }
+    const shopStore = useShopStore()
+    return { skillStore, itemStore, shopStore }
   },
   data() {
     return {
       shownMenu: 0,
-      showGuideModal: false,
+      shownGuideModal: 0,
+      buyAmount: 1,
     }
   },
   methods: {
-    hasCount(temp) {
-      return temp.filter(blep => blep.count > 0)
+    select: function (event) {
+      event.target.setSelectionRange(0, this.buyAmount.length)
     },
+    tryBuyCoins(temp) {
+      if (this.buyAmount == 'Max') {
+        //max buying calc
+        return
+      }
+      //if has items
+      if (this.itemStore.hasItemCount('money', temp.price * this.buyAmount, 'resourceItems')) {
 
-    tryBuyCombat() {
-      if (this.itemStore.hasItemCount('money', 10, 'resourceItems') == true && this.itemStore.hasItemCount('meatChop', 1, 'consumableItems') == true) {
-        this.skillStore.unlockCombat()
-        this.itemStore.changeItemCount('money', -10, 'resourceItems')
-        this.itemStore.changeItemCount('meatChop', -1, 'consumableItems')
+        this.itemStore.changeItemCount(temp.id, this.buyAmount)
+        this.itemStore.changeItemCount('money', 0 - (temp.price * this.buyAmount), 'resourceItems')
       }
     },
-    tryBuyRanged() {
-      if (this.itemStore.hasItemCount('money', 400, 'resourceItems') == true && this.itemStore.hasItemCount('copperArrow', 1, 'equipmentItems') == true) {
-        this.skillStore.unlockSkill(2)
-        this.skillStore.unlockSkill(5)
-        this.itemStore.changeItemCount('money', -400, 'resourceItems')
-        this.itemStore.changeItemCount('copperArrow', -1, 'equipmentItems')
+    tryBuy2(temp) {
+      //if has items
+      if (this.itemStore.hasItemCount(temp.price1[0], temp.price1[1], temp.price1[2]) && this.itemStore.hasItemCount(temp.price2[0], temp.price2[1], temp.price2[2])) {
+        //-99 hardcoded to unlock combat
+        if (temp.unlocks[0] == -99) {
+          this.skillStore.unlockCombat()
+        } else {
+          let unlockA = temp.unlocks[0] ?? 9 //exploration if there is no first unlock
+          let unlockB = temp.unlocks[1] ?? 9 //exploration if there is no second unlock
+          this.skillStore.unlockSkill(unlockA)
+          this.skillStore.unlockSkill(unlockB)
+        }
+        
+        this.itemStore.changeItemCount(temp.price1[0], 0 - temp.price1[1], temp.price1[2])
+        this.itemStore.changeItemCount(temp.price2[0], 0 - temp.price2[1], temp.price2[2])
       }
     },
-    tryBuyMagic() {
-      if (this.itemStore.hasItemCount('money', 800, 'resourceItems') == true && this.itemStore.hasItemCount('charge1', 1, 'equipmentItems') == true) {
-        this.skillStore.unlockSkill(3)
-        this.skillStore.unlockSkill(6)
-        this.itemStore.changeItemCount('money', -800, 'resourceItems')
-        this.itemStore.changeItemCount('charge1', -1, 'equipmentItems')
-      }
-    },
-
-    tryBuySmithing() {
-      if (this.itemStore.hasItemCount('money', 10, 'resourceItems') == true && this.itemStore.hasItemCount('ore1', 1, 'resourceItems') == true) {
-        this.skillStore.unlockSkill(16)
-        this.itemStore.changeItemCount('money', -10, 'resourceItems')
-        this.itemStore.changeItemCount('ore1', -1, 'resourceItems')
-      }
-    },
-    tryBuyCooking() {
-      if (this.itemStore.hasItemCount('money', 80, 'resourceItems') == true && this.itemStore.hasItemCount('plant1', 5, 'resourceItems') == true) {
-        this.skillStore.unlockSkill(20)
-        this.itemStore.changeItemCount('money', -80, 'resourceItems')
-        this.itemStore.changeItemCount('plant1', -5, 'resourceItems')
-      }
-    },
-
   },
 }
 </script>
 
 <template>
-  <div class="d-flex pt-3 pb-4 pe-2 main-window bg-transparent gap-1" style="width: 82rem;">
+  <div class="d-flex py-4 pe-2 main-window bg-transparent gap-1" style="width: 82rem;">
 
-    <!-- Skill Shop -->
-    <div class="pb-5 w-100" v-if="shownMenu == 0">
-      <div class="d-flex flex-wrap gap-1 pb-1">
-        <div class="card pb-1">
+    <!-- All Items -->
+    <div class="w-100 pb-5">
 
-          <!-- Title Header -->
-          <div class="p-0">
-            <div class="px-3">Skills</div>
+      <!-- Menu Menu -->
+      <div class="px-5 pb-1 w-100">
+        <div class="d-flex flex-wrap justify-content-center gap-1">
+
+          <!-- Talk Button -->
+          <!-- <div class="card card-activity align-items-center py-2" style="width: 67px; height: 67px;">
+            <img src="/src/assets/12x/questionmark.png" alt="" width="48" height="48">
+            <div class="stretched-link" @click="shownGuideModal = true"></div>
+          </div> -->
+
+          <!-- Menu Selector -->
+          <div class="card flex-grow-1">
+            <div class="d-flex m-auto">
+
+              <span>
+                Buy Something Will Ya?
+              </span>
+
+              <!-- <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 150px"
+              @click="toggleMenus(0)">
+              <div class="d-flex justify-content-start">
+                <img src="/src/assets/icons/defaultmap.png" alt="" width="32" height="32">Areas
+              </div>
+            </div>
+
+            <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 150px"
+              @click="toggleMenus(1)">
+              <div class="d-flex justify-content-start">
+                <img src="/src/assets/icons/steelsword16.png" alt="" width="32" height="32">Sequences
+              </div>
+            </div> -->
+
+            </div>
           </div>
 
-          <!-- Actual Data -->
-          <div class="d-flex flex-wrap gap-1 pt-1 px-2" style="min-height: 4rem;">
+          <!-- Buy X Button -->
+          <div style="max-height: 67px;">
 
-            <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 250px"
-              v-if="skillStore.flags.showCombat == false" @click="tryBuyCombat()">
-              <div class="d-flex justify-content-start">
-                <img style="width: 60px; height: 60px;" src="src/assets/12x/combat.png">
-                <div>
-                  Combat
-                  <div class="little-levels">
-                    10 <img style="width: 32px; height: 32px;" src="src/assets/icons/coins.png" alt="">
-                    1 <img style="width: 32px; height: 32px;" src="src/assets/icons/rawchop.png" alt="">
-                  </div>
-                </div>
+            <div class="card">
+              <div class="dropdown">
+                <button class="btn text-white activity dropdown-toggle w-100" type="button" data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  Buy X
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><a class="dropdown-item text-end" @click="buyAmount = 1">x1</a></li>
+                  <li><a class="dropdown-item text-end" @click="buyAmount = 10">x10</a></li>
+                  <li><a class="dropdown-item text-end" @click="buyAmount = 50">x50</a></li>
+                  <li><a class="dropdown-item text-end" @click="buyAmount = 100">x100</a></li>
+                  <li><a class="dropdown-item text-end" @click="buyAmount = 1000">x1,000</a></li>
+                  <!-- <li><a class="dropdown-item text-end" @click="buyAmount = 'Max'">Max</a></li> -->
+                </ul>
+              </div>
+
+              <div>
+                <input class="little-levels text-end form-control mt-1 py-0" type="text" size="7" @click="select"
+                  v-model="buyAmount">
               </div>
             </div>
+          </div>
+        </div>
+      </div>
 
-            <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 250px"
-              v-if="skillStore.flags.showCombat == true && skillStore.skills[2].locked == true && ((skillStore.flags.showHug == false && skillStore.flags.pacifist == true) || skillStore.flags.pacifist == false)"
-              @click="tryBuyRanged()">
-              <div class="d-flex justify-content-start">
-                <img style="width: 60px; height: 60px;" src="src/assets/12x/ranged.png">
-                <div>
-                  Ranged
-                  <div class="little-levels">
-                    400 <img style="width: 32px; height: 32px;" src="src/assets/icons/coins.png" alt="">
-                    1 <img style="width: 32px; height: 32px;" src="src/assets/icons/copperarrow.png" alt="">
+      <!-- Items -->
+      <div class="card card-big mb-2" style="min-height: 6rem;">
+
+        <!-- Title Header -->
+        <div class="card-header dark-text py-0">
+          Items
+        </div>
+
+        <!-- Actual Data -->
+        <div class="d-flex flex-wrap gap-1 pt-2 px-2">
+          <div v-for="itembuy in shopStore.items0">
+
+            <div class="card darkequipment-card sidenav-item2 little-levels tooltip-b" style="width: 200px"
+              @click="tryBuyCoins(itembuy)">
+
+              <div class="tooltip-text">
+                <tooltips :itemObject="itemStore.getItemData(itembuy.id)" :money="false" />
+              </div>
+
+              <div class="d-flex">
+                <img style="width: 48px; height: 48px;" :src="itemStore.getItemImage(itembuy.id)">
+                <div class="ms-2 text-white">
+                  {{ itemStore.getItemName(itembuy.id) }}
+
+                  <div class="d-flex">
+                    <div>
+                      {{ itembuy.price * this.buyAmount }}
+                      <img class="mx-1" style="width: 24px; height: 24px;" src="/src/assets/12x/coins.png" alt="">
+                    </div>
                   </div>
+
                 </div>
               </div>
-            </div>
 
-            <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 250px"
-              v-if="skillStore.flags.showCombat == true && skillStore.skills[3].locked == true && ((skillStore.flags.showHug == false && skillStore.flags.pacifist == true) || skillStore.flags.pacifist == false)"
-              @click="tryBuyMagic()">
-              <div class="d-flex justify-content-start">
-                <img style="width: 60px; height: 60px;" src="src/assets/12x/spirit.png">
-                <div>
-                  Magic
-                  <div class="little-levels">
-                    800 <img style="width: 32px; height: 32px;" src="src/assets/icons/coins.png" alt="">
-                    1 <img style="width: 32px; height: 32px;" src="src/assets/icons/charge1.png" alt="">
+              <div class="card-img-overlay my-4">
+                <span class="position-relative little-levels badge bg-secondary"
+                  style="translate: -10px -45px; padding: 0.25rem;">
+                  {{ itemStore.getItemCount(itembuy.id).toLocaleString(undefined, { notation: 'compact' }) }}
+                </span>
+              </div>
+
+            </div>
+          </div>
+
+          <div v-for="itembuy in shopStore.items1" v-if="skillStore.flags.dungeon2 == true">
+            <div class="card darkequipment-card sidenav-item2 little-levels tooltip-b" style="width: 200px"
+              @click="tryBuyCoins(itembuy)">
+
+              <div class="tooltip-text">
+                <tooltips :itemObject="itemStore.getItemData(itembuy.id)" :money="false" />
+              </div>
+
+              <div class="d-flex">
+                <img style="width: 48px; height: 48px;" :src="itemStore.getItemImage(itembuy.id)">
+                <div class="ms-2 text-white">
+                  {{ itemStore.getItemName(itembuy.id) }}
+
+                  <div class="d-flex">
+                    <div>
+                      {{ itembuy.price * this.buyAmount }}
+                      <img class="mx-1" style="width: 24px; height: 24px;" src="/src/assets/12x/coins.png" alt="">
+                    </div>
                   </div>
+
                 </div>
               </div>
-            </div>
 
-            <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 250px"
-              v-if="skillStore.skills[16].locked == true" @click="tryBuySmithing()">
-              <div class="d-flex justify-content-start">
-                <img style="width: 60px; height: 60px;" src="src/assets/12x/smithing.png">
-                <div>
-                  Smithing
-                  <div class="little-levels">
-                    10 <img style="width: 32px; height: 32px;" src="src/assets/icons/coins.png" alt="">
-                    1 <img style="width: 32px; height: 32px;" src="src/assets/icons/copperore.png" alt="">
-                  </div>
-                </div>
+              <div class="card-img-overlay my-4">
+                <span class="position-relative little-levels badge bg-secondary"
+                  style="translate: -10px -45px; padding: 0.25rem;">
+                  {{ itemStore.getItemCount(itembuy.id).toLocaleString(undefined, { notation: 'compact' }) }}
+                </span>
               </div>
-            </div>
 
-            <div class="btn sidenav-item px-2 py-1 disabled" style="font-size: 1.2rem; font-weight: 500; width: 250px">
-              <div class="d-flex justify-content-start">
-                <img style="width: 60px; height: 60px;" src="src/assets/12x/fletching.png">
-                <div>
-                  Fletching
-                  <div class="little-levels">
-                    400 <img style="width: 32px; height: 32px;" src="src/assets/icons/coins.png" alt="">
-                    15 <img style="width: 32px; height: 32px;" src="src/assets/icons/feather.png" alt="">
-                  </div>
-                </div>
-              </div>
             </div>
-
-            <div class="btn sidenav-item px-2 py-1 disabled" style="font-size: 1.2rem; font-weight: 500; width: 250px">
-              <div class="d-flex justify-content-start">
-                <img style="width: 60px; height: 60px;" src="src/assets/12x/artiface.png">
-                <div>
-                  Artifice
-                  <div class="little-levels">
-                    800 <img style="width: 32px; height: 32px;" src="src/assets/icons/coins.png" alt="">
-                    1 <img style="width: 32px; height: 32px;" src="src/assets/icons/rune1.png" alt="">
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="btn sidenav-item px-2 py-1 disabled" style="font-size: 1.2rem; font-weight: 500; width: 250px">
-              <div class="d-flex justify-content-start">
-                <img style="width: 60px; height: 60px;" src="src/assets/12x/tailoring.png">
-                <div>
-                  Tailoring
-                  <div class="little-levels">
-                    200 <img style="width: 32px; height: 32px;" src="src/assets/icons/coins.png" alt="">
-                    1 <img style="width: 32px; height: 32px;" src="src/assets/icons/wool.png" alt="">
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 250px"
-              v-if="skillStore.skills[20].locked == true" @click="tryBuyCooking()">
-              <div class="d-flex justify-content-start">
-                <img style="width: 60px; height: 60px;" src="src/assets/12x/cooking.png">
-                <div>
-                  Cooking
-                  <div class="little-levels">
-                    50 <img style="width: 32px; height: 32px;" src="src/assets/icons/coins.png" alt="">
-                    5 <img style="width: 32px; height: 32px;" src="src/assets/icons/oak.png" alt="">
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="btn sidenav-item px-2 py-1 disabled" style="font-size: 1.2rem; font-weight: 500; width: 250px">
-              <div class="d-flex justify-content-start">
-                <img style="width: 60px; height: 60px;" src="src/assets/12x/alchemy.png">
-                <div>
-                  Alchemy
-                  <div class="little-levels">
-                    2000 <img style="width: 32px; height: 32px;" src="src/assets/icons/coins.png" alt="">
-                    1 <img style="width: 32px; height: 32px;" src="src/assets/icons/rune2.png" alt="">
-                  </div>
-                </div>
-              </div>
-            </div>
-
           </div>
 
         </div>
+
+        <div class="dark-text little-levels mx-3 mb-1">
+          Shop will expand after
+          <span v-if="skillStore.flags.dungeon2 == false">
+            completing sequence 3
+          </span>
+          <span v-else-if="skillStore.flags.dungeon7 == false">
+            a future update
+          </span>
+        </div>
+      </div>
+
+      <!-- Skills -->
+      <div class="card card-big mb-2" style="min-height: 6rem;">
+
+        <!-- Title Header -->
+        <div class="card-header dark-text py-0">
+          Skills
+        </div>
+
+        <!-- Actual Data -->
+        <div class="d-flex flex-wrap gap-1 p-2">
+
+          <!-- combat -->
+          <skillbuy :buyObject="shopStore.skills[0]" @click="tryBuy2(shopStore.skills[0])"
+            v-if="skillStore.flags.showCombat == false" />
+          <!-- ranged -->
+          <skillbuy :buyObject="shopStore.skills[1]" @click="tryBuy2(shopStore.skills[1])"
+            v-if="skillStore.skills[2].locked == true" />
+          <!-- magic -->
+          <skillbuy :buyObject="shopStore.skills[2]" @click="tryBuy2(shopStore.skills[2])"
+            v-if="skillStore.skills[3].locked == true" />
+          <!-- smithing -->
+          <skillbuy :buyObject="shopStore.skills[3]" @click="tryBuy2(shopStore.skills[3])"
+            v-if="skillStore.skills[16].locked == true" />
+          <!-- artifice -->
+          <skillbuy :buyObject="shopStore.skills[4]" @click="tryBuy2(shopStore.skills[4])"
+            v-if="skillStore.skills[18].locked == true" />
+          <!-- cooking -->
+          <skillbuy :buyObject="shopStore.skills[5]" @click="tryBuy2(shopStore.skills[5])"
+            v-if="skillStore.skills[20].locked == true" />
+          <!-- tailoring -->
+          <skillbuy :buyObject="shopStore.skills[6]" @click="tryBuy2(shopStore.skills[6])"
+            v-if="skillStore.skills[19].locked == true" />
+          <!-- fletching -->
+          <skillbuy :buyObject="shopStore.skills[7]" @click="tryBuy2(shopStore.skills[7])"
+            v-if="skillStore.skills[17].locked == true" />
+          <!-- alchemy -->
+          <skillbuy :buyObject="shopStore.skills[8]" @click="tryBuy2(shopStore.skills[8])"
+            v-if="skillStore.skills[21].locked == true" />
+
+        </div>
+
       </div>
     </div>
 

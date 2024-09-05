@@ -58,7 +58,7 @@ export default {
 </script>
 
 <template>
-  <div class="card pt-4 align-items-center main-window bg-transparent" style="width: 77rem">
+  <div class="card py-4 align-items-center main-window bg-transparent" style="width: 77rem">
 
     <!-- Guide Modal -->
     <div class="modal show-modal" v-if="showGuideModal == true">
@@ -111,7 +111,7 @@ export default {
 
         <!-- Skill Icon and Help Button -->
         <div class="card card-activity align-items-center py-2" style="width: 67px; height: 67px;">
-          <img src="src/assets/12x/questionmark.png" alt="" width="48" height="48">
+          <img src="/src/assets/12x/questionmark.png" alt="" width="48" height="48">
           <div class="stretched-link" @click="showGuideModal = true"></div>
         </div>
 
@@ -159,6 +159,13 @@ export default {
 
                   <!-- Tooltip -->
                   <div class="tooltip-text py-1 px-3">
+                    <div class="d-flex justify-content-between little-levels"
+                      v-if="undefined != itemStore.equippedTools.miningTool.toolStats.bonusMiningSpeed">
+                      <span>Mining Time: </span>
+                      <span>
+                        {{ (2 - itemStore.equippedTools.miningTool.toolStats.bonusMiningSpeed).toFixed(2) }}s
+                      </span>
+                    </div>
                     <div class="d-flex justify-content-between little-levels">
                       <span>Hit: </span>
                       <span>{{ itemStore.equippedTools.miningTool.toolStats.bonusDamage }}</span>
@@ -167,26 +174,19 @@ export default {
                       <span>Hardness: </span>
                       <span>{{ itemStore.equippedTools.miningTool.toolStats.bonusPen }}</span>
                     </div>
-                    <div class="d-flex justify-content-between little-levels"
-                      v-if="itemStore.equippedTools.miningTool.toolStats.bonusMiningSpeed">
-                      <span>Mining: </span>
-                      <span>
-                        {{ itemStore.equippedTools.miningTool.toolStats.bonusMiningSpeed.toFixed(2) }}s
-                      </span>
-                    </div>
                   </div>
                 </div>
               </span>
             </div>
 
             <!-- Efficency % -->
-            <div class="tooltip-br">
-              {{ explorationStore.activities[1].mLevel + (2 * skillStore.skills[this.skillID].level) }}%
-              <img src="src/assets/12x/eff.png" alt="" width="24" height="24">
+            <div class="tooltip-bl">
+              {{ miningStore.efficency }}%
+              <img src="/src/assets/12x/eff.png" alt="" width="24" height="24">
               <div class="tooltip-text py-1 px-2">
                 <div class="little-levels">
                   Chance of additional instant actions, without using extra resources.
-                  <hr>
+                  <br><br>
                   Typically gained from skill levels and area unlocks.
                 </div>
               </div>
@@ -196,7 +196,7 @@ export default {
 
         <!-- Boost -->
         <div class="card align-items-center" style="width: 50px; height: 50px;">
-          <!-- <img src="src/assets/icons/testIcon32.png" alt="" width="64" height="64"> -->
+          <!-- <img src="/src/assets/icons/testIcon32.png" alt="" width="64" height="64"> -->
         </div>
       </div>
     </div>
@@ -272,7 +272,7 @@ export default {
             <div class="pb-1">{{ activity.xpGain }} XP / {{ activity.rockHP }} HP</div>
 
             <div class="progress" role="progressbar" style="height: 12px;">
-              <div class="progress-bar xp-progress" :style="`width: ${this.miningStore.activePercent}%;`"
+              <div class="progress-bar xp-progress" :style="`width: ${this.miningStore.activePercent.a}%;`"
                 v-if="activity.id == miningStore.activeObject.id">
               </div>
             </div>

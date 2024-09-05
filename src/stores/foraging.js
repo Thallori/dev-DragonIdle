@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { useItemStore as itemStore } from '@/stores/inventory'
 import { useSkillStore as skillStore } from '@/stores/skills'
-import { useExplorationStore as ExplorationStore } from '@/stores/exploration'
+import { useExplorationStore as explorationStore } from '@/stores/exploration'
 
 export const useForagingStore = defineStore('foragingStore', {
   state: () => ({
@@ -11,7 +11,7 @@ export const useForagingStore = defineStore('foragingStore', {
 
     activeObject: {},
     activeProgress: 0,
-    activePercent: 0,
+    activePercent: { a: 0, b: false, c: '#04AA6D' },
     currentTimeout: 0,
 
     //foraging skill is stored as id 13 which is also its index, because I don't know how to do it otherwise
@@ -23,7 +23,6 @@ export const useForagingStore = defineStore('foragingStore', {
         name: 'Oakbark',
         resourceID: 'plant1',
         resourceAmount: 1,
-        image: 'src/assets/icons/testIcon16.png',
         levelRequired: 1,
         xpGain: 4,
         searchDifficulty: 4.0,
@@ -40,7 +39,6 @@ export const useForagingStore = defineStore('foragingStore', {
         name: 'Sunflax',
         resourceID: 'plant2',
         resourceAmount: 1,
-        image: 'src/assets/icons/testIcon16.png',
         levelRequired: 2,
         xpGain: 7,
         searchDifficulty: 8.0,
@@ -57,7 +55,6 @@ export const useForagingStore = defineStore('foragingStore', {
         name: 'Mossberry',
         resourceID: 'plant3',
         resourceAmount: 1,
-        image: 'src/assets/icons/testIcon16.png',
         levelRequired: 3,
         xpGain: 6,
         searchDifficulty: 9.0,
@@ -74,7 +71,6 @@ export const useForagingStore = defineStore('foragingStore', {
         name: 'Snow Cotton',
         resourceID: 'plant4',
         resourceAmount: 1,
-        image: 'src/assets/icons/testIcon16.png',
         levelRequired: 4,
         xpGain: 11,
         searchDifficulty: 5.0,
@@ -91,7 +87,6 @@ export const useForagingStore = defineStore('foragingStore', {
         name: 'Rosemilk',
         resourceID: 'plant5',
         resourceAmount: 1,
-        image: 'src/assets/icons/testIcon16.png',
         levelRequired: 5,
         xpGain: 10,
         searchDifficulty: 14.0,
@@ -108,7 +103,6 @@ export const useForagingStore = defineStore('foragingStore', {
         name: 'Drip Maple',
         resourceID: 'plant6',
         resourceAmount: 1,
-        image: 'src/assets/icons/testIcon16.png',
         levelRequired: 6,
         xpGain: 14,
         searchDifficulty: 16.0,
@@ -125,7 +119,6 @@ export const useForagingStore = defineStore('foragingStore', {
         name: 'Siris Silk',
         resourceID: 'plant7',
         resourceAmount: 1,
-        image: 'src/assets/icons/testIcon16.png',
         levelRequired: 7,
         xpGain: 12,
         searchDifficulty: 18.0,
@@ -142,7 +135,6 @@ export const useForagingStore = defineStore('foragingStore', {
         name: 'Sweet Cane',
         resourceID: 'plant8',
         resourceAmount: 1,
-        image: 'src/assets/icons/testIcon16.png',
         levelRequired: 8,
         xpGain: 18,
         searchDifficulty: 12.0,
@@ -187,6 +179,8 @@ export const useForagingStore = defineStore('foragingStore', {
       //localstorage makes the active object a real boy instead of a reference to a real boy
       this.activeObject = JSON.parse(localStorage.getItem('foraging-activeObject'))
       this.activeObject = this.activities[this.activeObject.id]
+      skillStore().activePercent = this.activePercent
+      this.updateEfficency()
       this.tryRepeatAction()
     },
 
@@ -200,13 +194,14 @@ export const useForagingStore = defineStore('foragingStore', {
 
       this.gatherCounter = 0
       this.activeProgress = 0
-      this.activePercent = 0
+      this.activePercent.a = 0
       this.activeObject = newActiveActivity
 
       skillStore().cancelCurrentActivity('forage')
       skillStore().setCurrentActivity(this.activeObject)
       skillStore().setCurrentCat('Foraging: ')
-
+      skillStore().activePercent = this.activePercent
+      this.updateEfficency()
       this.tryRepeatAction()
     },
 
@@ -214,18 +209,17 @@ export const useForagingStore = defineStore('foragingStore', {
       clearTimeout(this.currentTimeout)
       this.gatherCounter = 0
       this.activeProgress = 0
-      this.activePercent = 0
+      this.activePercent.a = 0
       this.activeObject = {}
       skillStore().setCurrentActivity({ name: 'Nothing' })
       skillStore().setCurrentCat('Currently Doing: ')
-      this.updateEfficency()
     },
 
     updateProgress() {
       if (this.activeProgress >= (1000 * this.activeObject.searchDifficulty * (1 - itemStore().equippedTools.foragingTool.toolStats.locatingMultiplierAdd))) {
 
         this.activeProgress = this.activeObject.gatherDifficulty
-        this.activePercent = 100
+        this.activePercent.a = 100
         this.gatherCounter = this.activeObject.currentYield
         this.actionSuccess()
 
@@ -234,7 +228,7 @@ export const useForagingStore = defineStore('foragingStore', {
       }
 
       this.activeProgress += this.progressInterval
-      this.activePercent = this.activeProgress / (10 * this.activeObject.searchDifficulty * (1 - itemStore().equippedTools.foragingTool.toolStats.locatingMultiplierAdd))
+      this.activePercent.a = this.activeProgress / (10 * this.activeObject.searchDifficulty * (1 - itemStore().equippedTools.foragingTool.toolStats.locatingMultiplierAdd))
 
       this.tryRepeatAction()
     },
@@ -267,23 +261,33 @@ export const useForagingStore = defineStore('foragingStore', {
 
       this.updateEfficency()
       this.updateYield()
-      console.log('boop')
 
       this.gatherCounter -= 1
-      this.activePercent = 100 * this.gatherCounter / this.activeObject.currentYield
+      this.activePercent.a = 100 * this.gatherCounter / this.activeObject.currentYield
     },
 
     updateEfficency() {
       this.efficency = 2 * skillStore().skills[this.skillID].level
-      // this.efficency += explorationStore().activities[3].mLevel //area4
-    },
-    //TODO make efficency > 100 meaningful
-    efficencyReturn() {
-      if (this.efficency >= (Math.random() * 100)) {
-        console.log('efficent!')
-        return 2
+      this.efficency += explorationStore().activities[3].mLevel //area4
+      if (skillStore().totalOffline >= 1000) {
+        this.efficency += 75
       }
-      return 1
+    },
+    efficencyReturn() {
+      let a = 1 + Math.floor(this.efficency / 100)
+      if (this.efficency % 100 >= (Math.random() * 100)) {
+        a += 1
+      }
+      if (a == 2) {
+        console.log('efficent!')
+      }
+      if (a == 3) {
+        console.log('double efficent!')
+      }
+      if (a == 4) {
+        console.log('triple efficent!')
+      }
+      return a
     },
     updateYield() {
       //if mLevel is maxed, then yield is 25 instead of 20 + mLevel

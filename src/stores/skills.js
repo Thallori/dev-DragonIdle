@@ -10,6 +10,7 @@ import { useForagingStore as foragingStore } from '@/stores/foraging'
 import { useHuntingStore as huntingStore } from '@/stores/hunting'
 import { useMiningStore as miningStore } from '@/stores/mining'
 import { useSmithingStore as smithingStore } from '@/stores/smithing'
+import { useArtificeStore as artificeStore } from '@/stores/artifice'
 import { useCookingStore as cookingStore } from '@/stores/cooking'
 
 export const useSkillStore = defineStore('skillStore', {
@@ -24,10 +25,12 @@ export const useSkillStore = defineStore('skillStore', {
       currentActivity: { name: 'Nothing' },
       currentCat: 'Currently Doing: ',
       currentColor: 'rgb(56, 86, 74)',
+      activePercent: { a: 0 },
 
       flags: {
         showCombat: false,
         showHug: false,
+        showBest: false,
         showHoard: false,
         showMechanics: false,
         showAux: false,
@@ -37,6 +40,7 @@ export const useSkillStore = defineStore('skillStore', {
         dungeon0: false,
         dungeon1: false,
         dungeon2: false,
+        dungeon7: false,
 
         combatDummy: false,
 
@@ -46,12 +50,11 @@ export const useSkillStore = defineStore('skillStore', {
         ultraGenocide: true,
         startedGenocide: false,
       },
-
       skills: [
         {
           id: '0',
           name: 'Precision',
-          image: 'src/assets/12x/precision.png',
+          image: 'assets/12x/precision.png',
           color: '#FFFFFF',
           isCombat: true,
           xp: 0,
@@ -59,11 +62,12 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
+          tip: 'Governs Accuracy of All Styles',
         },
         {
           id: '1',
           name: 'Strength',
-          image: 'src/assets/12x/strength.png',
+          image: 'assets/12x/strength.png',
           color: '#FFFFFF',
           isCombat: true,
           xp: 0,
@@ -71,11 +75,12 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
+          tip: 'Governs Melee Damage',
         },
         {
           id: '2',
           name: 'Markship',
-          image: 'src/assets/12x/ranged.png',
+          image: 'assets/12x/ranged.png',
           color: '#FFFFFF',
           isCombat: true,
           xp: 0,
@@ -83,11 +88,12 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
+          tip: 'Governs Ranged Damage',
         },
         {
           id: '3',
           name: 'Spirit',
-          image: 'src/assets/12x/spirit.png',
+          image: 'assets/12x/spirit.png',
           color: '#FFFFFF',
           isCombat: true,
           xp: 0,
@@ -95,11 +101,12 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
+          tip: 'Governs Magic Damage',
         },
         {
           id: '4',
           name: 'Block',
-          image: 'src/assets/12x/block.png',
+          image: 'assets/12x/block.png',
           color: '#FFFFFF',
           isCombat: true,
           xp: 0,
@@ -107,11 +114,12 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
+          tip: 'Governs Melee Dodge',
         },
         {
           id: '5',
           name: 'Reflex',
-          image: 'src/assets/12x/reflex.png',
+          image: 'assets/12x/reflex.png',
           color: '#FFFFFF',
           isCombat: true,
           xp: 0,
@@ -119,11 +127,12 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
+          tip: 'Governs Ranged Dodge',
         },
         {
           id: '6',
           name: 'Acuity',
-          image: 'src/assets/12x/acuity.png',
+          image: 'assets/12x/acuity.png',
           color: '#FFFFFF',
           isCombat: true,
           xp: 0,
@@ -131,11 +140,12 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
+          tip: 'Governs Magic Dodge',
         },
         {
           id: '7',
           name: 'Vitality',
-          image: 'src/assets/12x/vitality.png',
+          image: 'assets/12x/vitality.png',
           color: '#FFFFFF',
           isCombat: true,
           xp: 0,
@@ -143,11 +153,12 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
+          tip: 'Governs Maximum HP',
         },
         {
           id: '8',
           name: 'Mechanics',
-          image: 'src/assets/12x/strength.png',
+          image: 'assets/12x/mechanics.png',
           color: '#FFFFFF',
           isCombat: false,
           xp: 0,
@@ -155,11 +166,12 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
+          tip: 'Manipulate Time and Space',
         },
         {
           id: '9',
           name: 'Exploration',
-          image: 'src/assets/12x/exploration.png',
+          image: 'assets/12x/exploration.png',
           color: '#A7E0EB',
           isCombat: false,
           xp: 0,
@@ -167,11 +179,12 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: false,
+          tip: 'Discover New Resources',
         },
         {
           id: '10',
           name: 'Ritual',
-          image: 'src/assets/12x/strength.png',
+          image: 'assets/12x/strength.png',
           color: '#FFFFFF',
           isCombat: false,
           xp: 0,
@@ -179,11 +192,12 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
+          tip: 'Put Remains to Rest',
         },
         {
           id: '11',
           name: 'Slayer',
-          image: 'src/assets/12x/strength.png',
+          image: 'assets/12x/strength.png',
           color: '#FFFFFF',
           isCombat: false,
           xp: 0,
@@ -191,11 +205,12 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
+          tip: 'Survive Special Encounters',
         },
         {
           id: '12',
           name: 'Scrying',
-          image: 'src/assets/12x/scrying.png',
+          image: 'assets/12x/scrying.png',
           color: '#CEBEAD',
           isCombat: false,
           xp: 0,
@@ -203,11 +218,12 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
+          tip: 'Gather Unstable Materials',
         },
         {
           id: '13',
           name: 'Foraging',
-          image: 'src/assets/12x/foraging.png',
+          image: 'assets/12x/foraging.png',
           color: '#FFFFFF',
           isCombat: false,
           xp: 0,
@@ -215,11 +231,12 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
+          tip: 'Gather Living Materials',
         },
         {
           id: '14',
           name: 'Hunting',
-          image: 'src/assets/12x/hunting.png',
+          image: 'assets/12x/hunting.png',
           color: '#FFFFFF',
           isCombat: false,
           xp: 0,
@@ -227,11 +244,12 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
+          tip: 'Gather Dead Materials',
         },
         {
           id: '15',
           name: 'Mining',
-          image: 'src/assets/12x/mining.png',
+          image: 'assets/12x/mining.png',
           color: '#CFDFE9',
           isCombat: false,
           xp: 0,
@@ -239,11 +257,12 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
+          tip: 'Gather Hardened Materials',
         },
         {
           id: '16',
           name: 'Smithing',
-          image: 'src/assets/12x/smithing.png',
+          image: 'assets/12x/smithing.png',
           color: '#FFFFFF',
           isCombat: false,
           xp: 0,
@@ -251,11 +270,12 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
+          tip: 'Craft Melee Equipment',
         },
         {
           id: '17',
           name: 'Fletching',
-          image: 'src/assets/12x/strength.png',
+          image: 'assets/12x/strength.png',
           color: '#FFFFFF',
           isCombat: false,
           xp: 0,
@@ -263,11 +283,12 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
+          tip: 'Craft Ranged Weapons',
         },
         {
           id: '18',
           name: 'Artifice',
-          image: 'src/assets/12x/strength.png',
+          image: 'assets/12x/artiface.png',
           color: '#FFFFFF',
           isCombat: false,
           xp: 0,
@@ -275,11 +296,12 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
+          tip: 'Craft Magic Weapons',
         },
         {
           id: '19',
           name: 'Tailoring',
-          image: 'src/assets/12x/strength.png',
+          image: 'assets/12x/strength.png',
           color: '#FFFFFF',
           isCombat: false,
           xp: 0,
@@ -287,11 +309,12 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
+          tip: 'Craft Ranged and Magic Armor',
         },
         {
           id: '20',
           name: 'Cooking',
-          image: 'src/assets/12x/cooking.png',
+          image: 'assets/12x/cooking.png',
           color: '#FFFFFF',
           isCombat: false,
           xp: 0,
@@ -299,11 +322,12 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
+          tip: 'Create Healing Food',
         },
         {
           id: '21',
           name: 'Alchemy',
-          image: 'src/assets/12x/strength.png',
+          image: 'assets/12x/strength.png',
           color: '#FFFFFF',
           isCombat: false,
           xp: 0,
@@ -311,11 +335,12 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
+          tip: 'Craft Potions and Oils',
         },
         {
           id: '22',
           name: 'Artisan',
-          image: 'src/assets/12x/strength.png',
+          image: 'assets/12x/strength.png',
           color: '#FFFFFF',
           isCombat: false,
           xp: 0,
@@ -323,11 +348,12 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
+          tip: 'Craft Jewelry and Tools',
         },
         {
           id: '23',
           name: 'Barony',
-          image: 'src/assets/12x/strength.png',
+          image: 'assets/12x/strength.png',
           color: '#FFFFFF',
           isCombat: false,
           xp: 0,
@@ -335,6 +361,7 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
+          tip: 'Build Outside of Time',
         },
       ]
     };
@@ -376,6 +403,7 @@ export const useSkillStore = defineStore('skillStore', {
       miningStore().saveAll()
       scryingStore().saveAll()
       smithingStore().saveAll()
+      artificeStore().saveAll()
       console.log('should be saved')
     },
     loadAll() {
@@ -409,7 +437,17 @@ export const useSkillStore = defineStore('skillStore', {
       miningStore().loadAll()
       scryingStore().loadAll()
       smithingStore().loadAll()
+      artificeStore().loadAll()
       console.log('should be loaded')
+
+      cookingStore().updateEfficency()
+      explorationStore().updateEfficency()
+      foragingStore().updateEfficency()
+      huntingStore().updateEfficency()
+      miningStore().updateEfficency()
+      scryingStore().updateEfficency()
+      smithingStore().updateEfficency()
+      artificeStore().updateEfficency()
 
       //resume doing things
       if (this.currentCat == 'Raiding: ' || this.currentCat == 'Fighting: ') {
@@ -436,6 +474,9 @@ export const useSkillStore = defineStore('skillStore', {
       if (this.currentCat == 'Smithing: ') {
         smithingStore().onLoad()
       }
+      if (this.currentCat == 'Artificing: ') {
+        artificeStore().onLoad()
+      }
     },
 
     clearAll() {
@@ -446,10 +487,28 @@ export const useSkillStore = defineStore('skillStore', {
     timeUpdate() {
       let offlineTime = Date.now() - this.dateLast
 
-      //if more than 1.5 seconds have past, pretend the window reloaded
-      if (offlineTime > 1500) {
+      //if more than 5 seconds have past, pretend the window reloaded
+      if (offlineTime > 5000) {
         this.totalOffline += offlineTime
-        console.log('total offline time: ' + (this.totalOffline / 1000) + 's')
+      }
+      //if doing nothing, or if combat is paused while fighting an enemy
+      if (this.currentActivity.name == 'Nothing' || ((combatStore().combatPaused == true) && (undefined != combatStore().activeObject.id))) {
+        this.totalOffline += 1000
+      }
+      //if doing something, or if combat is unpaused while fighting an enemy
+      if (this.totalOffline > 0 && this.currentActivity.name != 'Nothing') {
+        this.totalOffline -= 1000
+      }
+      //time bank cannot be less than zero
+      if (this.totalOffline < 0) {
+        this.totalOffline == 0
+        cookingStore().updateEfficency()
+        explorationStore().updateEfficency()
+        foragingStore().updateEfficency()
+        huntingStore().updateEfficency()
+        miningStore().updateEfficency()
+        scryingStore().updateEfficency()
+        smithingStore().updateEfficency()
       }
 
       if (this.oneMinuteCounter > 60) {
@@ -577,14 +636,24 @@ export const useSkillStore = defineStore('skillStore', {
       this[temp]()
     },
     dungeon2() {
+      this.flags.showBest = true
       this.maxLevel = 8
       this.unlockSkill(8)
+      //did not even get exploration mxp
       if (this.flags.genocide == true) {
         this.flags.startedGenocide = true
         this.checkUltraGenocide()
       }
+      //you started a pacifist run, then stopped, and have now been told murder is wrong
       if (this.flags.pacifist == false && this.flags.showHug == true) {
         this.flags.flawedPacifist = true
+      }
+      //unlock remaining combat skills if not a pacifist
+      if (this.flags.pacifist == false) {
+        this.skillStore.unlockSkill(2)
+        this.skillStore.unlockSkill(3)
+        this.skillStore.unlockSkill(5)
+        this.skillStore.unlockSkill(6)
       }
       diaStore().startDia('dungeon2')
     },

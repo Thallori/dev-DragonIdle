@@ -56,7 +56,7 @@ export default {
         { m: "My you've been busy." },
         { m: "A little vandalism here, a little murder there." },
         {
-            m: "Did you ever stop to think that the world was frozen for a reason?",
+            q: "Did you ever stop to think that the world was frozen for a reason?",
             r1: ["Yes", 'n1'],
             r2: ["No", 'n2'],
         },
@@ -89,8 +89,9 @@ export default {
         { m: "You'll fail like all the others." },
         { m: "Then we'll fix this disappointing incident..." },
         { ma: ["...and put you back where you belong...", 3500] },
-        { m: "[YOU HAVE FINISHED ALPHA ONE ON THE PACIFIST ROUTE]", next: 'end' },
-        //failed pacifist
+        { m: "[YOU HAVE FINISHED ALPHA ONE ON THE PACIFIST ROUTE]"},
+        { m: "[MAX LEVEL INCREASED TO 8]", next: 'end2' },
+        //flawed pacifist
         { label: 'fp', m: "My you've been busy." },
         { m: "After starting as a simple vandal..." },
         { m: "You worked your way up to murder." },
@@ -120,8 +121,8 @@ export default {
         { ma: ["Then we can begin repairing all the damage you've done...", 3500] },
         { m: "[YOU HAVE FINISHED ALPHA ONE ON THE COMBAT-ONLY ROUTE]", next: 'end' },
         //all
-        { label: 'end', m: "[MAX LEVEL INCREASED TO 8]" },
-        { m: "[YOU MAY CONTINUE TO PLAY, BUT THERE IS ONLY PLACEHOLDER ASSETS AND UNBALANCED GAMEPLAY BEYOND THIS POINT]", e: true },
+        { label: 'end', m: "[MAX LEVEL INCREASED TO 8, AUTO USE BEST STANCE UNLOCKED]" },
+        { label: 'end2', m: "[YOU MAY CONTINUE TO PLAY, BUT THERE IS ONLY PLACEHOLDER ASSETS AND UNBALANCED GAMEPLAY BEYOND THIS POINT]", e: true },
     ],
 
     combatDummy: [

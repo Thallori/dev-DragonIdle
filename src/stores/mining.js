@@ -11,7 +11,7 @@ export const useMiningStore = defineStore('miningStore', {
 
     activeObject: {},
     activeProgress: 0,
-    activePercent: 0,
+    activePercent: { a: 0, b: false, c: '#04AA6D' },
     currentTimeout: 0,
 
     //mining skill is stored as id 15 which is also its index, because I don't know how to do it otherwise
@@ -25,7 +25,6 @@ export const useMiningStore = defineStore('miningStore', {
         name: 'Copper Ore',
         resourceID: 'ore1',
         resourceAmount: 1,
-        image: 'src/assets/icons/testIcon16.png',
         levelRequired: 1,
         xpGain: 10,
         rockHP: 16,
@@ -40,7 +39,6 @@ export const useMiningStore = defineStore('miningStore', {
         name: 'Tin Ore',
         resourceID: 'ore2',
         resourceAmount: 1,
-        image: 'src/assets/icons/testIcon16.png',
         levelRequired: 2,
         xpGain: 18,
         rockHP: 24,
@@ -55,7 +53,6 @@ export const useMiningStore = defineStore('miningStore', {
         name: 'Amber',
         resourceID: 'ore3',
         resourceAmount: 1,
-        image: 'src/assets/icons/testIcon16.png',
         levelRequired: 3,
         xpGain: 14,
         rockHP: 12,
@@ -70,7 +67,6 @@ export const useMiningStore = defineStore('miningStore', {
         name: 'Iron Ore',
         resourceID: 'ore4',
         resourceAmount: 1,
-        image: 'src/assets/icons/testIcon16.png',
         levelRequired: 4,
         xpGain: 32,
         rockHP: 32,
@@ -85,7 +81,6 @@ export const useMiningStore = defineStore('miningStore', {
         name: 'Silver Ore',
         resourceID: 'ore5',
         resourceAmount: 1,
-        image: 'src/assets/icons/testIcon16.png',
         levelRequired: 5,
         xpGain: 37,
         rockHP: 28,
@@ -100,7 +95,6 @@ export const useMiningStore = defineStore('miningStore', {
         name: 'Sandstone',
         resourceID: 'ore6',
         resourceAmount: 1,
-        image: 'src/assets/icons/testIcon16.png',
         levelRequired: 6,
         xpGain: 25,
         rockHP: 20,
@@ -115,7 +109,6 @@ export const useMiningStore = defineStore('miningStore', {
         name: 'Coal',
         resourceID: 'ore7',
         resourceAmount: 1,
-        image: 'src/assets/icons/testIcon16.png',
         levelRequired: 7,
         xpGain: 46,
         rockHP: 35,
@@ -130,7 +123,6 @@ export const useMiningStore = defineStore('miningStore', {
         name: 'Beadstone',
         resourceID: 'ore8',
         resourceAmount: 1,
-        image: 'src/assets/icons/testIcon16.png',
         levelRequired: 8,
         xpGain: 84,
         rockHP: 48,
@@ -172,7 +164,9 @@ export const useMiningStore = defineStore('miningStore', {
       this.activeObject = JSON.parse(localStorage.getItem('mining-activeObject'))
       this.activeObject = this.activities[this.activeObject.id]
       this.activeProgress = this.activeObject.rockHP
-      this.activePercent = 100
+      this.activePercent.a = 100
+      skillStore().activePercent = this.activePercent
+      this.updateEfficency()
       this.tryRepeatAction()
     },
 
@@ -184,14 +178,15 @@ export const useMiningStore = defineStore('miningStore', {
       }
 
       this.toRockDamage = 0
-      this.activePercent = 100
+      this.activePercent.a = 100
       this.activeObject = newActiveActivity
       this.activeProgress = this.activeObject.rockHP
 
       skillStore().cancelCurrentActivity('mine')
       skillStore().setCurrentActivity(this.activeObject)
       skillStore().setCurrentCat('Mining: ')
-
+      skillStore().activePercent = this.activePercent
+      this.updateEfficency()
       this.tryRepeatAction()
     },
 
@@ -199,7 +194,7 @@ export const useMiningStore = defineStore('miningStore', {
       clearTimeout(this.currentTimeout)
       this.toRockDamage = 0
       this.activeProgress = 0
-      this.activePercent = 0
+      this.activePercent.a = 0
       this.activeObject = {}
       skillStore().setCurrentActivity({ name: 'Nothing' })
       skillStore().setCurrentCat('Currently Doing: ')
@@ -243,7 +238,6 @@ export const useMiningStore = defineStore('miningStore', {
         }
 
         this.updateEfficency()
-        console.log('boop')
 
         //this should be first, then there should be a marked carry over to perform 'multiple' actions in a single tick, and probably make the line go all swirrly to tell the player that they're getting one resource per swing. TODO
         this.activeProgress += this.activeObject.rockHP
@@ -253,7 +247,7 @@ export const useMiningStore = defineStore('miningStore', {
         }
       }
 
-      this.activePercent = 100 * this.activeProgress / this.activeObject.rockHP
+      this.activePercent.a = 100 * this.activeProgress / this.activeObject.rockHP
       this.tryRepeatAction()
     },
     tryRepeatAction() {
@@ -287,14 +281,25 @@ export const useMiningStore = defineStore('miningStore', {
     updateEfficency() {
       this.efficency = 2 * skillStore().skills[this.skillID].level
       this.efficency += explorationStore().activities[1].mLevel //cassit canton
-    },
-    //TODO make efficency > 100 meaningful
-    efficencyReturn() {
-      if (this.efficency >= (Math.random() * 100)) {
-        console.log('efficent!')
-        return 2
+      if (skillStore().totalOffline >= 1000) {
+        this.efficency += 75
       }
-      return 1
+    },
+    efficencyReturn() {
+      let a = 1 + Math.floor(this.efficency / 100)
+      if (this.efficency % 100 >= (Math.random() * 100)) {
+        a += 1
+      }
+      if (a == 2) {
+        console.log('efficent!')
+      }
+      if (a == 3) {
+        console.log('double efficent!')
+      }
+      if (a == 4) {
+        console.log('triple efficent!')
+      }
+      return a
     },
 
     addMXP(mxpAmount) {

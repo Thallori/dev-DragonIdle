@@ -13,7 +13,7 @@ export const useExplorationStore = defineStore('explorationStore', {
 
     activeObject: {},
     activeProgress: 0,
-    activePercent: 0,
+    activePercent: { a: 0, b: false, c: '#04AA6D' },
     currentTimeout: 0,
 
     //exploration skill is stored as id 9 which is also its index, because I don't know how to do it otherwise
@@ -23,7 +23,7 @@ export const useExplorationStore = defineStore('explorationStore', {
       {
         id: '0',
         name: 'Gleaming Glade',
-        image: 'src/assets/icons/area1.png',
+        image: 'assets/icons/area1.png',
         levelRequired: 1,
         xpGain: 2,
         interval: 2.0,
@@ -34,13 +34,13 @@ export const useExplorationStore = defineStore('explorationStore', {
         isSealed: true,
         requiresAnyFlags: 'tbd',
         efficencySkill: 'Hunting',
-        uniqueFeature1: ['Foraging', 0, 'src/assets/icons/oak.png'], //oak
-        uniqueFeature2: ['Hunting', 2, 'src/assets/icons/bird.png'], //phesant
+        uniqueFeature2: ['Hunting', 2, 'assets/icons/bird.png'], //phesant
+        uniqueFeature1: ['Foraging', 0, 'assets/icons/oak.png'], //oak
       },
       {
         id: '1',
         name: 'Cassit Canton',
-        image: 'src/assets/icons/area2.png',
+        image: 'assets/icons/area2.png',
         levelRequired: 2,
         xpGain: 4,
         interval: 3.0,
@@ -51,12 +51,13 @@ export const useExplorationStore = defineStore('explorationStore', {
         isSealed: true,
         requiresAnyFlags: 'tbd',
         efficencySkill: 'Mining',
-        uniqueFeature1: ['Mining', 1, 'src/assets/icons/tinore.png'], //tin
+        uniqueFeature1: ['Mining', 1, 'assets/icons/tinore.png'], //tin
+        uniqueFeature2: ['Hunting', 1, 'assets/icons/hog.png'], //hog
       },
       {
         id: '2',
         name: 'Vibrant Vale',
-        image: 'src/assets/icons/area3.png',
+        image: 'assets/icons/area3.png',
         levelRequired: 3,
         xpGain: 6,
         interval: 3.5,
@@ -66,26 +67,29 @@ export const useExplorationStore = defineStore('explorationStore', {
         mxpNext: 10,
         isSealed: true,
         efficencySkill: 'Scrying',
-        uniqueFeature1: ['Scrying', 0, 'src/assets/icons/rune1.png'], //pale clay
-        uniqueFeature2: ['Mining', 2, 'src/assets/icons/amber.png'], //amber
+        uniqueFeature1: ['Scrying', 0, 'assets/icons/rune1.png'], //pale clay
+        uniqueFeature2: ['Mining', 2, 'assets/icons/amber.png'], //amber
       },
-      // {
-      //   id: '3',
-      //   name: 'Fourth Area',
-      //   image: 'src/assets/icons/testIcon16.png',
-      //   levelRequired: 4,
-      //   xpGain: 8,
-      //   interval: 4.0,
-      //   mxp: 0,
-      //   mLevel: 0,
-      //   mxpPrev: 0,
-      //   mxpNext: 10,
-      //   isSealed: true,
-      // },
+      {
+        id: '3',
+        name: 'area4',
+        image: 'assets/icons/area4.png',
+        levelRequired: 4,
+        xpGain: 6,
+        interval: 3.0,
+        mxp: 0,
+        mLevel: 0,
+        mxpPrev: 0,
+        mxpNext: 10,
+        isSealed: true,
+        efficencySkill: 'Foraging',
+        uniqueFeature1: ['Foraging', 3, 'assets/icons/plant4.png'], //cotton
+        uniqueFeature2: ['Scrying', 3, 'assets/icons/rune4.png'], //spelldew
+      },
       // {
       //   id: '4',
       //   name: 'Fifth Area',
-      //   image: 'src/assets/icons/testIcon16.png',
+      //   image: 'assets/icons/testIcon16.png',
       //   levelRequired: 5,
       //   xpGain: 7,
       //   interval: 3.0,
@@ -98,7 +102,7 @@ export const useExplorationStore = defineStore('explorationStore', {
       // {
       //   id: '5',
       //   name: 'Sixth Area',
-      //   image: 'src/assets/icons/testIcon16.png',
+      //   image: 'assets/icons/testIcon16.png',
       //   levelRequired: 6,
       //   xpGain: 88,
       //   interval: 88.0,
@@ -111,7 +115,7 @@ export const useExplorationStore = defineStore('explorationStore', {
       // {
       //   id: '6',
       //   name: 'Seventh Area',
-      //   image: 'src/assets/icons/testIcon16.png',
+      //   image: 'assets/icons/testIcon16.png',
       //   levelRequired: 7,
       //   xpGain: 88,
       //   interval: 88.0,
@@ -124,7 +128,7 @@ export const useExplorationStore = defineStore('explorationStore', {
       // {
       //   id: '7',
       //   name: 'Eighth Area',
-      //   image: 'src/assets/icons/testIcon16.png',
+      //   image: 'assets/icons/testIcon16.png',
       //   levelRequired: 8,
       //   xpGain: 88,
       //   interval: 88.0,
@@ -160,11 +164,11 @@ export const useExplorationStore = defineStore('explorationStore', {
       this.currentUnsealedAreas = JSON.parse(localStorage.getItem('exploration-currentUnsealedAreas'))
 
       for (let i in this.activities) {
-        this.activities[i].mxp = JSON.parse(localStorage.getItem('exploration-mxp' + i))
-        this.activities[i].mLevel = JSON.parse(localStorage.getItem('exploration-mLevel' + i))
-        this.activities[i].mxpPrev = JSON.parse(localStorage.getItem('exploration-mxpPrev' + i))
-        this.activities[i].mxpNext = JSON.parse(localStorage.getItem('exploration-mxpNext' + i))
-        this.activities[i].isSealed = JSON.parse(localStorage.getItem('exploration-isSealed' + i))
+        this.activities[i].mxp = JSON.parse(localStorage.getItem('exploration-mxp' + i)) ?? 0
+        this.activities[i].mLevel = JSON.parse(localStorage.getItem('exploration-mLevel' + i)) ?? 0
+        this.activities[i].mxpPrev = JSON.parse(localStorage.getItem('exploration-mxpPrev' + i)) ?? 0
+        this.activities[i].mxpNext = JSON.parse(localStorage.getItem('exploration-mxpNext' + i)) ?? 10
+        this.activities[i].isSealed = JSON.parse(localStorage.getItem('exploration-isSealed' + i)) ?? true
       }
     },
 
@@ -172,6 +176,8 @@ export const useExplorationStore = defineStore('explorationStore', {
       //localstorage makes the active object a real boy instead of a reference to a real boy
       this.activeObject = JSON.parse(localStorage.getItem('exploration-activeObject'))
       this.activeObject = this.activities[this.activeObject.id]
+      skillStore().activePercent = this.activePercent
+      this.updateEfficency()
       this.tryRepeatAction()
     },
     
@@ -182,22 +188,22 @@ export const useExplorationStore = defineStore('explorationStore', {
         return
       }
 
-      this.activePercent = 0
+      this.activePercent.a = 0
       this.activeProgress = 0
       this.activeObject = newActiveActivity
 
       skillStore().cancelCurrentActivity('explore')
       skillStore().setCurrentActivity(this.activeObject)
       skillStore().setCurrentCat('Exploring: ')
+      skillStore().activePercent = this.activePercent
       this.updateEfficency()
-
       this.tryRepeatAction()
     },
 
     cancelAction() {
       clearTimeout(this.currentTimeout)
       this.activeProgress = 0
-      this.activePercent = 0
+      this.activePercent.a = 0
       this.activeObject = {}
       skillStore().setCurrentActivity({ name: 'Nothing' })
       skillStore().setCurrentCat('Currently Doing: ')
@@ -213,13 +219,12 @@ export const useExplorationStore = defineStore('explorationStore', {
 
         this.updateFlags()
         this.updateEfficency()
-        // console.log('boop, action done')
 
         this.activeProgress = 0
       }
 
       this.activeProgress += this.progressInterval
-      this.activePercent = this.activeProgress / (this.activeObject.interval * 10)
+      this.activePercent.a = this.activeProgress / (this.activeObject.interval * 10)
       this.tryRepeatAction()
     },
     tryRepeatAction() {
@@ -228,14 +233,25 @@ export const useExplorationStore = defineStore('explorationStore', {
 
     updateEfficency() {
       this.efficency = 2 * skillStore().skills[this.skillID].level
-    },
-    //TODO make efficency > 100 meaningful
-    efficencyReturn() {
-      if (this.efficency >= (Math.random() * 100)) {
-        console.log('efficent!')
-        return 2
+      if (skillStore().totalOffline >= 1000) {
+        this.efficency += 75
       }
-      return 1
+    },
+    efficencyReturn() {
+      let a = 1 + Math.floor(this.efficency / 100)
+      if (this.efficency % 100 >= (Math.random() * 100)) {
+        a += 1
+      }
+      if (a == 2) {
+        console.log('efficent!')
+      }
+      if (a == 3) {
+        console.log('double efficent!')
+      }
+      if (a == 4) {
+        console.log('triple efficent!')
+      }
+      return a
     },
 
     unsealArea(area) {
@@ -243,8 +259,8 @@ export const useExplorationStore = defineStore('explorationStore', {
       this.currentUnsealedAreas += 1
     },
     sealAllAreas() {
-      for (area in this.activities) {
-        area.isSealed = true
+      for (let i in this.activities) {
+        this.activities[i].isSealed = true
       }
       this.currentUnsealedAreas = 0
     },

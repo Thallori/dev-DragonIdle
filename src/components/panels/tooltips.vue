@@ -1,14 +1,18 @@
 <script>
 import { useSmithingStore } from '@/stores/smithing'
+import { useArtificeStore } from '@/stores/artifice'
 import { useCookingStore } from '@/stores/cooking'
+import { useItemStore } from '@/stores/inventory'
 
 export default {
   name: 'tooltips',
-  props: ['itemObject'],
+  props: ['itemObject', 'money'],
   setup() {
     const smithingStore = useSmithingStore()
+    const artificeStore = useArtificeStore()
     const cookingStore = useCookingStore()
-    return { smithingStore, cookingStore }
+    const itemStore = useItemStore()
+    return { smithingStore, artificeStore, cookingStore, itemStore }
   },
   methods: {
     bonusSmithingMastery(temp) {
@@ -18,9 +22,23 @@ export default {
       }
       return 0
     },
+    bonusArificeMastery(temp) {
+      if (temp.mArtifice) {
+        temp = this.artificeStore.equipmentMastery.find(t => t.id === temp.mArtifice)
+        return temp.mLevel
+      }
+      return 0
+    },
     bonusHeals(temp) {
-      temp = this.cookingStore.activities.find(blep => blep.itemID === temp.id)
-      return temp.mLevel
+      let spice = 0
+      if (this.itemStore.equippedCombat.trinketSlot.id == 'trinketSpice') {
+        spice +=1
+      }
+      if (temp.dcat == 'cookedFood') {
+        temp = this.cookingStore.activities.find(blep => blep.itemID === temp.id)
+        spice += temp.mLevel
+      }
+      return spice
     },
   },
 }
@@ -36,37 +54,41 @@ export default {
       <div class="text-warning">Tool</div>
 
       <div class="d-flex justify-content-between" v-if="this.itemObject.toolStats.explorationMulti">
-        <span>Exploring: </span>
+        <span>Explore Time: </span>
         <span>{{ (this.itemObject.toolStats.explorationMulti * 100) }}%</span>
       </div>
 
       <div class="d-flex justify-content-between" v-if="this.itemObject.toolStats.bonusSyphoningTime">
-        <span>Syphoning: </span>
-        <span>{{ this.itemObject.toolStats.bonusSyphoningTime.toFixed(2) }}s</span>
+        <span>Syphon Time: </span>
+        <span>{{ (2 - this.itemObject.toolStats.bonusSyphoningTime).toFixed(2) }}s</span>
       </div>
       <div class="d-flex justify-content-between" v-if="this.itemObject.toolStats.baseStabilityBonus">
         <span>Stability: </span>
         <span>{{ this.itemObject.toolStats.baseStabilityBonus * 100 }}%</span>
       </div>
 
-      <div class="d-flex justify-content-between" v-if="this.itemObject.toolStats.locatingMultiplierAdd">
-        <span>Locating: </span>
-        <span>{{ (this.itemObject.toolStats.locatingMultiplierAdd * 100) }}%</span>
-      </div>
       <div class="d-flex justify-content-between" v-if="this.itemObject.toolStats.harvestingTimeBonus">
-        <span>Harvesting: </span>
+        <span>Harvest Time: </span>
         <span>{{ this.itemObject.toolStats.harvestingTimeBonus.toFixed(2) }}s</span>
+      </div>
+      <div class="d-flex justify-content-between" v-if="this.itemObject.toolStats.locatingMultiplierAdd">
+        <span>Locate Time: </span>
+        <span>{{ (this.itemObject.toolStats.locatingMultiplierAdd * 100) }}%</span>
       </div>
 
       <div class="d-flex justify-content-between little-levels" v-if="this.itemObject.toolStats.bleeding">
         <span>Bleed: </span>
-        <span>{{ this.itemObject.toolStats.bleeding }}</span>
+        <span>{{ this.itemObject.toolStats.bleeding }} HP/s</span>
       </div>
       <div class="d-flex justify-content-between little-levels" v-if="this.itemObject.toolStats.instaKill">
         <span>Fatal Strike: </span>
         <span>{{ (this.itemObject.toolStats.instaKill * 100) }}%</span>
       </div>
 
+      <div class="d-flex justify-content-between" v-if="undefined != this.itemObject.toolStats.bonusMiningSpeed">
+        <span>Mining Time: </span>
+        <span>{{ (2 - this.itemObject.toolStats.bonusMiningSpeed).toFixed(2) }}s</span>
+      </div>
       <div class="d-flex justify-content-between" v-if="this.itemObject.toolStats.bonusDamage">
         <span>Hit: </span>
         <span>{{ this.itemObject.toolStats.bonusDamage }}</span>
@@ -74,10 +96,6 @@ export default {
       <div class="d-flex justify-content-between" v-if="this.itemObject.toolStats.bonusPen">
         <span>Hardness: </span>
         <span>{{ this.itemObject.toolStats.bonusPen }}</span>
-      </div>
-      <div class="d-flex justify-content-between" v-if="this.itemObject.toolStats.bonusMiningSpeed">
-        <span>Mining: </span>
-        <span>{{ this.itemObject.toolStats.bonusMiningSpeed.toFixed(2) }}s</span>
       </div>
     </div>
 
@@ -125,7 +143,7 @@ export default {
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.magicAccuracy != null">
         <span>🔥 Accuracy: </span>
         <span>
-          {{ this.itemObject.stats.magicAccuracy }}
+          {{ this.itemObject.stats.magicAccuracy + bonusArificeMastery(this.itemObject) }}
         </span>
       </div>
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.accuracy != null">
@@ -261,7 +279,8 @@ export default {
       <span>{{ this.itemObject.heals }}</span>
     </div>
 
-    <div class="d-flex justify-content-between" v-if="this.itemObject.dcat == 'cookedFood'">
+    <div class="d-flex justify-content-between"
+      v-if="this.itemObject.dcat == 'cookedFood' || (this.itemObject.dcat == 'rawFood' && itemStore.equippedCombat.trinketSlot.id == 'trinketSpice')">
       <span>Bonus Healing: </span>
       <span>{{ bonusHeals(this.itemObject) }}</span>
     </div>
@@ -275,10 +294,10 @@ export default {
     </div>
 
     <!-- Sell Price -->
-    <div v-if="this.itemObject.sellPrice != undefined">
+    <div v-if="this.itemObject.sellPrice != undefined && this.money == undefined">
       <div class=" d-flex justify-content-center align-items-center gap-1 pt-1">
         {{ this.itemObject.sellPrice }}
-        <img src="src/assets/icons/coins.png" alt="">
+        <img style="width: 16px; height: 16px;" src="/src/assets/icons/coins.png" alt="">
       </div>
     </div>
 

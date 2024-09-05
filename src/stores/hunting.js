@@ -10,8 +10,7 @@ export const useHuntingStore = defineStore('huntingStore', {
 
     activeObject: {},
     activeProgress: 0,
-    activePercent: 0,
-    activeColor: '#04AA6D',
+    activePercent: { a: 0, b: false, c: '#04AA6D' },
     currentTimeout: 0,
     
     //hunting skill is stored as id 14 which is also its index, because I don't know how to do it otherwise
@@ -26,7 +25,7 @@ export const useHuntingStore = defineStore('huntingStore', {
         itemHideID: 'hide1',
         itemHideRange: [0, 3],
         itemBonesID: 'bones1',
-        image: 'src/assets/icons/sheep.png',
+        image: 'assets/icons/sheep.png',
         levelRequired: 1,
         xpGain: 6,
         stalking: 4,
@@ -46,7 +45,7 @@ export const useHuntingStore = defineStore('huntingStore', {
         itemExtraID: 'hogTusk',
         itemExtraRange: [0, 2],
         itemBonesID: 'bones1',
-        image: 'src/assets/icons/hog.png',
+        image: 'assets/icons/hog.png',
         levelRequired: 2,
         xpGain: 9,
         stalking: 5,
@@ -64,7 +63,7 @@ export const useHuntingStore = defineStore('huntingStore', {
         itemExtraID: 'feather',
         itemExtraRange: [2, 12],
         itemBonesID: 'bones1',
-        image: 'src/assets/icons/bird.png',
+        image: 'assets/icons/bird.png',
         levelRequired: 3,
         xpGain: 14,
         stalking: 6,
@@ -84,7 +83,7 @@ export const useHuntingStore = defineStore('huntingStore', {
         itemExtraID: 'goatHorn',
         itemExtraRange: [0, 2],
         itemBonesID: 'bones1',
-        image: 'src/assets/icons/testIcon16.png',
+        image: 'assets/icons/animal4.png',
         levelRequired: 4,
         xpGain: 15,
         stalking: 4,
@@ -102,7 +101,7 @@ export const useHuntingStore = defineStore('huntingStore', {
         itemHideID: 'hide3',
         itemHideRange: [2, 5],
         itemBonesID: 'bones1',
-        image: 'src/assets/icons/testIcon16.png',
+        image: 'assets/icons/animal5.png',
         levelRequired: 5,
         xpGain: 25,
         stalking: 3,
@@ -120,7 +119,7 @@ export const useHuntingStore = defineStore('huntingStore', {
         itemHideID: 'hide4',
         itemHideRange: [2, 3],
         itemBonesID: 'bones1',
-        image: 'src/assets/icons/testIcon16.png',
+        image: 'assets/icons/animal6.png',
         levelRequired: 6,
         xpGain: 28,
         stalking: 7,
@@ -140,7 +139,7 @@ export const useHuntingStore = defineStore('huntingStore', {
         itemExtraID: 'slothClaws',
         itemExtraRange: [0, 4],
         itemBonesID: 'bones3',
-        image: 'src/assets/icons/testIcon16.png',
+        image: 'assets/icons/animal7.png',
         levelRequired: 7,
         xpGain: 40,
         stalking: 6,
@@ -159,7 +158,7 @@ export const useHuntingStore = defineStore('huntingStore', {
         itemHideRange: [1, 2],
         itemExtraID: 'scarabVenom',
         itemExtraRange: [0, 2],
-        image: 'src/assets/icons/testIcon16.png',
+        image: 'assets/icons/animal8.png',
         levelRequired: 8,
         xpGain: 40,
         stalking: 8,
@@ -200,6 +199,8 @@ export const useHuntingStore = defineStore('huntingStore', {
       //localstorage makes the active object a real boy instead of a reference to a real boy
       this.activeObject = JSON.parse(localStorage.getItem('hunting-activeObject'))
       this.activeObject = this.activities[this.activeObject.id]
+      skillStore().activePercent = this.activePercent
+      this.updateEfficency()
       this.tryRepeatAction()
     },
 
@@ -211,23 +212,24 @@ export const useHuntingStore = defineStore('huntingStore', {
         return
       }
 
-      this.activeColor = '#04AA6D'
       this.activeProgress = 0
-      this.activePercent = 0
+      this.activePercent.a = 0
+      this.activePercent.c = '#04AA6D'
       this.activeObject = newActiveActivity
 
       skillStore().cancelCurrentActivity('hunt')
       skillStore().setCurrentActivity(this.activeObject)
       skillStore().setCurrentCat('Hunting: ')
-
+      skillStore().activePercent = this.activePercent
+      this.updateEfficency()
       this.tryRepeatAction()
     },
 
     cancelAction() {
       clearTimeout(this.currentTimeout)
-      this.activeColor = '#04AA6D'
       this.activeProgress = 0
-      this.activePercent = 0
+      this.activePercent.a = 0
+      this.activePercent.c = '#04AA6D'
       this.activeObject = {}
       skillStore().setCurrentActivity({ name: 'Nothing' })
       skillStore().setCurrentCat('Currently Doing: ')
@@ -242,15 +244,15 @@ export const useHuntingStore = defineStore('huntingStore', {
         }
 
         this.activeProgress = this.activeObject.hp * 1000
-        this.activePercent = 100
-        this.activeColor = '#DC3545'
+        this.activePercent.a = 100
+        this.activePercent.c = '#DC3545'
 
         this.tryRepeatJump()
         return
       }
 
       this.activeProgress += this.progressInterval
-      this.activePercent = this.activeProgress / (10 * this.activeObject.stalking)
+      this.activePercent.a = this.activeProgress / (10 * this.activeObject.stalking)
       this.tryRepeatAction()
     },
     tryRepeatAction() {
@@ -265,7 +267,7 @@ export const useHuntingStore = defineStore('huntingStore', {
 
       this.activeProgress -= this.progressInterval * itemStore().equippedTools.huntingTool.toolStats.bleeding
 
-      this.activePercent = this.activeProgress / (10 * this.activeObject.hp)
+      this.activePercent.a = this.activeProgress / (10 * this.activeObject.hp)
 
       this.tryRepeatJump()
     },
@@ -308,11 +310,9 @@ export const useHuntingStore = defineStore('huntingStore', {
       }
 
       this.activeProgress = 0
-      this.activePercent = 0
-      this.activeColor = '#04AA6D'
+      this.activePercent.a = 0
+      this.activePercent.c = '#04AA6D'
       this.updateEfficency()
-      console.log('boop')
-
       this.tryRepeatAction()
     },
 
@@ -327,14 +327,25 @@ export const useHuntingStore = defineStore('huntingStore', {
     updateEfficency() {
       this.efficency = 2 * skillStore().skills[this.skillID].level
       this.efficency += explorationStore().activities[0].mLevel //gleaming glade
-    },
-    //TODO make efficency > 100 meaningful
-    efficencyReturn() {
-      if (this.efficency >= (Math.random() * 100)) {
-        console.log('efficent!')
-        return 2
+      if (skillStore().totalOffline >= 1000) {
+        this.efficency += 75
       }
-      return 1
+    },
+    efficencyReturn() {
+      let a = 1 + Math.floor(this.efficency / 100)
+      if (this.efficency % 100 >= (Math.random() * 100)) {
+        a += 1
+      }
+      if (a == 2) {
+        console.log('efficent!')
+      }
+      if (a == 3) {
+        console.log('double efficent!')
+      }
+      if (a == 4) {
+        console.log('triple efficent!')
+      }
+      return a
     },
 
     randomIntRange(min, max) {

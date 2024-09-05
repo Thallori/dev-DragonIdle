@@ -11,7 +11,7 @@ export const useSmithingStore = defineStore('smithingStore', {
 
     activeObject: {},
     activeProgress: 0,
-    activePercent: 0,
+    activePercent: { a: 0, b: false, c: '#04AA6D' },
     currentTimeout: 0,
 
     progressInterval: 50,
@@ -758,6 +758,8 @@ export const useSmithingStore = defineStore('smithingStore', {
       //localstorage makes the active object a real boy instead of a reference to a real boy
       this.activeObject = JSON.parse(localStorage.getItem('smithing-activeObject'))
       this.activeObject = this.activities.find(t => t.id === this.activeObject.id)
+      skillStore().activePercent = this.activePercent
+      this.updateEfficency()
       this.tryRepeatActionHeat()
     },
 
@@ -770,19 +772,21 @@ export const useSmithingStore = defineStore('smithingStore', {
       }
 
       this.activeProgress = 0
-      this.activePercent = 0
+      this.activePercent.a = 0
       this.activeObject = newActiveActivity
 
       skillStore().cancelCurrentActivity('smith')
       skillStore().setCurrentActivity(this.activeObject)
       skillStore().setCurrentCat('Smithing: ')
+      skillStore().activePercent = this.activePercent
+      this.updateEfficency()
       this.tryRepeatActionHeat()
     },
 
     cancelAction() {
       clearTimeout(this.currentTimeout)
       this.activeProgress = 0
-      this.activePercent = 0
+      this.activePercent.a = 0
       this.activeObject = {}
       skillStore().setCurrentActivity({ name: 'Nothing' })
       skillStore().setCurrentCat('Currently Doing: ')
@@ -807,15 +811,13 @@ export const useSmithingStore = defineStore('smithingStore', {
             itemStore().changeItemCount(this.activeObject.neededItem2[0], (0 - this.activeObject.neededItem2[1]), 'resourceItems')
           }
 
-
-          console.log('boop')
           this.activeProgress = 0
           this.tryRepeatActionHeat()
           return
         }
         //if not bar, then work
         this.activeProgress = this.activeObject.heatNeeded
-        this.activePercent = 100 * this.activeProgress / this.activeObject.heatNeeded
+        this.activePercent.a = 100 * this.activeProgress / this.activeObject.heatNeeded
         this.tryRepeatActionWork()
         return
       }
@@ -828,7 +830,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         this.activeProgress += this.progressInterval * this.heatFromUpgrades
       }
 
-      this.activePercent = (this.activeProgress / (this.activeObject.heatNeeded * 10))
+      this.activePercent.a = (this.activeProgress / (this.activeObject.heatNeeded * 10))
       this.tryRepeatActionHeat()
     },
     tryRepeatActionHeat() {
@@ -863,14 +865,13 @@ export const useSmithingStore = defineStore('smithingStore', {
         //remove item(s)
         itemStore().changeItemCount(this.activeObject.neededItem1[0], (0 - this.activeObject.neededItem1[1]), 'resourceItems')
 
-        console.log('boop')
         this.activeProgress = 0
         this.tryRepeatActionHeat()
         return
       }
 
       this.activeProgress -= this.workFromTools
-      this.activePercent = 100 * this.activeProgress / this.activeObject.heatNeeded
+      this.activePercent.a = 100 * this.activeProgress / this.activeObject.heatNeeded
       this.tryRepeatActionWork()
       return
     },
@@ -880,14 +881,25 @@ export const useSmithingStore = defineStore('smithingStore', {
 
     updateEfficency() {
       this.efficency = 2 * skillStore().skills[this.skillID].level
-    },
-    //TODO make efficency > 100 meaningful
-    efficencyReturn() {
-      if (this.efficency >= (Math.random() * 100)) {
-        console.log('efficent!')
-        return 2
+      if (skillStore().totalOffline >= 1000) {
+        this.efficency += 50
       }
-      return 1
+    },
+    efficencyReturn() {
+      let a = 1 + Math.floor(this.efficency / 100)
+      if (this.efficency % 100 >= (Math.random() * 100)) {
+        a += 1
+      }
+      if (a == 2) {
+        console.log('efficent!')
+      }
+      if (a == 3) {
+        console.log('double efficent!')
+      }
+      if (a == 4) {
+        console.log('triple efficent!')
+      }
+      return a
     },
 
     addMXPCat(mxpAmount, mCatIndex) {

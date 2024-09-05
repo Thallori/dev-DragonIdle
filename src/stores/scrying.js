@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
-import { useSkillStore as skillStore } from '@/stores/skills';
-import { useExplorationStore as explorationStore } from '@/stores/exploration';
-import { useItemStore as itemStore } from '@/stores/inventory';
+import { useSkillStore as skillStore } from '@/stores/skills'
+import { useExplorationStore as explorationStore } from '@/stores/exploration'
+import { useItemStore as itemStore } from '@/stores/inventory'
 
 export const useScryingStore = defineStore('scryingStore', {
   state: () => ({
@@ -11,7 +11,7 @@ export const useScryingStore = defineStore('scryingStore', {
 
     activeObject: {},
     activeProgress: 0,
-    activePercent: 0,
+    activePercent: { a: 0, b: false, c: '#04AA6D' },
     currentTimeout: 0,
 
     //scrying skill is stored as id 12 which is also its index, because I don't know how to do it otherwise
@@ -23,7 +23,6 @@ export const useScryingStore = defineStore('scryingStore', {
         name: 'Pale Clay',
         resourceID: 'rune1',
         resourceAmount: 1,
-        image: 'src/assets/icons/testIcon16.png',
         levelRequired: 1,
         xpGain: 3,
         fortifyTime: 2,
@@ -38,7 +37,6 @@ export const useScryingStore = defineStore('scryingStore', {
         name: 'Pure Oil',
         resourceID: 'rune2',
         resourceAmount: 1,
-        image: 'src/assets/icons/testIcon16.png',
         levelRequired: 2,
         xpGain: 6,
         fortifyTime: 4,
@@ -53,7 +51,6 @@ export const useScryingStore = defineStore('scryingStore', {
         name: 'Nitor',
         resourceID: 'rune3',
         resourceAmount: 1,
-        image: 'src/assets/icons/testIcon16.png',
         levelRequired: 3,
         xpGain: 11,
         fortifyTime: 8,
@@ -68,7 +65,6 @@ export const useScryingStore = defineStore('scryingStore', {
         name: 'Spelldew',
         resourceID: 'rune4',
         resourceAmount: 1,
-        image: 'src/assets/icons/testIcon16.png',
         levelRequired: 4,
         xpGain: 9,
         fortifyTime: 6,
@@ -83,7 +79,6 @@ export const useScryingStore = defineStore('scryingStore', {
         name: 'Cinnabar',
         resourceID: 'rune5',
         resourceAmount: 1,
-        image: 'src/assets/icons/testIcon16.png',
         levelRequired: 5,
         xpGain: 15,
         fortifyTime: 10,
@@ -98,7 +93,6 @@ export const useScryingStore = defineStore('scryingStore', {
         name: 'Vis',
         resourceID: 'rune6',
         resourceAmount: 1,
-        image: 'src/assets/icons/testIcon16.png',
         levelRequired: 6,
         xpGain: 20,
         fortifyTime: 12,
@@ -113,7 +107,6 @@ export const useScryingStore = defineStore('scryingStore', {
         name: 'Spark Salt',
         resourceID: 'rune7',
         resourceAmount: 1,
-        image: 'src/assets/icons/testIcon16.png',
         levelRequired: 7,
         xpGain: 25,
         fortifyTime: 14,
@@ -128,7 +121,6 @@ export const useScryingStore = defineStore('scryingStore', {
         name: 'Flux Crystal',
         resourceID: 'rune8',
         resourceAmount: 1,
-        image: 'src/assets/icons/testIcon16.png',
         levelRequired: 8,
         xpGain: 22,
         fortifyTime: 10,
@@ -169,6 +161,8 @@ export const useScryingStore = defineStore('scryingStore', {
       //localstorage makes the active object a real boy instead of a reference to a real boy
       this.activeObject = JSON.parse(localStorage.getItem('scrying-activeObject'))
       this.activeObject = this.activities[this.activeObject.id]
+      skillStore().activePercent = this.activePercent
+      this.updateEfficency()
       this.tryRepeatAction()
     },
 
@@ -181,20 +175,23 @@ export const useScryingStore = defineStore('scryingStore', {
       }
 
       this.activeProgress = 0
-      this.activePercent = 0
+      this.activePercent.a = 0
+      this.activePercent.b = false
       this.activeObject = newActiveActivity
 
       skillStore().cancelCurrentActivity('scry')
       skillStore().setCurrentActivity(this.activeObject)
       skillStore().setCurrentCat('Scrying: ')
-
+      skillStore().activePercent = this.activePercent
+      this.updateEfficency()
       this.tryRepeatAction()
     },
 
     cancelAction() {
       clearTimeout(this.currentTimeout)
       this.activeProgress = 0
-      this.activePercent = 0
+      this.activePercent.a = 0
+      this.activePercent.b = false
       this.activeObject = {}
       skillStore().setCurrentActivity({ name: 'Nothing' })
       skillStore().setCurrentCat('Currently Doing: ')
@@ -203,13 +200,14 @@ export const useScryingStore = defineStore('scryingStore', {
     updateProgress() {
       if (this.activeProgress >= (1000 * this.activeObject.fortifyTime)) {
 
-        this.activePercent = 100
+        this.activePercent.a = 100
+        this.activePercent.b = true
         this.tryRepeatGather()
         return
       }
 
       this.activeProgress += this.progressInterval
-      this.activePercent = (this.activeProgress / (10 * this.activeObject.fortifyTime))
+      this.activePercent.a = (this.activeProgress / (10 * this.activeObject.fortifyTime))
       this.progressInterval = (Math.random() * 450) + 150
 
       //don't wait longer than you have to
@@ -233,7 +231,8 @@ export const useScryingStore = defineStore('scryingStore', {
       if (Math.random() > (this.activeObject.baseStability + itemStore().equippedTools.scryingTool.toolStats.baseStabilityBonus + (this.activeObject.mLevel * 0.02))) {
 
         this.activeProgress = 0
-        this.activePercent = 0
+        this.activePercent.a = 0
+        this.activePercent.b = false
         this.tryRepeatAction()
         return
       }
@@ -247,14 +246,25 @@ export const useScryingStore = defineStore('scryingStore', {
     updateEfficency() {
       this.efficency = 2 * skillStore().skills[this.skillID].level
       this.efficency += explorationStore().activities[2].mLevel //vibrant vale
-    },
-    //TODO make efficency > 100 meaningful
-    efficencyReturn() {
-      if (this.efficency >= (Math.random() * 100)) {
-        console.log('efficent!')
-        return 2
+      if (skillStore().totalOffline >= 1000) {
+        this.efficency += 75
       }
-      return 1
+    },
+    efficencyReturn() {
+      let a = 1 + Math.floor(this.efficency / 100)
+      if (this.efficency % 100 >= (Math.random() * 100)) {
+        a += 1
+      }
+      if (a == 2) {
+        console.log('efficent!')
+      }
+      if (a == 3) {
+        console.log('double efficent!')
+      }
+      if (a == 4) {
+        console.log('triple efficent!')
+      }
+      return a
     },
 
     addMXP(mxpAmount) {

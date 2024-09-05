@@ -58,7 +58,7 @@ export default {
 </script>
 
 <template>
-  <div class="card pt-4 align-items-center main-window bg-transparent" style="width: 77rem">
+  <div class="card py-4 align-items-center main-window bg-transparent" style="width: 77rem">
 
     <!-- Guide Modal -->
     <div class="modal show-modal" v-if="showGuideModal == true">
@@ -110,7 +110,7 @@ export default {
 
         <!-- Skill Icon and Help Button -->
         <div class="card card-activity align-items-center py-2" style="width: 67px; height: 67px;">
-          <img src="src/assets/12x/questionmark.png" alt="" width="48" height="48">
+          <img src="/src/assets/12x/questionmark.png" alt="" width="48" height="48">
           <div class="stretched-link" @click="showGuideModal = true"></div>
         </div>
 
@@ -158,12 +158,12 @@ export default {
                   <!-- Tooltip -->
                   <div class="tooltip-text py-1 px-3">
                     <div class="d-flex justify-content-between little-levels ">
-                      <span>Locating: </span>
-                      <span>{{ (itemStore.equippedTools.foragingTool.toolStats.locatingMultiplierAdd * 100) }}%</span>
+                      <span>Harvest Time: </span>
+                      <span>{{ itemStore.equippedTools.foragingTool.toolStats.harvestingTimeBonus.toFixed(2) }}s</span>
                     </div>
                     <div class="d-flex justify-content-between little-levels ">
-                      <span>Harvesting: </span>
-                      <span>{{ itemStore.equippedTools.foragingTool.toolStats.harvestingTimeBonus.toFixed(2) }}s</span>
+                      <span>Locate Time: </span>
+                      <span>{{ (itemStore.equippedTools.foragingTool.toolStats.locatingMultiplierAdd * 100) }}%</span>
                     </div>
                   </div>
                 </div>
@@ -171,13 +171,13 @@ export default {
             </div>
 
             <!-- Efficency % -->
-            <div class="tooltip-br">
-              {{ explorationStore.activities[0].mLevel + (2 * skillStore.skills[this.skillID].level) }}%
-              <img src="src/assets/12x/eff.png" alt="" width="24" height="24">
+            <div class="tooltip-bl">
+              {{ foragingStore.efficency }}%
+              <img src="/src/assets/12x/eff.png" alt="" width="24" height="24">
               <div class="tooltip-text py-1 px-2">
                 <div class="little-levels">
                   Chance of additional instant actions, without using extra resources.
-                  <hr>
+                  <br><br>
                   Typically gained from skill levels and area unlocks.
                 </div>
               </div>
@@ -187,7 +187,7 @@ export default {
 
         <!-- Boost -->
         <div class="card align-items-center" style="width: 50px; height: 50px;">
-          <!-- <img src="src/assets/icons/testIcon32.png" alt="" width="64" height="64"> -->
+          <!-- <img src="/src/assets/icons/testIcon32.png" alt="" width="64" height="64"> -->
         </div>
       </div>
     </div>
@@ -195,7 +195,7 @@ export default {
     <!-- All Activities -->
     <div class="d-flex flex-wrap gap-1" style="max-width: 61rem">
 
-      <div class="card border-dark text-center px-0" style="width: 12rem; height: 14rem;"
+      <div class="card border-dark text-center" style="width: 12rem; height: 14rem;"
         v-for="(activity, index) in foragingStore.activities">
 
         <!-- Not Enough Levels or Area Access for Activity -->
@@ -266,7 +266,7 @@ export default {
 
             <!-- Progress Bar for Activity Completion -->
             <div class="progress" role="progressbar" style="height: 12px;">
-              <div class="progress-bar xp-progress" :style="`width: ${foragingStore.activePercent}%;`"
+              <div class="progress-bar xp-progress" :style="`width: ${foragingStore.activePercent.a}%;`"
                 v-if="activity.id == foragingStore.activeObject.id">
               </div>
             </div>
