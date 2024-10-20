@@ -110,8 +110,11 @@ export default {
       <div class="d-flex justify-content-center gap-1 pb-1">
 
         <!-- Skill Icon and Help Button -->
-        <div class="card card-activity align-items-center py-2" style="width: 67px; height: 67px;">
-          <img src="/src/assets/12x/questionmark.png" alt="" width="48" height="48">
+        <div class="card card-activity align-items-center pt-1" style="width: 67px; height: 67px;">
+          <img src="/src/assets/12x/questionmark.png" alt="" width="36" height="36">
+          <div class="little-levels my-auto">
+            Guide
+          </div>
           <div class="stretched-link" @click="showGuideModal = true"></div>
         </div>
 
@@ -127,8 +130,8 @@ export default {
 
             <!-- XP -->
             <div class="px-2">
-              <span class="badge bg-secondary">{{ skillStore.skills[this.skillID].xp }} / {{
-                skillStore.skills[this.skillID].xpNext }}</span> XP
+              <span class="badge bg-secondary">{{ (skillStore.skills[this.skillID].xp).toLocaleString() }} / {{
+                (skillStore.skills[this.skillID].xpNext).toLocaleString() }}</span> XP
             </div>
           </div>
 
@@ -252,10 +255,13 @@ export default {
             <div>
               <img :src="itemStore.resourceItems[index + itemIndexStart].image" alt="" width="64" height="64">
               <div style="height: 0.0rem">
+
+                <!-- Badge of Item Amount -->
                 <span class="position-relative little-levels badge bg-secondary"
-                  style="translate: -30px -76px; padding: 0.25rem;">
+                  style="translate: -30px -76px; padding: 0.25rem;" v-if="activity.resourceID != 'gem'">
                   {{ itemStore.resourceItems[index + itemIndexStart].count.toLocaleString() }}
                 </span>
+
               </div>
             </div>
           </div>
@@ -285,7 +291,7 @@ export default {
         <div class="card-footer pt-0">
           <div class="d-flex justify-content-between little-levels">
             <div>LVL: {{ activity.mLevel }}</div>
-            <div>{{ activity.mxp }}/{{ activity.mxpNext }}</div>
+            <div>{{ (activity.mxp).toLocaleString() }}/{{ (activity.mxpNext).toLocaleString() }}</div>
           </div>
           <div class="progress" role="progressbar" style="height: 8px">
             <div class="progress-bar mastery-progress"

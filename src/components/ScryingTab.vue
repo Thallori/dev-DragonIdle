@@ -108,8 +108,11 @@ export default {
       <div class="d-flex justify-content-center gap-1 pb-1">
 
         <!-- Skill Icon and Help Button -->
-        <div class="card card-activity align-items-center py-2" style="width: 67px; height: 67px;">
-          <img src="/src/assets/12x/questionmark.png" alt="" width="48" height="48">
+        <div class="card card-activity align-items-center pt-1" style="width: 67px; height: 67px;">
+          <img src="/src/assets/12x/questionmark.png" alt="" width="36" height="36">
+          <div class="little-levels my-auto">
+            Guide
+          </div>
           <div class="stretched-link" @click="showGuideModal = true"></div>
         </div>
 
@@ -124,8 +127,8 @@ export default {
 
             <!-- XP -->
             <div class="px-2">
-              <span class="badge bg-secondary">{{ skillStore.skills[this.skillID].xp }} / {{
-                skillStore.skills[this.skillID].xpNext }}</span> XP
+              <span class="badge bg-secondary">{{ (skillStore.skills[this.skillID].xp).toLocaleString() }} / {{
+                (skillStore.skills[this.skillID].xpNext).toLocaleString() }}</span> XP
             </div>
           </div>
 
@@ -159,7 +162,8 @@ export default {
                     <div class="d-flex justify-content-between little-levels"
                       v-if="undefined != itemStore.equippedTools.scryingTool.toolStats.bonusSyphoningTime">
                       <span>Syphon Time: </span>
-                      <span>{{ (2 - itemStore.equippedTools.scryingTool.toolStats.bonusSyphoningTime).toFixed(2) }}s</span>
+                      <span>{{ (2 - itemStore.equippedTools.scryingTool.toolStats.bonusSyphoningTime).toFixed(2)
+                        }}s</span>
                     </div>
                     <div class="d-flex justify-content-between little-levels">
                       <span>Stability: </span>
@@ -281,7 +285,7 @@ export default {
         <div class=" card-footer pt-0">
           <div class="d-flex justify-content-between little-levels">
             <div>LVL: {{ activity.mLevel }}</div>
-            <div>{{ activity.mxp }}/{{ activity.mxpNext }}</div>
+            <div>{{ (activity.mxp).toLocaleString() }}/{{ (activity.mxpNext).toLocaleString() }}</div>
           </div>
           <div class="progress" role="progressbar" style="height: 8px">
             <div class="progress-bar mastery-progress"

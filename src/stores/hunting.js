@@ -95,11 +95,13 @@ export const useHuntingStore = defineStore('huntingStore', {
       },
       {
         id: '4',
-        name: 'Cow',
+        name: 'Ox',
         itemMeatID: 'meatFlank',
         itemMeatRange: [3, 5],
         itemHideID: 'hide3',
         itemHideRange: [2, 5],
+        itemExtraID: 'oxTail',
+        itemExtraRange: [1, 3],
         itemBonesID: 'bones1',
         image: 'assets/icons/animal5.png',
         levelRequired: 5,
@@ -151,17 +153,32 @@ export const useHuntingStore = defineStore('huntingStore', {
       },
       {
         id: '7',
-        name: 'Scarab',
+        name: 'Turtle',
         itemMeatID: 'meatSpicy',
-        itemMeatRange: [2, 3],
+        itemMeatRange: [2, 4],
         itemHideID: 'hide5',
-        itemHideRange: [1, 2],
-        itemExtraID: 'scarabVenom',
-        itemExtraRange: [0, 2],
+        itemHideRange: [1, 1],
         image: 'assets/icons/animal8.png',
         levelRequired: 8,
-        xpGain: 40,
-        stalking: 8,
+        xpGain: 44,
+        stalking: 4,
+        hp: 36,
+        mxp: 0,
+        mLevel: 0,
+        mxpPrev: 0,
+        mxpNext: 10,
+      },
+      {
+        id: '8',
+        name: 'Crab',
+        itemMeatID: 'meatSpicy',
+        itemMeatRange: [1, 2],
+        itemHideID: 'hide5',
+        itemHideRange: [1, 2],
+        image: 'assets/icons/animal9.png',
+        levelRequired: 9,
+        xpGain: 45,
+        stalking: 10,
         hp: 18,
         mxp: 0,
         mLevel: 0,
@@ -188,10 +205,10 @@ export const useHuntingStore = defineStore('huntingStore', {
       this.efficency = JSON.parse(localStorage.getItem('hunting-efficency'))
 
       for (let i in this.activities) {
-        this.activities[i].mxp = JSON.parse(localStorage.getItem('hunting-mxp' + i))
-        this.activities[i].mLevel = JSON.parse(localStorage.getItem('hunting-mLevel' + i))
-        this.activities[i].mxpPrev = JSON.parse(localStorage.getItem('hunting-mxpPrev' + i))
-        this.activities[i].mxpNext = JSON.parse(localStorage.getItem('hunting-mxpNext' + i))
+        this.activities[i].mxp = JSON.parse(localStorage.getItem('hunting-mxp' + i)) ?? 0
+        this.activities[i].mLevel = JSON.parse(localStorage.getItem('hunting-mLevel' + i)) ?? 0
+        this.activities[i].mxpPrev = JSON.parse(localStorage.getItem('hunting-mxpPrev' + i)) ?? 0
+        this.activities[i].mxpNext = JSON.parse(localStorage.getItem('hunting-mxpNext' + i)) ?? 10
       }
     },
 
@@ -199,6 +216,116 @@ export const useHuntingStore = defineStore('huntingStore', {
       //localstorage makes the active object a real boy instead of a reference to a real boy
       this.activeObject = JSON.parse(localStorage.getItem('hunting-activeObject'))
       this.activeObject = this.activities[this.activeObject.id]
+      skillStore().activePercent = this.activePercent
+      this.updateEfficency()
+      this.tryRepeatAction()
+    },
+
+    warp(ttime) {
+      //if less than 8 seconds, do not attempt
+      if (ttime < 8000) {
+        return
+      }
+      if (this.activeObject.id == undefined) {
+        return console.error('tried to warp without a target')
+      }
+      let timeRemaining = ttime / 1000
+      let timeNextLevel = -1
+      let timeNextMLevel = -1
+      let timeToUse = -1
+
+      let avgInterval = 10
+
+      //avg interval = stalking time + ((hp/bleeding time) * instakill mitigation)
+      avgInterval = this.activeObject.stalking + ((this.activeObject.hp / itemStore().equippedTools.huntingTool.toolStats.bleeding) * (1 - Math.min(1, ((this.activeObject.mLevel * 0.02) + itemStore().equippedTools.huntingTool.toolStats.instaKill)) ))
+
+      //if you can't kill a creature in time, do not attempt
+      if (avgInterval > timeRemaining) {
+        return
+      }
+
+      //if not max level, do the calc
+      if ((skillStore().skills[this.skillID].xpNext - skillStore().skills[this.skillID].xp) > 1) {
+        //next level = action time * (xp to next level / xp per action)
+        timeNextLevel = avgInterval * Math.ceil((skillStore().skills[this.skillID].xpNext - skillStore().skills[this.skillID].xp) / this.activeObject.xpGain)
+      }
+
+      //if not max mxp level, do the calc
+      if ((this.activeObject.mxpNext - this.activeObject.mxp) > 1) {
+        timeNextMLevel = avgInterval * (this.activeObject.mxpNext - this.activeObject.mxp)
+      }
+
+      //timeToUse = smallest time, or -1 if there is no smallest
+      if (timeNextLevel != -1 && timeNextMLevel != -1) {
+        timeToUse = Math.min(timeNextLevel, timeNextMLevel)
+      } else if (timeNextLevel != -1) {
+        timeToUse = timeNextLevel
+      } else if (timeNextMLevel != -1) {
+        timeToUse = timeNextMLevel
+      }
+
+      //if both xp and mxp are maxed out, then 
+      if (timeToUse < 1) {
+        this.batchGain(timeRemaining, avgInterval)
+        skillStore().totalOffline -= timeRemaining * 1000
+        return
+      }
+
+      if (timeToUse > timeRemaining) {
+        this.batchGain(timeRemaining, avgInterval)
+        skillStore().totalOffline -= timeRemaining * 1000
+        return
+      }
+
+      this.batchGain(timeToUse, avgInterval)
+      timeRemaining -= timeToUse
+      skillStore().totalOffline -= timeToUse * 1000
+      this.warp(timeRemaining * 1000)
+    },
+
+    batchGain(ttime, tavg) {
+      let actions = Math.floor(ttime * (1 + (this.efficency / 100)) / tavg)
+
+      skillStore().addXP(this.skillID, (this.activeObject.xpGain * actions))
+      this.addMXP(1 * actions)
+
+      //there is always a meat
+      itemStore().changeItemCount(this.activeObject.itemMeatID, Math.round(actions * this.randomRandomTriangleRange(this.activeObject.itemMeatRange[0], this.activeObject.itemMeatRange[1])), 'consumableItems')
+
+      //if there are bones, there is only one
+      if (this.activeObject.itemBonesID) {
+        itemStore().changeItemCount(this.activeObject.itemBonesID, actions, 'resourceItems')
+      }
+
+      // if there is a hide, there is a range for hide, roll and give it
+      if (this.activeObject.itemHideID) {
+        itemStore().changeItemCount(this.activeObject.itemHideID, Math.round(actions * this.randomRandomTriangleRange(this.activeObject.itemHideRange[0], this.activeObject.itemHideRange[1])), 'resourceItems')
+      }
+
+      // if there is an extra, there is a range for extra, roll and give it
+      if (this.activeObject.itemExtraID) {
+        itemStore().changeItemCount(this.activeObject.itemExtraID, Math.round(actions * this.randomRandomTriangleRange(this.activeObject.itemExtraRange[0], this.activeObject.itemExtraRange[1])), 'resourceItems')
+      }
+
+      this.updateEfficency()
+      console.log('warp actions performed: ' + actions)
+    },
+
+    setActiveAction(newActiveActivity) {
+      clearTimeout(this.currentTimeout)
+      if (newActiveActivity.id == this.activeObject.id) {
+        this.cancelAction()
+        return
+      }
+
+      this.toRockDamage = 0
+      this.activePercent.a = 100
+      this.activeObject = newActiveActivity
+      this.activeProgress = this.activeObject.rockHP
+
+      skillStore().cancelCurrentActivity('mine')
+      skillStore().setCurrentActivity(this.activeObject)
+      skillStore().setCurrentCat('Mining: ')
       skillStore().activePercent = this.activePercent
       this.updateEfficency()
       this.tryRepeatAction()
@@ -276,6 +403,10 @@ export const useHuntingStore = defineStore('huntingStore', {
     },
 
     actionSuccess() {
+      //killed an animal
+      if (skillStore().flags.ultraPacifist == true) {
+        skillStore().flags.ultraPacifist = false
+      }
       let wasEfficent = this.efficencyReturn()
       
       skillStore().addXP(this.skillID, (this.activeObject.xpGain * wasEfficent))
@@ -318,7 +449,7 @@ export const useHuntingStore = defineStore('huntingStore', {
 
     instaKill() {
       if (((this.activeObject.mLevel * 0.02) + itemStore().equippedTools.huntingTool.toolStats.instaKill) >= Math.random()) {
-        console.log('fatal strike!')
+        // console.log('fatal strike!')
         return true
       }
       return false
@@ -326,10 +457,11 @@ export const useHuntingStore = defineStore('huntingStore', {
 
     updateEfficency() {
       this.efficency = 2 * skillStore().skills[this.skillID].level
+      this.efficency += itemStore().equippedStats.allEfficency
       this.efficency += explorationStore().activities[0].mLevel //gleaming glade
-      if (skillStore().totalOffline >= 1000) {
-        this.efficency += 75
-      }
+      // if (skillStore().totalOffline >= 1000) {
+      //   this.efficency += 75
+      // }
     },
     efficencyReturn() {
       let a = 1 + Math.floor(this.efficency / 100)
@@ -337,7 +469,7 @@ export const useHuntingStore = defineStore('huntingStore', {
         a += 1
       }
       if (a == 2) {
-        console.log('efficent!')
+        // console.log('efficent!')
       }
       if (a == 3) {
         console.log('double efficent!')
@@ -350,6 +482,9 @@ export const useHuntingStore = defineStore('huntingStore', {
 
     randomIntRange(min, max) {
       return Math.floor(Math.random() * (1 + max - min)) + min;
+    },
+    randomRandomTriangleRange(min, max) {
+      return (Math.sqrt(Math.random()) * (1 + max - min)) + min;
     },
 
     addMXP(mxpAmount) {

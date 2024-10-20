@@ -138,6 +138,7 @@ export default {
         </div>
       </div>
 
+      <!-- Save Box -->
       <div>
         <input class="little-levels w-100" type="text" @click="select" v-model="saveDisplay">
       </div>
@@ -156,18 +157,28 @@ export default {
             </div>
 
             <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 200px"
-              @click="explorationStore.sealAllAreas()">
+              @click="explorationStore.sealAllAreas()" v-if="debugFlags">
               Seal All Areas
             </div>
 
             <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 200px"
-              @click="dumpAllItems(); skillStore.flags.showMechanics = true">
+              @click="dumpAllItems(); skillStore.flags.showMechanics = true" v-if="debugFlags">
               Get All Items
             </div>
 
             <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 200px"
-              @click="reverseDumpAllItems(); skillStore.flags.showMechanics = false">
+              @click="reverseDumpAllItems()" v-if="debugFlags">
               -20 All Items
+            </div>
+
+            <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 200px"
+              @click="skillStore.maxLevel += 1" v-if="debugFlags">
+              +1 Max Level
+            </div>
+
+            <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 200px"
+              @click="skillStore.maxLevel -= 1" v-if="debugFlags">
+              -1 Max Level
             </div>
 
           </div>

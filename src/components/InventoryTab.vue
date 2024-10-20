@@ -24,6 +24,7 @@ export default {
     return {
       sideMenu: 2,
       activeObject: {},
+      sellAmount: 1,
     }
   },
   methods: {
@@ -31,12 +32,12 @@ export default {
       return temp.filter(t => t.count > 0)
     },
     sellItem(temp, tempAmount) {
+      if (tempAmount == '') {
+        tempAmount = 1
+      }
       if (temp.count > 0) {
         temp.count -= tempAmount
         this.itemStore.changeItemCount('money', (temp.sellPrice * tempAmount), 'resourceItems')
-      }
-      if (temp.count == 0) {
-        this.sideMenu = 2
       }
     },
 
@@ -111,7 +112,7 @@ export default {
             <!-- Card of Item -->
             <div class="card tooltip-b" :class="inventoryItem.onEquip ? 'equipped-card' : 'equipment-card'"
               style="width: 58px; height: 58px;" @dblclick="itemStore.equipItem(inventoryItem)"
-              @click="activeObject = inventoryItem">
+              @click="activeObject = inventoryItem; sideMenu = 1;">
 
               <!-- Tooltip -->
               <div class=" tooltip-text">
@@ -169,7 +170,7 @@ export default {
       <!-- Mechanics -->
       <div class="card w-100 my-1" style="min-height: 6rem;" v-if="skillStore.flags.showMechanics == true">
         <div class="p-0">
-          <div class="px-3">Mechanics [alpha2 content]</div>
+          <div class="px-3">Timeless</div>
         </div>
 
         <div class="d-flex justify-content-start flex-wrap gap-2 p-2">
@@ -218,9 +219,12 @@ export default {
 
         <div class="pb-2">
           {{ activeObject.name }}
+          <span v-if="activeObject.count > 1">
+            ({{ (activeObject.count).toLocaleString() }})
+          </span>
         </div>
 
-        <!-- Equip Item -->
+        <!-- Equip Tool -->
         <div class="btn sidenav-item px-2 py-1 activity mb-2" style="font-size: 1.2rem; font-weight: 500; width: 200px"
           :class="activeObject.id == itemStore.equippedTools[activeObject.toolSlot].id ? 'bg-secondary' : ''"
           v-if="activeObject.isTool && activeObject.count > 0" @click="itemStore.equipItem(activeObject)">
@@ -229,37 +233,51 @@ export default {
           <span v-if="activeObject.id == itemStore.equippedTools[activeObject.toolSlot].id == true">Store Tool</span>
         </div>
 
-        <div class="btn sidenav-item px-2 py-1 activity mb-3" style="font-size: 1.2rem; font-weight: 500; width: 200px"
+        <!-- Equip Combat -->
+        <div class="btn sidenav-item px-2 py-1 activity mb-2" style="font-size: 1.2rem; font-weight: 500; width: 200px"
           :class="activeObject.id == itemStore.equippedCombat[activeObject.slot].id ? 'bg-secondary' : ''"
           v-if="(activeObject.isCombat || activeObject.isFood) && activeObject.count > 0"
           @click="itemStore.equipCombatTool(activeObject)">
 
-          <span v-if="activeObject.id == itemStore.equippedCombat[activeObject.slot].id == false">Equip</span>
-          <span v-if="activeObject.id == itemStore.equippedCombat[activeObject.slot].id == true">Unequip</span>
+          <span v-if="activeObject.id == itemStore.equippedCombat[activeObject.slot].id == false">Equip Combat</span>
+          <span v-if="activeObject.id == itemStore.equippedCombat[activeObject.slot].id == true">Unequip Combat</span>
         </div>
 
         <!-- Sell if Not Equipped -->
         <div v-if="activeObject.sellPrice && activeObject.onEquip != true">
 
-          <div class="btn sidenav-item px-2 py-1 bg-danger mb-2"
+          <!-- Sell X Button -->
+          <div v-if="activeObject.sellPrice && activeObject.count > 2">
+            <div class="btn sidenav-item px-2 py-1 bg-danger mt-1"
+              style="font-size: 1.2rem; font-weight: 500; width: 200px" @click="sellItem(activeObject, sellAmount)">
+
+              Sell
+
+              <span v-if="sellAmount < activeObject.count">X</span>
+              <span v-else>All</span>
+
+              ({{ (activeObject.sellPrice * Math.max(1, sellAmount)).toLocaleString() }}<img class="mx-0"
+                src="/src/assets/icons/coins.png" alt="">)
+            </div>
+
+            <input class="little-levels text-end form-control mt-1 py-0" type="number"
+              @input="() => { if (sellAmount > activeObject.count || sellAmount < 0) { sellAmount = activeObject.count } sellAmount = Math.floor(sellAmount) }"
+              v-model="sellAmount" @click="sellAmount = ''">
+          </div>
+
+          <div class="btn sidenav-item px-2 py-1 bg-danger my-1"
             style="font-size: 1.2rem; font-weight: 500; width: 200px" v-if="activeObject.count > 1"
             @click="sellItem(activeObject, 1)">
 
-            Sell ({{ activeObject.sellPrice }}<img class="mx-0" src="/src/assets/icons/coins.png" alt="">)
+            Sell ({{ (activeObject.sellPrice).toLocaleString() }}<img class="mx-0" src="/src/assets/icons/coins.png"
+              alt="">)
           </div>
 
-          <div class="btn sidenav-item px-2 py-1 bg-danger mb-2"
-            style="font-size: 1.2rem; font-weight: 500; width: 200px" v-if="activeObject.count > 4"
-            @click="sellItem(activeObject, Math.floor(activeObject.count / 2))">
+          <div class="btn sidenav-item px-2 py-1 bg-danger my-1"
+            style="font-size: 1.2rem; font-weight: 500; width: 200px" v-if="activeObject.count > 0"
+            @click="sellItem(activeObject, activeObject.count); activeObject = {}">
 
-            Sell ½ ({{ activeObject.sellPrice * Math.floor(activeObject.count / 2) }}<img class="mx-0"
-              src="/src/assets/icons/coins.png" alt="">)
-          </div>
-
-          <div class="btn sidenav-item px-2 py-1 bg-danger" style="font-size: 1.2rem; font-weight: 500; width: 200px"
-            v-if="activeObject.count > 0" @click="sellItem(activeObject, activeObject.count); activeObject = {}">
-
-            Sell All ({{ activeObject.sellPrice * activeObject.count }}<img class="mx-0"
+            Sell All ({{ (activeObject.sellPrice * activeObject.count).toLocaleString() }}<img class="mx-0"
               src="/src/assets/icons/coins.png" alt="">)
           </div>
         </div>
@@ -267,32 +285,46 @@ export default {
         <!-- Sell If Equipped, All But One -->
         <div v-if="activeObject.sellPrice && activeObject.onEquip == true">
 
-          <div class="btn sidenav-item px-2 py-1 bg-danger mb-2"
+          <!-- Sell X Button -->
+          <div v-if="activeObject.sellPrice && activeObject.count > 3">
+            <div class="btn sidenav-item px-2 py-1 bg-danger" style="font-size: 1.2rem; font-weight: 500; width: 200px"
+              @click="sellItem(activeObject, sellAmount)">
+
+              Sell
+
+              <span v-if="sellAmount < activeObject.count - 1">X</span>
+              <span v-else>All</span>
+
+              ({{ (activeObject.sellPrice * Math.max(1, sellAmount)).toLocaleString() }}<img class="mx-0"
+                src="/src/assets/icons/coins.png" alt="">)
+
+            </div>
+
+            <input class="little-levels text-end form-control mt-1 py-0" type="number"
+              @input="() => { if (sellAmount > (activeObject.count - 1) || sellAmount < 0) { sellAmount = (activeObject.count - 1) } sellAmount = Math.floor(sellAmount) }"
+              v-model="sellAmount" @click="sellAmount = ''">
+          </div>
+
+          <div class="btn sidenav-item px-2 py-1 bg-danger my-1"
             style="font-size: 1.2rem; font-weight: 500; width: 200px" @click="sellItem(activeObject, 1)"
             v-if="activeObject.count > 1">
 
-            Sell ({{ activeObject.sellPrice }}<img class="mx-0" src="/src/assets/icons/coins.png" alt="">)
+            Sell ({{ (activeObject.sellPrice).toLocaleString() }}<img class="mx-0" src="/src/assets/icons/coins.png"
+              alt="">)
+
           </div>
 
-          <div class="btn sidenav-item px-2 py-1 bg-danger mb-2"
-            style="font-size: 1.2rem; font-weight: 500; width: 200px"
-            @click="sellItem(activeObject, Math.floor(activeObject.count / 2))" v-if="activeObject.count > 4">
+          <div class="btn sidenav-item px-2 py-1 bg-danger my-1"
+            style="font-size: 1.2rem; font-weight: 500; width: 200px" v-if="activeObject.count > 2"
+            @click="sellItem(activeObject, activeObject.count - 1);">
 
-            Sell ½ ({{ activeObject.sellPrice * Math.floor(activeObject.count / 2) }}<img class="mx-0"
-              src="/src/assets/icons/coins.png" alt="">)
-          </div>
-
-          <div class="btn sidenav-item px-2 py-1 bg-danger" style="font-size: 1.2rem; font-weight: 500; width: 200px"
-            v-if="activeObject.count > 2" @click="sellItem(activeObject, activeObject.count - 1);">
-
-            Sell All ({{ activeObject.sellPrice * (activeObject.count - 1) }}<img class="mx-0"
+            Sell All ({{ (activeObject.sellPrice * (activeObject.count - 1)).toLocaleString() }}<img class="mx-0"
               src="/src/assets/icons/coins.png" alt="">)
           </div>
         </div>
 
-        <div class="btn sidenav-item px-2 py-1 bg-secondary mt-3"
+        <div class="btn sidenav-item px-2 py-1 bg-secondary my-2"
           style="font-size: 1.2rem; font-weight: 500; width: 220px" @click="sideMenu = 2">
-
           Cancel
         </div>
 

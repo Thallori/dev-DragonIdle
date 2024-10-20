@@ -12,7 +12,7 @@ export default {
   },
   methods: {
     isDisabled() {
-      if (this.buyObject.isInGame == false || (this.buyObject.sequence == 3 && this.skillStore.flags.dungeon2 == false) || (this.buyObject.requiresCombat == true && this.skillStore.flags.showCombat == false)) {
+      if (this.buyObject.isInGame == false || (this.skillStore.maxLevel < this.buyObject.sequence + 1)) {
         return true
       }
       return false
@@ -30,9 +30,8 @@ export default {
       <div>
         {{ this.buyObject.name }}
 
-        <!-- can buy anytime -->
-        <div class="d-flex little-levels"
-          v-if="buyObject.sequence == 0 && this.buyObject.isInGame == true && (buyObject.requiresCombat == false || skillStore.flags.showCombat == true)">
+        <!-- Can Buy -->
+        <div class="d-flex little-levels" v-if="(this.skillStore.maxLevel >= buyObject.sequence + 1) && this.buyObject.isInGame == true">
 
           <div style="width: 90px;">
             {{ this.buyObject.price1[1] }}
@@ -47,35 +46,14 @@ export default {
           </div>
         </div>
 
-        <!-- can buy only if sequence 3 is done -->
-        <div class="d-flex little-levels"
-          v-if="buyObject.sequence == 3 && skillStore.flags.dungeon2 == true && this.buyObject.isInGame == true">
-
-          <div style="width: 90px;">
-            {{ this.buyObject.price1[1] }}
-            <img style="width: 32px; height: 32px;"
-              :src="itemStore.getItemImage(this.buyObject.price1[0], this.buyObject.price1[2])" alt="">
-          </div>
-
-          <div style="width: 60px;">
-            {{ this.buyObject.price2[1] }}
-            <img style="width: 32px; height: 32px;"
-              :src="itemStore.getItemImage(this.buyObject.price2[0], this.buyObject.price2[2]) " alt="">
-          </div>
-        </div>
-
-        <div class="little-levels px-2"
-          v-else-if="buyObject.sequence == 3 && skillStore.flags.dungeon2 == false && this.buyObject.isInGame == true">
-          requires sequence 3
-        </div>
-
         <div class="little-levels px-3" v-if="buyObject.isInGame == false">
           future update
         </div>
-
-        <div class="little-levels px-3" v-if="buyObject.requiresCombat == true && skillStore.flags.showCombat == false">
-          requires combat
+        <div class="little-levels px-2"
+          v-else-if="this.skillStore.maxLevel < buyObject.sequence + 1">
+          requires sequence {{ buyObject.sequence }}
         </div>
+
 
       </div>
     </div>

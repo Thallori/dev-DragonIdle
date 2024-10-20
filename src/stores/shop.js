@@ -4,16 +4,27 @@ import { useItemStore as itemStore } from '@/stores/inventory'
 export const useShopStore = defineStore('shopStore', {
   state: () => ({
     skills: [
+      // {
+      //   id: 'combatshop',
+      //   name: 'Combat',
+      //   image: 'assets/12x/combat.png',
+      //   price1: ['money', 10, 'resourceItems'],
+      //   price2: ['meatChop', 1, 'consumableItems'],
+      //   unlocks: [-99], //hardcoded to unlock combat
+      //   sequence: 0,
+      //   isInGame: true,
+      //   requiresCombat: false,
+      // },
       {
-        id: 'combatshop',
-        name: 'Combat',
-        image: 'assets/12x/combat.png',
+        id: 'meleeshop',
+        name: 'Melee',
+        image: 'assets/12x/strength.png',
         price1: ['money', 10, 'resourceItems'],
-        price2: ['meatChop', 1, 'consumableItems'],
-        unlocks: [-99], //hardcoded to unlock combat
+        price2: ['copperDagger', 1, 'equipmentItems'],
+        unlocks: [1, 4],
         sequence: 0,
         isInGame: true,
-        requiresCombat: false,
+        requiresCombat: true,
       },
       {
         id: 'rangedshop',
@@ -103,39 +114,70 @@ export const useShopStore = defineStore('shopStore', {
         isInGame: false,
         requiresCombat: false,
       },
+      {
+        id: 'craftingshop',
+        name: 'Crafting',
+        image: 'assets/12x/crafting.png',
+        price1: ['money', 2000, 'resourceItems'],
+        price2: ['glassBar', 1, 'resourceItems'],
+        unlocks: [22],
+        sequence: 3,
+        isInGame: false,
+        requiresCombat: false,
+      },
     ],
-    items0: [
+    items: [
       {
         id: 'stew',
-        name: "Traveler's Stew",
-        image: 'assets/icons/rawchop.png',
         price: '24',
+        sequence: 0,
       },
-      {
-        id: 'trinketSpice',
-        name: 'Spice Pouch',
-        image: 'assets/icons/rawchop.png',
-        price: '480',
-      },
-    ],
-    items1: [
       {
         id: 'oil1',
-        name: 'Slip Oil',
         image: '',
         price: '7',
+        sequence: 3,
       },
       {
         id: 'copperArrow',
-        name: 'Copper Arrows',
-        image: 'assets/icons/copperarrow.png',
         price: '4',
+        sequence: 3,
       },
       {
         id: 'charge1',
-        name: 'Strike Charge',
-        image: 'assets/icons/charge1.png',
         price: '10',
+        sequence: 3,
+      },
+    ],
+    equipment: [
+      {
+        id: 'trinketSpice',
+        price1: ['money', 480, 'resourceItems'],
+        sequence: 0,
+      },
+      {
+        id: 'bronzeCook',
+        price1: ['money', 200, 'resourceItems'],
+        price2: ['bar2', 8, 'resourceItems'],
+        sequence: 0,
+      },
+      {
+        id: 'ironCook',
+        price1: ['money', 320, 'resourceItems'],
+        price2: ['bar3', 8, 'resourceItems'],
+        sequence: 3,
+      },
+      {
+        id: 'steelCook',
+        price1: ['money', 600, 'resourceItems'],
+        price2: ['bar5', 8, 'resourceItems'],
+        sequence: 6,
+      },
+      {
+        id: 'mythrilCook',
+        price1: ['money', 850, 'resourceItems'],
+        price2: ['bar6', 8, 'resourceItems'],
+        sequence: 6,
       },
     ],
   }),

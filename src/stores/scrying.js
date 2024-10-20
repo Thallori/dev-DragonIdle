@@ -104,7 +104,7 @@ export const useScryingStore = defineStore('scryingStore', {
       },
       {
         id: '6',
-        name: 'Spark Salt',
+        name: 'Sparksalt',
         resourceID: 'rune7',
         resourceAmount: 1,
         levelRequired: 7,
@@ -130,6 +130,20 @@ export const useScryingStore = defineStore('scryingStore', {
         mxpPrev: 0,
         mxpNext: 10,
       },
+      {
+        id: '8',
+        name: 'Naptha',
+        resourceID: 'rune9',
+        resourceAmount: 1,
+        levelRequired: 9,
+        xpGain: 32,
+        fortifyTime: 14,
+        baseStability: 0.25,
+        mxp: 0,
+        mLevel: 0,
+        mxpPrev: 0,
+        mxpNext: 10,
+      },
     ]
   }),
   getters: {
@@ -150,10 +164,10 @@ export const useScryingStore = defineStore('scryingStore', {
       this.efficency = JSON.parse(localStorage.getItem('scrying-efficency'))
 
       for (let i in this.activities) {
-        this.activities[i].mxp = JSON.parse(localStorage.getItem('scrying-mxp' + i))
-        this.activities[i].mLevel = JSON.parse(localStorage.getItem('scrying-mLevel' + i))
-        this.activities[i].mxpPrev = JSON.parse(localStorage.getItem('scrying-mxpPrev' + i))
-        this.activities[i].mxpNext = JSON.parse(localStorage.getItem('scrying-mxpNext' + i))
+        this.activities[i].mxp = JSON.parse(localStorage.getItem('scrying-mxp' + i)) ?? 0
+        this.activities[i].mLevel = JSON.parse(localStorage.getItem('scrying-mLevel' + i)) ?? 0
+        this.activities[i].mxpPrev = JSON.parse(localStorage.getItem('scrying-mxpPrev' + i)) ?? 0
+        this.activities[i].mxpNext = JSON.parse(localStorage.getItem('scrying-mxpNext' + i)) ?? 10
       }
     },
 
@@ -164,6 +178,80 @@ export const useScryingStore = defineStore('scryingStore', {
       skillStore().activePercent = this.activePercent
       this.updateEfficency()
       this.tryRepeatAction()
+    },
+
+    warp(ttime) {
+      //if less than 5 seconds, do not attempt
+      if (ttime < 5000) {
+        return
+      }
+      if (this.activeObject.id == undefined) {
+        return console.error('tried to warp without a target')
+      }
+      let timeRemaining = ttime / 1000
+      let timeNextLevel = -1
+      let timeNextMLevel = -1
+      let timeToUse = -1
+
+      let avgInterval = 10
+
+      //avg interval = syphoning time + (fortify time / avg yield)
+      avgInterval = (this.baseSyphoningInterval - itemStore().equippedTools.scryingTool.toolStats.bonusSyphoningTime) + (this.activeObject.fortifyTime / (1 / (1 - Math.min(0.9999999, (this.activeObject.baseStability + itemStore().equippedTools.scryingTool.toolStats.baseStabilityBonus + (this.activeObject.mLevel * 0.02)))) ))
+
+      //if you can't syphon in time, do not attempt
+      if (avgInterval > timeRemaining) {
+        return
+      }
+
+      //if not max level, do the calc
+      if ((skillStore().skills[this.skillID].xpNext - skillStore().skills[this.skillID].xp) > 1) {
+        //next level = action time * (xp to next level / xp per action)
+        timeNextLevel = avgInterval * Math.ceil((skillStore().skills[this.skillID].xpNext - skillStore().skills[this.skillID].xp) / this.activeObject.xpGain)
+      }
+
+      //if not max mxp level, do the calc
+      if ((this.activeObject.mxpNext - this.activeObject.mxp) > 1) {
+        timeNextMLevel = avgInterval * (this.activeObject.mxpNext - this.activeObject.mxp)
+      }
+
+      //timeToUse = smallest time, or -1 if there is no smallest
+      if (timeNextLevel != -1 && timeNextMLevel != -1) {
+        timeToUse = Math.min(timeNextLevel, timeNextMLevel)
+      } else if (timeNextLevel != -1) {
+        timeToUse = timeNextLevel
+      } else if (timeNextMLevel != -1) {
+        timeToUse = timeNextMLevel
+      }
+
+      //if both xp and mxp are maxed out, then 
+      if (timeToUse < 1) {
+        this.batchGain(timeRemaining, avgInterval)
+        skillStore().totalOffline -= timeRemaining * 1000
+        return
+      }
+
+      if (timeToUse > timeRemaining) {
+        this.batchGain(timeRemaining, avgInterval)
+        skillStore().totalOffline -= timeRemaining * 1000
+        return
+      }
+
+      this.batchGain(timeToUse, avgInterval)
+      timeRemaining -= timeToUse
+      skillStore().totalOffline -= timeToUse * 1000
+      this.warp(timeRemaining * 1000)
+    },
+
+    batchGain(ttime, tavg) {
+      let actions = Math.floor(ttime * (1 + (this.efficency / 100)) / tavg)
+
+      skillStore().addXP(this.skillID, (this.activeObject.xpGain * actions))
+      this.addMXP(actions)
+
+      itemStore().changeItemCount(this.activeObject.resourceID, actions, 'resourceItems')
+
+      this.updateEfficency()
+      console.log('warp actions performed: ' + actions)
     },
 
     setActiveAction(newActiveActivity) {
@@ -245,10 +333,12 @@ export const useScryingStore = defineStore('scryingStore', {
 
     updateEfficency() {
       this.efficency = 2 * skillStore().skills[this.skillID].level
+      this.efficency += itemStore().equippedStats.allEfficency
       this.efficency += explorationStore().activities[2].mLevel //vibrant vale
-      if (skillStore().totalOffline >= 1000) {
-        this.efficency += 75
-      }
+      this.efficency += explorationStore().activities[4].mLevel //brecciated bluff
+      // if (skillStore().totalOffline >= 1000) {
+      //   this.efficency += 75
+      // }
     },
     efficencyReturn() {
       let a = 1 + Math.floor(this.efficency / 100)
@@ -256,7 +346,7 @@ export const useScryingStore = defineStore('scryingStore', {
         a += 1
       }
       if (a == 2) {
-        console.log('efficent!')
+        // console.log('efficent!')
       }
       if (a == 3) {
         console.log('double efficent!')
@@ -277,8 +367,9 @@ export const useScryingStore = defineStore('scryingStore', {
       this.activeObject.mLevel = levelFromMXP(this.activeObject.mxp)
 
       if (this.activeObject.mLevel >= maxMLevel) {
-        this.activeObject.mLevel = maxMLevel
-        this.activeObject.mxp = mxpFromLevel(maxMLevel)
+        this.activeObject.mLevel = 20
+        this.activeObject.mxp = 28700
+        this.activeObject.mxpNext = 28700
         return
       }
 

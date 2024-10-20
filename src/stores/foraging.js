@@ -146,6 +146,22 @@ export const useForagingStore = defineStore('foragingStore', {
         mxpPrev: 0,
         mxpNext: 10,
       },
+      {
+        id: '8',
+        name: 'Taxine Yew',
+        resourceID: 'plant8',
+        resourceAmount: 1,
+        levelRequired: 9,
+        xpGain: 20,
+        searchDifficulty: 18.0,
+        gatherDifficulty: 5.0,
+        baseYield: 3,
+        currentYield: 3,
+        mxp: 0,
+        mLevel: 0,
+        mxpPrev: 0,
+        mxpNext: 10,
+      },
     ]
   }),
   getters: {
@@ -167,11 +183,11 @@ export const useForagingStore = defineStore('foragingStore', {
       this.efficency = JSON.parse(localStorage.getItem('foraging-efficency'))
 
       for (let i in this.activities) {
-        this.activities[i].currentYield = JSON.parse(localStorage.getItem('foraging-currentYield' + i))
-        this.activities[i].mxp = JSON.parse(localStorage.getItem('foraging-mxp' + i))
-        this.activities[i].mLevel = JSON.parse(localStorage.getItem('foraging-mLevel' + i))
-        this.activities[i].mxpPrev = JSON.parse(localStorage.getItem('foraging-mxpPrev' + i))
-        this.activities[i].mxpNext = JSON.parse(localStorage.getItem('foraging-mxpNext' + i))
+        this.activities[i].currentYield = JSON.parse(localStorage.getItem('foraging-currentYield' + i)) ?? 3
+        this.activities[i].mxp = JSON.parse(localStorage.getItem('foraging-mxp' + i)) ?? 0
+        this.activities[i].mLevel = JSON.parse(localStorage.getItem('foraging-mLevel' + i)) ?? 0
+        this.activities[i].mxpPrev = JSON.parse(localStorage.getItem('foraging-mxpPrev' + i)) ?? 0
+        this.activities[i].mxpNext = JSON.parse(localStorage.getItem('foraging-mxpNext' + i)) ?? 10
       }
     },
 
@@ -182,6 +198,80 @@ export const useForagingStore = defineStore('foragingStore', {
       skillStore().activePercent = this.activePercent
       this.updateEfficency()
       this.tryRepeatAction()
+    },
+
+    warp(ttime) {
+      //if less than 14 seconds, do not attempt
+      if (ttime < 14000) {
+        return
+      }
+      if (this.activeObject.id == undefined) {
+        return console.error('tried to warp without a target')
+      }
+      let timeRemaining = ttime / 1000
+      let timeNextLevel = -1
+      let timeNextMLevel = -1
+      let timeToUse = -1
+
+      let avgInterval = 10
+
+      //avg interval = search difficulty + (harvest time * yeild)
+      avgInterval = (this.activeObject.searchDifficulty * (1 - itemStore().equippedTools.foragingTool.toolStats.locatingMultiplierAdd)) + ((this.activeObject.gatherDifficulty - itemStore().equippedTools.foragingTool.toolStats.harvestingTimeBonus) * this.activeObject.currentYield)
+
+      //if you can't kill a creature in time, do not attempt
+      if (avgInterval > timeRemaining) {
+        return
+      }
+
+      //if not max level, do the calc
+      if ((skillStore().skills[this.skillID].xpNext - skillStore().skills[this.skillID].xp) > 1) {
+        //next level = action time * (xp to next level / xp per action)
+        timeNextLevel = avgInterval * Math.ceil((skillStore().skills[this.skillID].xpNext - skillStore().skills[this.skillID].xp) / this.activeObject.xpGain)
+      }
+
+      //if not max mxp level, do the calc
+      if ((this.activeObject.mxpNext - this.activeObject.mxp) > 1) {
+        timeNextMLevel = avgInterval * (this.activeObject.mxpNext - this.activeObject.mxp)
+      }
+
+      //timeToUse = smallest time, or -1 if there is no smallest
+      if (timeNextLevel != -1 && timeNextMLevel != -1) {
+        timeToUse = Math.min(timeNextLevel, timeNextMLevel)
+      } else if (timeNextLevel != -1) {
+        timeToUse = timeNextLevel
+      } else if (timeNextMLevel != -1) {
+        timeToUse = timeNextMLevel
+      }
+
+      //if both xp and mxp are maxed out, then 
+      if (timeToUse < 1) {
+        this.batchGain(timeRemaining, avgInterval)
+        skillStore().totalOffline -= timeRemaining * 1000
+        return
+      }
+
+      if (timeToUse > timeRemaining) {
+        this.batchGain(timeRemaining, avgInterval)
+        skillStore().totalOffline -= timeRemaining * 1000
+        return
+      }
+
+      this.batchGain(timeToUse, avgInterval)
+      timeRemaining -= timeToUse
+      skillStore().totalOffline -= timeToUse * 1000
+      this.warp(timeRemaining * 1000)
+    },
+
+    batchGain(ttime, tavg) {
+      let actions = Math.floor(ttime * (1 + (this.efficency / 100)) / tavg)
+
+      skillStore().addXP(this.skillID, (this.activeObject.xpGain * actions * this.activeObject.currentYield))
+      this.addMXP(1 * actions * this.activeObject.currentYield)
+
+      itemStore().changeItemCount(this.activeObject.resourceID, Math.round(actions * this.activeObject.currentYield), 'resourceItems')
+
+      this.updateEfficency()
+      console.log('warp actions performed: ' + (actions * this.activeObject.currentYield))
     },
 
     setActiveAction(newActiveActivity) {
@@ -268,10 +358,11 @@ export const useForagingStore = defineStore('foragingStore', {
 
     updateEfficency() {
       this.efficency = 2 * skillStore().skills[this.skillID].level
-      this.efficency += explorationStore().activities[3].mLevel //area4
-      if (skillStore().totalOffline >= 1000) {
-        this.efficency += 75
-      }
+      this.efficency += itemStore().equippedStats.allEfficency
+      this.efficency += explorationStore().activities[3].mLevel //forlorn fields
+      // if (skillStore().totalOffline >= 1000) {
+      //   this.efficency += 75
+      // }
     },
     efficencyReturn() {
       let a = 1 + Math.floor(this.efficency / 100)
@@ -279,7 +370,7 @@ export const useForagingStore = defineStore('foragingStore', {
         a += 1
       }
       if (a == 2) {
-        console.log('efficent!')
+        // console.log('efficent!')
       }
       if (a == 3) {
         console.log('double efficent!')
@@ -313,8 +404,9 @@ export const useForagingStore = defineStore('foragingStore', {
       this.activeObject.mLevel = levelFromMXP(this.activeObject.mxp)
 
       if (this.activeObject.mLevel >= maxMLevel) {
-        this.activeObject.mLevel = maxMLevel
-        this.activeObject.mxp = mxpFromLevel(maxMLevel)
+        this.activeObject.mLevel = 20
+        this.activeObject.mxp = 28700
+        this.activeObject.mxpNext = 28700
         return
       }
 

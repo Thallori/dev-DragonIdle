@@ -218,6 +218,14 @@ export default {
       <div class="card tooltip-br equipment-card" style="width: 58px; height: 58px;"
         @dblclick="itemStore.equipItem(itemStore.equippedCombat.oilSlot)">
 
+        <!-- make a better number formater, TODO -->
+        <div class="card-img-overlay my-4" v-if="itemStore.equippedCombat.oilSlot.count">
+          <span class="position-relative little-levels badge bg-secondary"
+            style="translate: -19px -48px; padding: 0.25rem;">
+            {{ itemStore.equippedCombat.oilSlot.count.toLocaleString(undefined, { notation: 'compact' }) }}
+          </span>
+        </div>
+
         <div class="tooltip-text" v-if="itemStore.equippedCombat.oilSlot.id">
           <tooltips :itemObject="itemStore.equippedCombat.oilSlot" />
         </div>
@@ -233,6 +241,14 @@ export default {
       <div class="card tooltip-br equipment-card" style="width: 58px; height: 58px;"
         @dblclick="itemStore.equipItem(itemStore.equippedCombat.ammoSlot)">
 
+        <!-- make a better number formater, TODO -->
+        <div class="card-img-overlay my-4" v-if="itemStore.equippedCombat.ammoSlot.count">
+          <span class="position-relative little-levels badge bg-secondary"
+            style="translate: -19px -48px; padding: 0.25rem;">
+            {{ itemStore.equippedCombat.ammoSlot.count.toLocaleString(undefined, { notation: 'compact' }) }}
+          </span>
+        </div>
+
         <div class="tooltip-text" v-if="itemStore.equippedCombat.ammoSlot.id">
           <tooltips :itemObject="itemStore.equippedCombat.ammoSlot" />
         </div>
@@ -247,6 +263,14 @@ export default {
       <!-- chargeSlot -->
       <div class="card tooltip-br equipment-card" style="width: 58px; height: 58px;"
         @dblclick="itemStore.equipItem(itemStore.equippedCombat.chargeSlot)">
+
+        <!-- make a better number formater, TODO -->
+        <div class="card-img-overlay my-4" v-if="itemStore.equippedCombat.chargeSlot.count">
+          <span class="position-relative little-levels badge bg-secondary"
+            style="translate: -19px -48px; padding: 0.25rem;">
+            {{ itemStore.equippedCombat.chargeSlot.count.toLocaleString(undefined, { notation: 'compact' }) }}
+          </span>
+        </div>
 
         <div class="tooltip-text" v-if="itemStore.equippedCombat.chargeSlot.id">
           <tooltips :itemObject="itemStore.equippedCombat.chargeSlot" />
@@ -301,8 +325,10 @@ export default {
         <div class="d-flex justify-content-between">
           <span>Speed: </span>
           <span>
-            {{ (Math.ceil(itemStore.equippedStats.meleeSpeed * combatStore.currentSpeedMod * 20) / 20).toFixed(2) }}s /
-            {{ (Math.ceil(itemStore.equippedStats.rangedSpeed * combatStore.currentSpeedMod * 20) / 20).toFixed(2) }}s /
+            {{ (Math.ceil(itemStore.equippedStats.meleeSpeed * combatStore.currentSpeedMod * 20) / 20).toFixed(2) }}s
+            /
+            {{ (Math.ceil(itemStore.equippedStats.rangedSpeed * combatStore.currentSpeedMod * 20) / 20).toFixed(2) }}s
+            /
             {{ (Math.ceil(itemStore.equippedStats.magicSpeed * combatStore.currentSpeedMod * 20) / 20).toFixed(2) }}s
           </span>
         </div>

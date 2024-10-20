@@ -44,23 +44,23 @@ export default {
     },
     shownActivityMeatItem1() {
       let temp = this.itemStore.consumableItems.find(({ id }) => id === this.shownActivity.neededMeatItem1)
-      return temp.count
+      return temp.count.toLocaleString()
     },
     shownActivityItem1() {
       let temp = this.itemStore.resourceItems.find(({ id }) => id === this.shownActivity.neededItem1)
-      return temp.count
+      return temp.count.toLocaleString()
     },
     shownActivityItem2() {
       let temp = this.itemStore.resourceItems.find(({ id }) => id === this.shownActivity.neededItem2)
-      return temp.count
+      return temp.count.toLocaleString()
     },
     shownActivityMadeItemC() {
       let temp = this.itemStore.consumableItems.find(({ id }) => id === this.shownActivity.itemID)
-      return temp.count
+      return temp.count.toLocaleString()
     },
     shownActivityHeals() {
       let temp = this.itemStore.consumableItems.find(({ id }) => id === this.shownActivity.itemID)
-      return temp.heals
+      return temp.heals.toLocaleString()
     },
   }
 }
@@ -120,8 +120,11 @@ export default {
       <div class="d-flex justify-content-center gap-1 pb-1">
 
         <!-- Skill Icon and Help Button -->
-        <div class="card card-activity align-items-center py-2" style="width: 67px; height: 67px;">
-          <img src="/src/assets/12x/questionmark.png" alt="" width="48" height="48">
+        <div class="card card-activity align-items-center pt-1" style="width: 67px; height: 67px;">
+          <img src="/src/assets/12x/questionmark.png" alt="" width="36" height="36">
+          <div class="little-levels my-auto">
+            Guide
+          </div>
           <div class="stretched-link" @click="showGuideModal = true"></div>
         </div>
 
@@ -137,8 +140,8 @@ export default {
 
             <!-- XP -->
             <div class="px-2">
-              <span class="badge bg-secondary">{{ skillStore.skills[this.skillID].xp }} / {{
-                skillStore.skills[this.skillID].xpNext }}</span> XP
+              <span class="badge bg-secondary">{{ (skillStore.skills[this.skillID].xp).toLocaleString() }} / {{
+                (skillStore.skills[this.skillID].xpNext).toLocaleString() }}</span> XP
             </div>
           </div>
 
@@ -164,17 +167,25 @@ export default {
             <div class="px-2">
               <span>
                 <div class="tooltip-b">
-                  <img src="/src/assets/icons/defaultcook16.png" alt="" width="32" height="32">
-                  <span> Fire Pit</span>
+                  <img :src="itemStore.equippedTools.cookingTool.image" alt="" width="32" height="32">
+                  {{ itemStore.equippedTools.cookingTool.name }}
 
                   <!-- Tooltip -->
-                  <div class="tooltip-text py-1 px-4">
-                    <div class="d-flex justify-content-between little-levels ">
-                      <span>Cook Time:</span>
-                      <span>0%</span>
+                  <div class="tooltip-text py-1 px-3">
+                    <div class="d-flex justify-content-between little-levels">
+                      <span>Cook Time: </span>
+                      <span>
+                        {{ itemStore.equippedTools.cookingTool.toolStats.cookSpeed * 100 }}%
+                      </span>
+                    </div>
+                    <div class="d-flex justify-content-between little-levels"
+                      v-if="itemStore.equippedTools.cookingTool.toolStats.extraItems">
+                      <span>Extra Items: </span>
+                      <span>
+                        {{ itemStore.equippedTools.cookingTool.toolStats.extraItems }}
+                      </span>
                     </div>
                   </div>
-
                 </div>
               </span>
             </div>
@@ -302,7 +313,8 @@ export default {
               Heals: {{ shownActivityHeals() }}
             </div>
             <div class="little-levels pb-1">
-              {{ shownActivity.xpGain }} XP / {{ (Math.ceil(shownActivity.cookTime * 20) / 20).toFixed(2) }}s
+              {{ shownActivity.xpGain }} XP / {{ (Math.ceil(shownActivity.cookTime * (1 -
+              itemStore.equippedTools.cookingTool.toolStats.cookSpeed) * 20) / 20).toFixed(2) }}s
             </div>
 
             <!-- Progress Bar for Activity Completion -->
@@ -371,7 +383,7 @@ export default {
 
               <div class="d-flex justify-content-between little-levels">
                 <div>LVL: {{ activity.mLevel }}</div>
-                <div>{{ activity.mxp }}/{{ activity.mxpNext }}</div>
+                <div>{{ (activity.mxp).toLocaleString() }}/{{ (activity.mxpNext).toLocaleString() }}</div>
               </div>
 
               <div class="progress" role="progressbar" style="height: 8px">

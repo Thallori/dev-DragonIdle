@@ -5,6 +5,7 @@ import { useScryingStore } from '@/stores/scrying'
 import { useForagingStore } from '@/stores/foraging'
 import { useHuntingStore } from '@/stores/hunting'
 import { useMiningStore } from '@/stores/mining'
+import { useMechanicsStore } from '@/stores/mechanics'
 import { useItemStore } from '@/stores/inventory'
 import areaRequirements from '@/data/areaRequirements'
 
@@ -17,16 +18,23 @@ export default {
     const foragingStore = useForagingStore()
     const huntingStore = useHuntingStore()
     const miningStore = useMiningStore()
+    const mechanicsStore = useMechanicsStore()
     const itemStore = useItemStore()
     const areaData = { ...areaRequirements }
 
-    return { skillStore, explorationStore, scryingStore, foragingStore, huntingStore, miningStore, itemStore, areaData }
+    return { skillStore, explorationStore, scryingStore, foragingStore, huntingStore, miningStore, mechanicsStore, itemStore, areaData }
   },
   data() {
     return {
       skillID: 9,
       showGuideModal: false,
+      showResourcesModal: false,
+      resourcesObject: {}
     }
+  },
+  mounted() {
+    this.explorationStore.updateEfficency()
+    this.explorationStore.updateMaxAreas()
   },
   methods: {
     isNotValidActivity(activityObject) {
@@ -89,16 +97,16 @@ export default {
             but as the flow of time returns, the <span class="info-text">stability</span> of this fragile existance will
             become threatened. Limiting the options for what can be accessed, leaving the rest locked.
             <br><br>
-            Each area has unique resources, enemies, and a <span class="info-text">sequence</span> of encounters that
-            guard something <span class="info-text">special</span>.
-            <br><br>
 
             <span class="text-warning">Resources</span>
             <br>
+            <span class="info-text">Exploring</span> each area unlocks unique resources, enemies, and a <span class="info-text">sequence</span> of encounters that
+            guard something <span class="info-text">special</span>. These unlocks will stay accessible as long as the area remains <span class="info-text">released</span>.
+            <br><br>
 
-            Exploring an area grants <span class="info-text">mastery</span> of it, each level providing something new to
-            <span class="info-text">gather</span> and some <span class="info-text">efficency</span> for that region's
-            primary skill.
+            Area unlocks are represented by its <span class="info-text">mastery level</span>, each level providing something new to
+            <span class="info-text">gather</span> and +2% <span class="info-text">efficency</span> for that region's
+            <span class="info-text">efficency skill</span>.
             <br><br>
 
             <span class="text-warning">Efficency</span>
@@ -112,6 +120,51 @@ export default {
       </div>
     </div>
 
+    
+    <!-- Resources Modal -->
+    <div class="modal show-modal" v-if="showResourcesModal == true">
+      <div class="modal-backing" @click="showResourcesModal = false"></div>
+
+      <!-- Resources Content -->
+      <div class="modal-content py-4 px-5" style="width: 23rem;">
+
+        <div class="text-center pb-2">
+          <div class="pb-3">
+            {{ resourcesObject.name }}
+          </div>
+          <img :src="resourcesObject.image" alt="" width="128" height="128">
+        </div>
+
+        <div class="text-center">
+          <div class="little-levels dark-text">Efficency Skill</div>
+           {{ resourcesObject.efficencySkill }}
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center dark-text py-2 little-levels" v-if="true">
+          <span>Resources</span>
+          <span>Mastery LVL</span>
+        </div>
+
+        <!-- Resources List -->
+        <div class="d-flex justify-content-between align-items-center gap-2 pb-1" v-for="resources in resourcesObject.resourcesList">
+          <!-- <img :src="itemStore.getItemData(resources.itemID).image" alt="" width="32" height="32">
+          <span class="flex-grow-1">
+            {{ itemStore.getItemData(resources.itemID).name }}
+          </span> -->
+          <span>
+            {{ resources[0] }}
+          </span>
+          <span class="little-levels dark-text flex-grow-1">
+            ({{ resources[1] }})
+          </span>
+          <span>
+            {{ resources[2] }}
+          </span>
+        </div>
+      </div>
+
+    </div>
+
     <!-- Top Info -->
     <div class="px-5 pb-3 w-100" style="max-width: 64rem;">
 
@@ -119,8 +172,11 @@ export default {
       <div class="d-flex justify-content-center gap-1 pb-1">
 
         <!-- Skill Icon and Help Button -->
-        <div class="card card-activity align-items-center py-2" style="width: 67px; height: 67px;">
-          <img src="/src/assets/12x/questionmark.png" alt="" width="48" height="48">
+        <div class="card card-activity align-items-center pt-1" style="width: 67px; height: 67px;">
+          <img src="/src/assets/12x/questionmark.png" alt="" width="36" height="36">
+          <div class="little-levels my-auto">
+            Guide
+          </div>
           <div class="stretched-link" @click="showGuideModal = true"></div>
         </div>
 
@@ -135,8 +191,8 @@ export default {
 
             <!-- XP -->
             <div class="px-2">
-              <span class="badge bg-secondary">{{ skillStore.skills[this.skillID].xp }} / {{
-                skillStore.skills[this.skillID].xpNext }}</span> XP
+              <span class="badge bg-secondary">{{ (skillStore.skills[this.skillID].xp).toLocaleString() }} / {{
+                (skillStore.skills[this.skillID].xpNext).toLocaleString() }}</span> XP
             </div>
           </div>
 
@@ -167,10 +223,17 @@ export default {
 
                   <!-- Tooltip -->
                   <div class="tooltip-text py-1 px-3">
-                    <div class="d-flex justify-content-between little-levels ">
+                    <div class="d-flex justify-content-between little-levels">
                       <span>Explore Time: </span>
                       <span>
                         {{ itemStore.equippedTools.explorationTool.toolStats.explorationMulti * 100 }}%
+                      </span>
+                    </div>
+                    <div class="d-flex justify-content-between little-levels"
+                      v-if="itemStore.equippedTools.explorationTool.dcat == 'device'">
+                      <span>Efficency: </span>
+                      <span>
+                        {{ mechanicsStore.activities[0].mLevel * 5 }}%
                       </span>
                     </div>
                   </div>
@@ -201,18 +264,24 @@ export default {
     </div>
 
     <!-- All Activities -->
-    <div style="max-width: 64rem">
+    <div style="max-width: 80rem">
 
       <!-- Stability Display -->
       <div class="card py-1 px-1">
         <div class="d-flex justify-content-center gap-1">
 
           <div v-if="0 == explorationStore.maxUnsealedAreas - explorationStore.currentUnsealedAreas">
-            Stability: NONE
+            <span v-if="skillStore.skills[8].locked == true">
+              Stability Exhausted: Complete Sequence 3 to Restore
+            </span>
+            <span v-else>
+              Stability Exhausted: Use Mechanics to Reset the Loop
+            </span>
           </div>
           <div v-else>
             Stability: {{ explorationStore.maxUnsealedAreas - explorationStore.currentUnsealedAreas }}
           </div>
+
         </div>
       </div>
 
@@ -236,9 +305,9 @@ export default {
                 SEALED
               </div>
 
-              <!-- Unique Features -->
+              <!-- Unique Resources -->
               <div class="pt-4 pb-1">
-                <span>Unique Features</span>
+                <span>Unique Resources</span>
               </div>
 
               <div class="d-flex justify-content-center gap-3">
@@ -269,14 +338,15 @@ export default {
                         </span>
                       </div>
 
-                      <div class="d-flex justify-content-between">
+                      <!-- <div class="d-flex justify-content-between">
                         <span>Level: </span>
                         <span>
                           {{ findUniqueFeatureObject(activity.uniqueFeature1[0],
                           activity.uniqueFeature1[1]).levelRequired
                           }}
                         </span>
-                      </div>
+                      </div> -->
+
                     </div>
                   </div>
                 </span>
@@ -302,14 +372,15 @@ export default {
                         </span>
                       </div>
 
-                      <div class="d-flex justify-content-between">
+                      <!-- <div class="d-flex justify-content-between">
                         <span>Level: </span>
                         <span>
                           {{ findUniqueFeatureObject(activity.uniqueFeature2[0],
                           activity.uniqueFeature2[1]).levelRequired
                           }}
                         </span>
-                      </div>
+                      </div> -->
+
                     </div>
                   </div>
                 </span>
@@ -333,9 +404,9 @@ export default {
               <img :src="activity.image" alt="" width="64" height="64">
             </div>
 
-            <!-- Unique Features -->
+            <!-- Unique Resources -->
             <div class="pb-1">
-              <span>Unique Features</span>
+              <span>Unique Resources</span>
             </div>
 
             <div class="d-flex justify-content-center gap-3 pb-1">
@@ -366,14 +437,15 @@ export default {
                       </span>
                     </div>
 
-                    <div class="d-flex justify-content-between">
+                    <!-- <div class="d-flex justify-content-between">
                       <span>Level: </span>
                       <span>
                         {{ findUniqueFeatureObject(activity.uniqueFeature1[0],
                         activity.uniqueFeature1[1]).levelRequired
                         }}
                       </span>
-                    </div>
+                    </div> -->
+
                   </div>
                 </div>
               </span>
@@ -399,14 +471,15 @@ export default {
                       </span>
                     </div>
 
-                    <div class="d-flex justify-content-between">
+                    <!-- <div class="d-flex justify-content-between">
                       <span>Level: </span>
                       <span>
                         {{ findUniqueFeatureObject(activity.uniqueFeature2[0],
                         activity.uniqueFeature2[1]).levelRequired
                         }}
                       </span>
-                    </div>
+                    </div> -->
+
                   </div>
                 </div>
               </span>
@@ -432,15 +505,18 @@ export default {
                 @click="explorationStore.setActiveAction(activity)">Explore</button>
 
               <!-- It's a button, but it's also going to be a tooltip? Maybe I need to rethink this. -->
-              <!-- <button type="button" class="btn activity w-100">Resources</button> -->
+              <button type="button" class="btn activity w-100" @click="showResourcesModal = true; resourcesObject = activity">Resources</button>
             </div>
           </div>
 
           <!-- Mastery Level and XP Footer -->
           <div class="card-footer pt-0">
             <div class="d-flex justify-content-between little-levels">
-              <div>LVL: {{ activity.mLevel }}</div>
-              <div>{{ activity.mxp }}/{{ activity.mxpNext }}</div>
+              <div>
+                <span v-if="activity.mLevel == 0">Unexplored</span>
+                <span v-else>LVL: {{ activity.mLevel }}</span>
+              </div>
+              <div>{{ (activity.mxp).toLocaleString() }}/{{ (activity.mxpNext).toLocaleString() }}</div>
             </div>
             <div class="progress" role="progressbar" style="height: 8px">
               <div class="progress-bar mastery-progress"

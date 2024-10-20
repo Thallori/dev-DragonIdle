@@ -4,6 +4,7 @@ import { useDiaStore as diaStore } from '@/stores/dialog'
 import { useItemStore as itemStore } from '@/stores/inventory'
 import { useCombatStore as combatStore } from '@/stores/combat'
 
+import { useMechanicsStore as mechanicsStore } from '@/stores/mechanics'
 import { useExplorationStore as explorationStore } from '@/stores/exploration'
 import { useScryingStore as scryingStore } from '@/stores/scrying'
 import { useForagingStore as foragingStore } from '@/stores/foraging'
@@ -11,6 +12,7 @@ import { useHuntingStore as huntingStore } from '@/stores/hunting'
 import { useMiningStore as miningStore } from '@/stores/mining'
 import { useSmithingStore as smithingStore } from '@/stores/smithing'
 import { useArtificeStore as artificeStore } from '@/stores/artifice'
+import { useTailoringStore as tailoringStore } from '@/stores/tailoring'
 import { useCookingStore as cookingStore } from '@/stores/cooking'
 
 export const useSkillStore = defineStore('skillStore', {
@@ -20,6 +22,7 @@ export const useSkillStore = defineStore('skillStore', {
       secondTimeout: null,
       totalOffline: 0,
       oneMinuteCounter: 0,
+      warpAutomatically: true,
 
       maxLevel: 3,
       currentActivity: { name: 'Nothing' },
@@ -27,6 +30,7 @@ export const useSkillStore = defineStore('skillStore', {
       currentColor: 'rgb(56, 86, 74)',
       activePercent: { a: 0 },
 
+      inDialog: [false, 'none'],
       flags: {
         showCombat: false,
         showHug: false,
@@ -37,14 +41,21 @@ export const useSkillStore = defineStore('skillStore', {
 
         skipCount: 0,
         intro: false,
+        loop1: false,
         dungeon0: false,
         dungeon1: false,
-        dungeon2: false,
+        dungeon2: false,//tower
+        dungeon3: false,
+        dungeon4: false,
+        dungeon5: false,//republic
+        dungeon6: false,
         dungeon7: false,
+        dungeon8: false,//area9
 
         combatDummy: false,
 
         pacifist: true,
+        ultraPacifist: true,
         flawedPacifist: false,
         genocide: true,
         ultraGenocide: true,
@@ -270,7 +281,7 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
-          tip: 'Craft Melee Equipment',
+          tip: 'Produce Melee Equipment',
         },
         {
           id: '17',
@@ -283,7 +294,7 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
-          tip: 'Craft Ranged Weapons',
+          tip: 'Produce Ranged Weapons',
         },
         {
           id: '18',
@@ -296,7 +307,7 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
-          tip: 'Craft Magic Weapons',
+          tip: 'Produce Magic Weapons',
         },
         {
           id: '19',
@@ -309,7 +320,7 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
-          tip: 'Craft Ranged and Magic Armor',
+          tip: 'Produce Ranged and Magic Armor',
         },
         {
           id: '20',
@@ -322,7 +333,7 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
-          tip: 'Create Healing Food',
+          tip: 'Produce Healing Food',
         },
         {
           id: '21',
@@ -335,12 +346,12 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
-          tip: 'Craft Potions and Oils',
+          tip: 'Produce Potions and Oils',
         },
         {
           id: '22',
-          name: 'Artisan',
-          image: 'assets/12x/strength.png',
+          name: 'Crafting',
+          image: 'assets/12x/crafting.png',
           color: '#FFFFFF',
           isCombat: false,
           xp: 0,
@@ -348,7 +359,7 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
-          tip: 'Craft Jewelry and Tools',
+          tip: 'Produce Jewelry and Tools',
         },
         {
           id: '23',
@@ -361,7 +372,7 @@ export const useSkillStore = defineStore('skillStore', {
           xpNext: 600,
           level: 1,
           locked: true,
-          tip: 'Build Outside of Time',
+          tip: 'Produce Buildings',
         },
       ]
     };
@@ -384,6 +395,7 @@ export const useSkillStore = defineStore('skillStore', {
       localStorage.setItem('skills-currentActivity', JSON.stringify(this.currentActivity))
       localStorage.setItem('skills-currentCat', JSON.stringify(this.currentCat))
       localStorage.setItem('skills-currentColor', JSON.stringify(this.currentColor))
+      localStorage.setItem('skills-inDialog', JSON.stringify(this.inDialog))
       localStorage.setItem('skills-flags', JSON.stringify(this.flags))
 
       for (let i in this.skills) {
@@ -404,6 +416,8 @@ export const useSkillStore = defineStore('skillStore', {
       scryingStore().saveAll()
       smithingStore().saveAll()
       artificeStore().saveAll()
+      mechanicsStore().saveAll()
+      tailoringStore().saveAll()
       console.log('should be saved')
     },
     loadAll() {
@@ -415,17 +429,17 @@ export const useSkillStore = defineStore('skillStore', {
       this.currentActivity = JSON.parse(localStorage.getItem('skills-currentActivity'))
       this.currentCat = JSON.parse(localStorage.getItem('skills-currentCat'))
       this.currentColor = JSON.parse(localStorage.getItem('skills-currentColor'))
+      this.inDialog = JSON.parse(localStorage.getItem('skills-inDialog')) ?? [false, 'none']
 
       let tempFlags = JSON.parse(localStorage.getItem('skills-flags'))
       Object.assign(this.flags, tempFlags)
-      tempFlags = null
 
       for (let i in this.skills) {
-        this.skills[i].xp = JSON.parse(localStorage.getItem('skills-xp' + i))
-        this.skills[i].xpPrev = JSON.parse(localStorage.getItem('skills-xpPrev' + i))
-        this.skills[i].xpNext = JSON.parse(localStorage.getItem('skills-xpNext' + i))
-        this.skills[i].level = JSON.parse(localStorage.getItem('skills-level' + i))
-        this.skills[i].locked = JSON.parse(localStorage.getItem('skills-locked' + i))
+        this.skills[i].xp = JSON.parse(localStorage.getItem('skills-xp' + i)) ?? 0
+        this.skills[i].xpPrev = JSON.parse(localStorage.getItem('skills-xpPrev' + i)) ?? 0
+        this.skills[i].xpNext = JSON.parse(localStorage.getItem('skills-xpNext' + i)) ?? 600
+        this.skills[i].level = JSON.parse(localStorage.getItem('skills-level' + i)) ?? 1
+        this.skills[i].locked = JSON.parse(localStorage.getItem('skills-locked' + i)) ?? true
       }
 
       itemStore().loadAll()
@@ -438,6 +452,8 @@ export const useSkillStore = defineStore('skillStore', {
       scryingStore().loadAll()
       smithingStore().loadAll()
       artificeStore().loadAll()
+      mechanicsStore().loadAll()
+      tailoringStore().loadAll()
       console.log('should be loaded')
 
       cookingStore().updateEfficency()
@@ -448,6 +464,8 @@ export const useSkillStore = defineStore('skillStore', {
       scryingStore().updateEfficency()
       smithingStore().updateEfficency()
       artificeStore().updateEfficency()
+      mechanicsStore().updateEfficency()
+      tailoringStore().updateEfficency()
 
       //resume doing things
       if (this.currentCat == 'Raiding: ' || this.currentCat == 'Fighting: ') {
@@ -477,8 +495,18 @@ export const useSkillStore = defineStore('skillStore', {
       if (this.currentCat == 'Artificing: ') {
         artificeStore().onLoad()
       }
-    },
+      if (this.currentCat == 'Machining: ') {
+        mechanicsStore().onLoad()
+      }
+      if (this.currentCat == 'Tailoring: ') {
+        tailoringStore().onLoad()
+      }
 
+      //resume dialog if somehow loading a save with dialog
+      if (this.inDialog[0] == true) {
+        this.diaThrow(this.inDialog[1])
+      }
+    },
     clearAll() {
       localStorage.clear()
       location.reload()
@@ -487,28 +515,35 @@ export const useSkillStore = defineStore('skillStore', {
     timeUpdate() {
       let offlineTime = Date.now() - this.dateLast
 
-      //if more than 5 seconds have past, pretend the window reloaded
-      if (offlineTime > 5000) {
+      //if more than 1.1 seconds have past, pretend the window reloaded
+      if (offlineTime > 1100) {
         this.totalOffline += offlineTime
+        //if less than 8 hours have passed make warping manual
+        if (this.totalOffline > 28800000) {
+          this.warpAutomatically = false
+        }
+        if (this.warpAutomatically == true) {
+          this.warp()
+        }
       }
-      //if doing nothing, or if combat is paused while fighting an enemy
-      if (this.currentActivity.name == 'Nothing' || ((combatStore().combatPaused == true) && (undefined != combatStore().activeObject.id))) {
+      //increase offline time if doing nothing, or if combat is paused while fighting an enemy
+      if (this.currentActivity.name == 'Nothing' || (combatStore().combatPaused == true && undefined != combatStore().activeObject.id)) {
         this.totalOffline += 1000
       }
-      //if doing something, or if combat is unpaused while fighting an enemy
-      if (this.totalOffline > 0 && this.currentActivity.name != 'Nothing') {
-        this.totalOffline -= 1000
-      }
+      // else {
+      //   this.totalOffline -= 1000
+      // }
       //time bank cannot be less than zero
       if (this.totalOffline < 0) {
-        this.totalOffline == 0
-        cookingStore().updateEfficency()
-        explorationStore().updateEfficency()
-        foragingStore().updateEfficency()
-        huntingStore().updateEfficency()
-        miningStore().updateEfficency()
-        scryingStore().updateEfficency()
-        smithingStore().updateEfficency()
+        this.totalOffline = 0
+        // cookingStore().updateEfficency()
+        // explorationStore().updateEfficency()
+        // foragingStore().updateEfficency()
+        // huntingStore().updateEfficency()
+        // miningStore().updateEfficency()
+        // scryingStore().updateEfficency()
+        // smithingStore().updateEfficency()
+        // artificeStore().updateEfficency()
       }
 
       if (this.oneMinuteCounter > 60) {
@@ -519,6 +554,61 @@ export const useSkillStore = defineStore('skillStore', {
       this.dateLast = Date.now()
       this.oneMinuteCounter += 1
       this.secondTimeout = setTimeout(this.timeUpdate, 1000)
+    },
+
+    warp() {
+      if (this.totalOffline > 28800000) { //8 hours
+        this.warpTime(28800000)
+      } else {
+        this.warpTime(this.totalOffline)
+      }
+    },
+
+    idk() {
+      this.warpTime(this.totalOffline)
+    },
+
+    warpTime(ttime) {
+      if (this.currentCat == 'Exploring: ') {
+        explorationStore().warp(ttime)
+        return
+      }
+      if (this.currentCat == 'Mining: ') {
+        miningStore().warp(ttime)
+        return
+      }
+      if (this.currentCat == 'Foraging: ') {
+        foragingStore().warp(ttime)
+        return
+      }
+      if (this.currentCat == 'Hunting: ') {
+        huntingStore().warp(ttime)
+        return
+      }
+      if (this.currentCat == 'Scrying: ') {
+        scryingStore().warp(ttime)
+        return
+      }
+      if (this.currentCat == 'Smithing: ') {
+        smithingStore().warp(ttime)
+        return
+      }
+      if (this.currentCat == 'Cooking: ') {
+        cookingStore().warp(ttime)
+        return
+      }
+      if (this.currentCat == 'Artificing: ') {
+        artificeStore().warp(ttime)
+        return
+      }
+      if (this.currentCat == 'Machining: ') {
+        mechanicsStore().warp(ttime)
+        return
+      }
+      if (this.currentCat == 'Tailoring: ') {
+        tailoringStore().warp(ttime)
+        return
+      }
     },
 
     cancelCurrentActivity(temp) {
@@ -548,8 +638,17 @@ export const useSkillStore = defineStore('skillStore', {
       if (temp != 'smith') {
         smithingStore().cancelAction()
       }
+      if (temp != 'artifice') {
+        artificeStore().cancelAction()
+      }
       if (temp != 'cook') {
         cookingStore().cancelAction()
+      }
+      if (temp != 'mechanics') {
+        mechanicsStore().cancelAction()
+      }
+      if (temp != 'tailor') {
+        tailoringStore().cancelAction()
       }
     },
     setCurrentActivity(newActivity) {
@@ -601,8 +700,16 @@ export const useSkillStore = defineStore('skillStore', {
           combatStore().onHealthUp()
         }
         itemStore().updateEquippedStats()
-        this.checkPacifist()
+        //if mechanics, then update max areas
+        if (index == 8) {
+          explorationStore().updateMaxAreas()
+        }
+        this.checkGiveHug()
         this.checkGenocide()
+        //on any level up, show more menus
+        if (this.flags.showAux != true) {
+          this.flags.showAux = true
+        }
       }
     },
 
@@ -616,14 +723,29 @@ export const useSkillStore = defineStore('skillStore', {
       this.skills[7].locked = false
       this.flags.showCombat = true
     },
+    unlockedWords() {
+      //if we did this already, don't do this
+      if (this.flags.words == true) {
+        return
+      }
+      this.flags.showMechanics = true
+      this.diaThrow('words')
+    },
+
     unlockCombatPacifist() {
-      diaStore().startDia('showHug')
-      this.flags.showCombat = true
+      this.diaThrow('showHug')
       this.flags.showHug = true
-      this.skills[4].locked = false
-      this.skills[5].locked = false
-      this.skills[6].locked = false
-      this.skills[7].locked = false
+
+      //if you haven't killed anyone, don't show offensive skills
+      if (this.flags.pacifist == true) {
+        this.skills[4].locked = false
+        this.skills[5].locked = false
+        this.skills[6].locked = false
+        this.skills[7].locked = false
+        this.flags.showCombat = true
+      } else {
+        this.unlockCombat()
+      }
 
       combatStore().currentStyle = 'hug'
       itemStore().preStance = 0
@@ -632,45 +754,51 @@ export const useSkillStore = defineStore('skillStore', {
       itemStore().updateEquippedStats()
     },
 
+    //TODO all dungeons
     dungeonDone(temp) {
       this[temp]()
     },
     dungeon2() {
       this.flags.showBest = true
-      this.maxLevel = 8
+      this.maxLevel = 6
       this.unlockSkill(8)
       //did not even get exploration mxp
       if (this.flags.genocide == true) {
         this.flags.startedGenocide = true
         this.checkUltraGenocide()
       }
-      //you started a pacifist run, then stopped, and have now been told murder is wrong
+      //you have been told how to hug, killed someone anyway, and have now been told murder is wrong. if you murder again, some combat.js will remove this flag, making you just a murderer
       if (this.flags.pacifist == false && this.flags.showHug == true) {
         this.flags.flawedPacifist = true
       }
       //unlock remaining combat skills if not a pacifist
       if (this.flags.pacifist == false) {
-        this.skillStore.unlockSkill(2)
-        this.skillStore.unlockSkill(3)
-        this.skillStore.unlockSkill(5)
-        this.skillStore.unlockSkill(6)
+        this.unlockSkill(2)
+        this.unlockSkill(3)
+        this.unlockSkill(5)
+        this.unlockSkill(6)
       }
-      diaStore().startDia('dungeon2')
+      this.diaThrow('dungeon2')
     },
 
-    checkPacifist() {
-      //if this check gave you a hug already, or you killed someone, do nothing
-      if (this.flags.showHug == true || this.flags.pacifist == false) {
+    diaThrow(temp) {
+      diaStore().startDia(temp)
+    },
+
+    checkGiveHug() {
+      //if this check gave you a hug already, or you've completed sequence3, do nothing
+      if (this.flags.showHug == true || this.flags.dungeon2 == true) {
         return
       }
-      //add up all currently implimented non-combat skills
+      //add up all currently implimented non-combat skills (except hunting)
       let leveladder = 0
       leveladder += this.skills[9].level
       leveladder += this.skills[12].level
       leveladder += this.skills[13].level
-      leveladder += this.skills[14].level
+      // leveladder += this.skills[14].level
       leveladder += this.skills[15].level
       leveladder += this.skills[16].level
+      leveladder += this.skills[18].level
       leveladder += this.skills[20].level
 
       //if all levels are maxed out, then let hug
@@ -713,6 +841,9 @@ export const useSkillStore = defineStore('skillStore', {
       xpadder += explorationStore().activities[0].mxp
       xpadder += explorationStore().activities[1].mxp
       xpadder += explorationStore().activities[2].mxp
+      xpadder += explorationStore().activities[3].mxp
+      xpadder += explorationStore().activities[4].mxp
+      xpadder += explorationStore().activities[5].mxp
 
       xpadder += this.skills[12].xp
       xpadder += this.skills[13].xp

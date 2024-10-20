@@ -1,41 +1,42 @@
 <script>
 import { useSkillStore } from '@/stores/skills';
-import { useSmithingStore } from '@/stores/smithing';
+import { useTailoringStore } from '@/stores/tailoring';
 import { useMechanicsStore } from '@/stores/mechanics'
 import { useItemStore } from '@/stores/inventory';
 
 import tooltips from './panels/tooltips.vue';
 
 export default {
-  name: 'SmithingTab',
+  name: 'TailoringTab',
   components: {
     tooltips,
   },
   setup() {
     const skillStore = useSkillStore()
-    const smithingStore = useSmithingStore()
+    const tailoringStore = useTailoringStore()
     const mechanicsStore = useMechanicsStore()
     const itemStore = useItemStore()
 
-    return { skillStore, smithingStore, mechanicsStore, itemStore }
+    return { skillStore, tailoringStore, mechanicsStore, itemStore }
   },
   data() {
     return {
-      skillID: 16,
+      skillID: 19,
+      itemIndexStart: 0, //itemStore.resourceItems.findIndex(t => t.id === this.tailoringStore[0].resourceID) //this code will get the start index of itemIDs, but I don't know how to run it after everything is loaded. Also, it hardcodes all activity items which could limit further development.
       shownActivity: {},
-      shownCat: 'bar',
+      shownCat: 1,
       showGuideModal: false,
     }
   },
   mounted() {
-    this.shownActivity = this.smithingStore.activeObject
-    if (this.smithingStore.activeObject.cat != undefined) {
-      this.shownCat = this.smithingStore.activeObject.cat
+    this.shownActivity = this.tailoringStore.activeObject
+    if (this.tailoringStore.activeObject.cat != undefined) {
+      this.shownCat = this.tailoringStore.activeObject.cat
     }
   },
   methods: {
     isNotValidActivity(activityObject) {
-      // return false
+      return false
 
       //if skill isn't up to snuff, is never valid
       if (activityObject.levelRequired > this.skillStore.skills[this.skillID].level) {
@@ -63,11 +64,6 @@ export default {
       temp = this.itemStore.resourceItems.find(({ id }) => id === this.shownActivity.neededItem3[0])
       return temp.count.toLocaleString()
     },
-    shownActivityMadeItemR() {
-      let temp
-      temp = this.itemStore.resourceItems.find(({ id }) => id === this.shownActivity.itemID)
-      return temp.count.toLocaleString()
-    },
     shownActivityMadeItemE() {
       let temp
       temp = this.itemStore.equipmentItems.find(({ id }) => id === this.shownActivity.itemID)
@@ -89,35 +85,23 @@ export default {
 
         <div class="text-center pb-2">
           <div class="pb-1">
-            Smithing Guide
+            Tailoring Guide
           </div>
 
           <!-- Page 1 -->
           <div class="little-levels">
-            Metals may not be alive, but they will certainly outlive everything else.
+            quote
             <br><br>
 
             <!-- forging -->
-            <span class="text-warning">Forge</span>
+            <span class="text-warning">Weave</span>
             <br>
-            The art of refining <span class="info-text">ore</span> begins with the excessive application of <span
-              class="info-text">heat</span>. Melting stone into <span class="info-text">ingots</span> takes time. <span
-              class="info-text">Working</span> those ingots into shape takes considerably more time.
-            <br><br>
-            Each ingot <span class="info-text">mastery level</span> increases its <span class="info-text">heat
-              rate</span>
-            by 0.1 (from a base rate of 2 per second).
+            trim and stitch
             <br><br>
 
             <span class="text-warning">Equipment</span>
             <br>
-            To work an ingot, hit it with a <span class="info-text">hammer</span> when it's glowing hot. The amount of
-            <span class="info-text">heat</span> required is always equal to its <span class="info-text">work</span>.
-            <br><br>
-            Equipment <span class="info-text">mastery levels</span> increase a <span class="info-text">weapon's
-              accuracy</span> by 1, and an <span class="info-text">armor's melee/ranged dodge</span> stats by 0.25 per
-            level.
-
+            mastery levels do
           </div>
         </div>
 
@@ -178,26 +162,26 @@ export default {
             <div class="px-2">
               <span>
                 <div class="tooltip-b">
-                  <img :src="itemStore.equippedTools.smithingTool.image" alt="" width="32" height="32">
-                  {{ itemStore.equippedTools.smithingTool.name }}
+                  <img src="/src/assets/icons/testIcon16.png" alt="" width="32" height="32">
+                  {{ 'Needle' }}
 
                   <!-- Tooltip -->
                   <div class="tooltip-text py-1 px-4">
                     <div class="d-flex justify-content-between little-levels">
-                      <span>Work Time: </span>
-                      <span>{{ (itemStore.equippedTools.smithingTool.toolStats.workSpeed).toFixed(2) }}s</span>
+                      <span>Trimming: </span>
+                      <span>{{ 0 }}%</span>
                     </div>
                     <div class="d-flex justify-content-between little-levels">
-                      <span>Work: </span>
-                      <span>{{ itemStore.equippedTools.smithingTool.toolStats.workPerAction }}</span>
+                      <span>Stitch Time: </span>
+                      <span>{{ (1).toFixed(2) }}s</span>
                     </div>
-                    <div class="d-flex justify-content-between little-levels"
-                      v-if="itemStore.equippedTools.smithingTool.dcat == 'device'">
+                    <!-- <div class="d-flex justify-content-between little-levels"
+                      v-if="itemStore.equippedTools.tailoringTool.dcat == 'device'">
                       <span>Efficency: </span>
                       <span>
                         {{ mechanicsStore.activities[3].mLevel * 5 }}%
                       </span>
-                    </div>
+                    </div> -->
 
                   </div>
                 </div>
@@ -206,7 +190,7 @@ export default {
 
             <!-- Efficency % -->
             <div class="tooltip-bl">
-              {{ smithingStore.efficency }}%
+              {{ tailoringStore.efficency }}%
               <img src="/src/assets/12x/eff.png" alt="" width="24" height="24">
               <div class="tooltip-text py-1 px-2">
                 <div class="little-levels">
@@ -232,45 +216,38 @@ export default {
       <div class="card py-1 px-1">
         <div class="d-flex flex-wrap justify-content-center gap-1">
 
-          <div class="btn sidenav-item" style="font-size: 1.2rem; font-weight: 500; width: 150px"
-            @click="shownCat = 'bar'">
+          <div class="btn sidenav-item" style="font-size: 1.2rem; font-weight: 500; width: 185px"
+            @click="shownCat = 1">
             <div class="d-flex justify-content-start">
-              <img src="/src/assets/icons/tempkiln16.png">Ingots
+              <img src="/src/assets/icons/testIcon16.png">Wool/Flax
             </div>
           </div>
 
-          <div class="btn sidenav-item" style="font-size: 1.2rem; font-weight: 500; width: 150px"
-            @click="shownCat = 'copper'">
+          <div class="btn sidenav-item" style="font-size: 1.2rem; font-weight: 500; width: 185px"
+            @click="shownCat = 2">
             <div class="d-flex justify-content-start">
-              <img src="/src/assets/icons/copperingot16.png">Copper
+              <img src="/src/assets/icons/testIcon16.png">Fur/Cotton
             </div>
           </div>
 
-          <div class="btn sidenav-item" style="font-size: 1.2rem; font-weight: 500; width: 150px"
-            @click="shownCat = 'bronze'">
+          <div class="btn sidenav-item" style="font-size: 1.2rem; font-weight: 500; width: 185px"
+            @click="shownCat = 3">
             <div class=" d-flex justify-content-start">
-              <img src="/src/assets/icons/bronzeingot16.png">Bronze
+              <img src="/src/assets/icons/testIcon16.png">Leather/Bark
             </div>
           </div>
 
-          <div class="btn sidenav-item" style="font-size: 1.2rem; font-weight: 500; width: 150px"
-            @click="shownCat = 'iron'">
-            <div class="d-flex justify-content-start">
-              <img src="/src/assets/icons/ironingot16.png">Iron
+          <div class="btn sidenav-item" style="font-size: 1.2rem; font-weight: 500; width: 185px"
+            @click="shownCat = 4">
+            <div class=" d-flex justify-content-start">
+              <img src="/src/assets/icons/testIcon16.png">Hide/Silk
             </div>
           </div>
 
-          <div class="btn sidenav-item" style="font-size: 1.2rem; font-weight: 500; width: 150px"
-            @click="shownCat = 'steel'">
-            <div class="d-flex justify-content-start">
-              <img src="/src/assets/icons/steelingot16.png">Steel
-            </div>
-          </div>
-
-          <div class="btn sidenav-item disabled" style="font-size: 1.2rem; font-weight: 500; width: 150px"
-            @click="shownCat = 'mythril'">
-            <div class="d-flex justify-content-start">
-              <img src="/src/assets/icons/mythrilingot16.png">Mythril
+          <div class="btn sidenav-item disabled" style="font-size: 1.2rem; font-weight: 500; width: 185px"
+            @click="shownCat = 5">
+            <div class=" d-flex justify-content-start">
+              <img src="/src/assets/icons/testIcon16.png">Cara/Shellac
             </div>
           </div>
 
@@ -378,37 +355,29 @@ export default {
 
             </div>
 
-            <!-- Derived Time to Complete -->
-            <div class="little-levels" v-if="shownActivity.cat == 'bar'">
-              Time: {{ (Math.ceil((shownActivity.heatNeeded / (this.smithingStore.heatFromUpgrades + (0.1 *
-              shownActivity.mLevel))) * 20) / 20).toFixed(2) }} Seconds
+            <!-- Trim and Stitch -->
+            <div class="little-levels">
+              Trim/Stitch: {{ (this.shownActivity.baseTrim * this.shownActivity.neededItem1[1]).toFixed(2) }}s / {{ (this.shownActivity.baseStitch * this.shownActivity.neededItem1[1]) - this.shownActivity.stitchDiscount }}
             </div>
 
-            <div class="little-levels" v-else>
-              Time: {{ (((shownActivity.heatNeeded / itemStore.equippedTools.smithingTool.toolStats.workPerAction) * (itemStore.equippedTools.smithingTool.toolStats.workSpeed)) + (shownActivity.heatNeeded / this.smithingStore.heatFromUpgrades)).toFixed(2) }} Seconds
-            </div>
-
-            <!-- XP and Heat/Work Needed -->
-            <div class="little-levels pb-1" v-if="shownActivity.cat == 'bar'">
-              Forge: {{ shownActivity.xpGain }} XP / {{ shownActivity.heatNeeded }}
-              Heat
-            </div>
-            <div class="little-levels pb-1" v-else>
-              Forge: {{ shownActivity.xpGain }} XP / {{ shownActivity.heatNeeded }} Work
+            <!-- XP / Time -->
+            <div class="little-levels pb-1">
+              {{ this.shownActivity.baseXP * this.shownActivity.neededItem1[1] }} XP / {{ ((this.shownActivity.baseTrim * this.shownActivity.neededItem1[1]) + (this.shownActivity.baseStitch * this.shownActivity.neededItem1[1]) - this.shownActivity.stitchDiscount).toFixed(2) }}s
+              
             </div>
 
             <!-- Progress Bar for Activity Completion -->
             <div class="progress" role="progressbar" style="height: 12px;">
-              <div class="progress-bar xp-progress" :style="`width: ${this.smithingStore.activePercent.a}%;`"
-                v-if="this.smithingStore.activeObject.id == shownActivity.id">
+              <div class="progress-bar xp-progress" :style="`width: ${this.tailoringStore.activePercent.a}%;`"
+                v-if="this.tailoringStore.activeObject.id == shownActivity.id">
               </div>
             </div>
 
-            <!-- SMITH! -->
+            <!-- WEAVE! -->
             <div class="pt-2">
               <button type="button" class="btn activity" style="width: 100%;"
-                @click="smithingStore.setActiveAction(shownActivity)">
-                Smith
+                @click="tailoringStore.setActiveAction(shownActivity)">
+                Weave
               </button>
             </div>
           </div>
@@ -419,17 +388,10 @@ export default {
         <div class="d-flex crafting-activities align-content-start flex-wrap gap-1 pb-3">
 
           <div class="card card-list flex-grow-1 border-dark text-center"
-            v-for="(activity, index) in smithingStore.activities.filter(temp => temp.cat === this.shownCat)">
+            v-for="(activity, index) in tailoringStore.activities.filter(temp => temp.cat === this.shownCat)">
 
             <!-- Not Enough Levels or Area Access for Activity -->
             <div class="card-body pt-2 pb-0 tooltip-be3" v-if="isNotValidActivity(activity)">
-
-              <!-- Heavy Weapon Tooltip -->
-              <div class="tooltip-text bg-secondary py-2 w-100"
-                v-if="activity.mCat == 6 && activity.levelRequired <= skillStore.skills[this.skillID].level && skillStore.flags.dungeon5 == false">
-                Recipe Located in Sequence 6
-              </div>
-
               <div class="d-flex justify-content-around align-items-center">
 
                 <div class="d-flex flex-grow-1">
@@ -451,10 +413,7 @@ export default {
 
                 <div class="d-flex align-items-center flex-grow-1">
 
-                  <img :src="itemStore.getItemImage(activity.itemID, 'resourceItems')" alt="" width="32" height="32"
-                    v-if="activity.cat == 'bar'">
-                  <img :src="itemStore.getItemImage(activity.itemID, 'equipmentItems') " alt="" width="32" height="32"
-                    v-else>
+                  <img :src="itemStore.getItemImage(activity.itemID, 'equipmentItems')" alt="" width="32" height="32">
 
                   <h5 class="mt-1 px-2">{{ activity.name }}</h5>
                 </div>
@@ -468,36 +427,20 @@ export default {
               </div>
             </div>
 
-            <!-- Mastery Level and XP Footer for Bars-->
-            <div class="card-footer pt-0" v-if="shownCat == 'bar'">
-
-              <div class="d-flex justify-content-between little-levels">
-                <div>LVL: {{ activity.mLevel }}</div>
-                <div>{{ (activity.mxp).toLocaleString() }}/{{ (activity.mxpNext).toLocaleString() }}</div>
-              </div>
-
-              <div class="progress" role="progressbar" style="height: 8px">
-                <div class="progress-bar mastery-progress"
-                  :style="`width: ${(activity.mxp - activity.mxpPrev) / (activity.mxpNext - activity.mxpPrev) * 100}%;`">
-                </div>
-              </div>
-            </div>
-
             <!-- Mastery Level and XP Footer for General Equipment -->
-            <div class="card-footer pt-0" v-else>
-
+            <div class="card-footer pt-0">
               <div class="d-flex justify-content-between little-levels">
-                <div>LVL: {{ smithingStore.equipmentMastery[activity.mCat].mLevel }}</div>
+                <div>LVL: {{ tailoringStore.equipmentMastery[activity.mCat].mLevel }}</div>
 
                 <div>
-                  {{ (smithingStore.equipmentMastery[activity.mCat].mxp).toLocaleString() }}/{{
-                  (smithingStore.equipmentMastery[activity.mCat].mxpNext).toLocaleString() }}
+                  {{ (tailoringStore.equipmentMastery[activity.mCat].mxp).toLocaleString() }}/{{
+                  (tailoringStore.equipmentMastery[activity.mCat].mxpNext).toLocaleString() }}
                 </div>
               </div>
 
               <div class="progress" role="progressbar" style="height: 8px">
                 <div class="progress-bar mastery-progress"
-                  :style="`width: ${(smithingStore.equipmentMastery[activity.mCat].mxp - smithingStore.equipmentMastery[activity.mCat].mxpPrev) / (smithingStore.equipmentMastery[activity.mCat].mxpNext - smithingStore.equipmentMastery[activity.mCat].mxpPrev) * 100}%;`">
+                  :style="`width: ${(tailoringStore.equipmentMastery[activity.mCat].mxp - tailoringStore.equipmentMastery[activity.mCat].mxpPrev) / (tailoringStore.equipmentMastery[activity.mCat].mxpNext - tailoringStore.equipmentMastery[activity.mCat].mxpPrev) * 100}%;`">
                 </div>
               </div>
             </div>

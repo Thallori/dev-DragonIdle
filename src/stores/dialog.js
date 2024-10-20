@@ -32,6 +32,7 @@ export const useDiaStore = defineStore('diaStore', {
       if (undefined == diasData[temp]) {
         return console.error('tried to start non-existant dialog: ' + temp)
       }
+      skillStore().inDialog = [true, temp]
       this.currentLine = 1
       this.currentMessage = ""
       this.showOK = true
@@ -111,6 +112,7 @@ export const useDiaStore = defineStore('diaStore', {
 
     clearDia() {
       skillStore().flags[this.currentDia[0].id] = true
+      skillStore().inDialog = [false, 'none']
       if (undefined !== this.currentDia[0].combat) {
         combatStore().cancelAction()
         combatStore().combatPaused = false

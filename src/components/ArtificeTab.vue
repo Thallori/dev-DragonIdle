@@ -40,7 +40,7 @@ export default {
         return true
       }
       //if orb weapon, is never valid
-      if (activityObject.mCat == 3) {
+      if (activityObject.mCat == 3 && this.skillStore.flags.dungeon2 == false) {
         return true
       }
       //is valid
@@ -48,19 +48,19 @@ export default {
     },
     shownActivityItem1() {
       let temp = this.itemStore.resourceItems.find(({ id }) => id === this.shownActivity.neededItem1[0])
-      return temp.count
+      return temp.count.toLocaleString()
     },
     shownActivityItem2() {
       let temp = this.itemStore.resourceItems.find(({ id }) => id === this.shownActivity.neededItem2[0])
-      return temp.count
+      return temp.count.toLocaleString()
     },
     shownActivityItem3() {
       let temp = this.itemStore.resourceItems.find(({ id }) => id === this.shownActivity.neededItem3[0])
-      return temp.count
+      return temp.count.toLocaleString()
     },
     shownActivityMadeItemC() {
       let temp = this.itemStore.equipmentItems.find(({ id }) => id === this.shownActivity.itemID)
-      return temp.count
+      return temp.count.toLocaleString()
     },
   }
 }
@@ -83,16 +83,24 @@ export default {
 
           <!-- Page 1 -->
           <div class="little-levels">
-            at last, a use for scrying
+            Create new wonders with art, measures, and just a hint of life.
             <br><br>
 
-            <!-- locating/harvesting -->
-            <span class="text-warning">Charges</span>
+            <!-- setting -->
+            <span class="text-warning">Type and Set</span>
             <br>
-
-            <span class="info-text">apells and magic things</span> mastery makes more spell charges per craft
+            To shape raw <span class="info-text">essence</span> into <span class="info-text">weapons, armor, and magical charge</span>, start by <span class="info-text">typing</span> the individual weaves. Record its chromatic and invariant properties with an appropriate <span class="info-text">writing tool</span>, taking time to ensure nothing is lost to entropic easure.
             <br><br>
-            mastery of other things give extra accuracy for equipment. the wings will also give extra accuracy, spooky.
+            <span class="info-text">Set</span> new vectors with a quick flurry of connecting strokes. More complex shapes require more setting strokes, but this can be done as fast as the <span class="info-text">tool</span> can handle without breaking.
+            <br><br>
+
+            <span class="text-warning">Equipment</span>
+            <br>
+            Charge <span class="info-text">mastery levels</span> increase <span class="info-text">amount made</span> per set.
+            <br>
+            Weapon <span class="info-text">mastery</span> increase <span class="info-text">accuracy</span> by 1 per level.
+            <br>
+            Wing <span class="info-text">mastery</span> increase <span class="info-text">magic defense</span> by 0.25 per level.
 
           </div>
         </div>
@@ -107,14 +115,16 @@ export default {
       <div class="d-flex justify-content-center gap-1 pb-1">
 
         <!-- Skill Icon and Help Button -->
-        <div class="card card-activity align-items-center py-2" style="width: 67px; height: 67px;">
-          <img src="/src/assets/12x/questionmark.png" alt="" width="48" height="48">
+        <div class="card card-activity align-items-center pt-1" style="width: 67px; height: 67px;">
+          <img src="/src/assets/12x/questionmark.png" alt="" width="36" height="36">
+          <div class="little-levels my-auto">
+            Guide
+          </div>
           <div class="stretched-link" @click="showGuideModal = true"></div>
         </div>
 
         <!-- Level and XP Card -->
         <div class="card flex-grow-1 px-0">
-
           <div class="d-flex justify-content-between py-1 px-2">
 
             <!-- Level -->
@@ -124,8 +134,8 @@ export default {
 
             <!-- XP -->
             <div class="px-2">
-              <span class="badge bg-secondary">{{ skillStore.skills[this.skillID].xp }} / {{
-                skillStore.skills[this.skillID].xpNext }}</span> XP
+              <span class="badge bg-secondary">{{ (skillStore.skills[this.skillID].xp).toLocaleString() }} / {{
+                (skillStore.skills[this.skillID].xpNext).toLocaleString() }}</span> XP
             </div>
           </div>
 
@@ -151,7 +161,7 @@ export default {
             <div class="px-2">
               <span>
                 <div class="tooltip-b">
-                  <img src="/src/assets/icons/testIcon16.png" alt="" width="32" height="32">
+                  <img src="/src/assets/icons/defaultquill.png" alt="" width="32" height="32">
                   <span> Quill</span>
 
                   <!-- Tooltip -->
@@ -208,35 +218,35 @@ export default {
           <div class="btn sidenav-item" style="font-size: 1.2rem; font-weight: 500; width: 150px"
             @click="shownCat = 'wand'">
             <div class="d-flex justify-content-start">
-              <img src="/src/assets/icons/testIcon16.png">Wands
+              <img src="/src/assets/icons/wand1.png">Wands
             </div>
           </div>
 
           <div class="btn sidenav-item" style="font-size: 1.2rem; font-weight: 500; width: 150px"
             @click="shownCat = 'staff'">
             <div class="d-flex justify-content-start">
-              <img src="/src/assets/icons/testIcon16.png">Staffs
+              <img src="/src/assets/icons/staff1.png">Staffs
             </div>
           </div>
 
           <div class="btn sidenav-item" style="font-size: 1.2rem; font-weight: 500; width: 150px"
             @click="shownCat = 'book'">
             <div class="d-flex justify-content-start">
-              <img src="/src/assets/icons/testIcon16.png">Books
+              <img src="/src/assets/icons/book1.png">Books
             </div>
           </div>
 
           <div class="btn sidenav-item" style="font-size: 1.2rem; font-weight: 500; width: 150px"
             @click="shownCat = 'orb'">
             <div class="d-flex justify-content-start">
-              <img src="/src/assets/icons/testIcon16.png">Orbs
+              <img src="/src/assets/icons/orb1.png">Orbs
             </div>
           </div>
 
           <div class="btn sidenav-item" style="font-size: 1.2rem; font-weight: 500; width: 150px"
             @click="shownCat = 'wing'">
             <div class="d-flex justify-content-start">
-              <img src="/src/assets/icons/testIcon16.png">Wings
+              <img src="/src/assets/icons/wing1.png">Wings
             </div>
           </div>
 
@@ -341,7 +351,7 @@ export default {
 
             <!-- XP per Completion and Seconds per Complete -->
             <div class="little-levels">
-              Typeset: {{ shownActivity.typingNeeded.toFixed(2) }}s / {{ shownActivity.settingNeeded }}
+              Type/Set: {{ shownActivity.typingNeeded.toFixed(2) }}s / {{ shownActivity.settingNeeded }}
             </div>
             <div class="little-levels pb-1">
               {{ shownActivity.xpGain }} XP / {{ (shownActivity.typingNeeded + shownActivity.settingNeeded).toFixed(2)
@@ -378,7 +388,8 @@ export default {
             <div class="card-footer pt-0">
               <div class="d-flex justify-content-between little-levels">
                 <div>LVL: {{ artificeStore.equipmentMastery[0].mLevel }}</div>
-                <div>{{ artificeStore.equipmentMastery[0].mxp }}/{{ artificeStore.equipmentMastery[0].mxpNext }}</div>
+                <div>{{ (artificeStore.equipmentMastery[0].mxp).toLocaleString() }}/{{
+                  (artificeStore.equipmentMastery[0].mxpNext).toLocaleString() }}</div>
               </div>
 
               <div class="progress" role="progressbar" style="height: 8px">
@@ -398,7 +409,8 @@ export default {
             <div class="card-footer pt-0">
               <div class="d-flex justify-content-between little-levels">
                 <div>LVL: {{ artificeStore.equipmentMastery[1].mLevel }}</div>
-                <div>{{ artificeStore.equipmentMastery[1].mxp }}/{{ artificeStore.equipmentMastery[1].mxpNext }}</div>
+                <div>{{ (artificeStore.equipmentMastery[1].mxp).toLocaleString() }}/{{
+                  (artificeStore.equipmentMastery[1].mxpNext).toLocaleString() }}</div>
               </div>
 
               <div class="progress" role="progressbar" style="height: 8px">
@@ -418,7 +430,8 @@ export default {
             <div class="card-footer pt-0">
               <div class="d-flex justify-content-between little-levels">
                 <div>LVL: {{ artificeStore.equipmentMastery[2].mLevel }}</div>
-                <div>{{ artificeStore.equipmentMastery[2].mxp }}/{{ artificeStore.equipmentMastery[2].mxpNext }}</div>
+                <div>{{ (artificeStore.equipmentMastery[2].mxp).toLocaleString() }}/{{
+                  (artificeStore.equipmentMastery[2].mxpNext).toLocaleString() }}</div>
               </div>
 
               <div class="progress" role="progressbar" style="height: 8px">
@@ -438,7 +451,8 @@ export default {
             <div class="card-footer pt-0">
               <div class="d-flex justify-content-between little-levels">
                 <div>LVL: {{ artificeStore.equipmentMastery[3].mLevel }}</div>
-                <div>{{ artificeStore.equipmentMastery[3].mxp }}/{{ artificeStore.equipmentMastery[3].mxpNext }}</div>
+                <div>{{ (artificeStore.equipmentMastery[3].mxp) }}/{{
+                  (artificeStore.equipmentMastery[3].mxpNext).toLocaleString() }}</div>
               </div>
 
               <div class="progress" role="progressbar" style="height: 8px">
@@ -458,7 +472,8 @@ export default {
             <div class="card-footer pt-0">
               <div class="d-flex justify-content-between little-levels">
                 <div>LVL: {{ artificeStore.equipmentMastery[4].mLevel }}</div>
-                <div>{{ artificeStore.equipmentMastery[4].mxp }}/{{ artificeStore.equipmentMastery[4].mxpNext }}</div>
+                <div>{{ (artificeStore.equipmentMastery[4].mxp).toLocaleString() }}/{{
+                  (artificeStore.equipmentMastery[4].mxpNext).toLocaleString() }}</div>
               </div>
 
               <div class="progress" role="progressbar" style="height: 8px">
@@ -481,8 +496,8 @@ export default {
 
                 <!-- Orb Weapon Tooltip -->
                 <div class="tooltip-text bg-secondary py-2 w-100"
-                  v-if="activity.mCat == 3 && activity.levelRequired <= skillStore.skills[this.skillID].level">
-                  Recipe Located in Sequence 8
+                  v-if="activity.mCat == 3 && activity.levelRequired <= skillStore.skills[this.skillID].level && skillStore.flags.dungeon5 == false">
+                  Recipe Located in Sequence 6
                 </div>
 
                 <!-- Title of Activity -->
@@ -521,7 +536,7 @@ export default {
 
               <div class="d-flex justify-content-between little-levels">
                 <div>LVL: {{ activity.mLevel }}</div>
-                <div>{{ activity.mxp }}/{{ activity.mxpNext }}</div>
+                <div>{{ (activity.mxp).toLocaleString() }}/{{ (activity.mxpNext).toLocaleString() }}</div>
               </div>
 
               <div class="progress" role="progressbar" style="height: 8px">
@@ -529,7 +544,6 @@ export default {
                   :style="`width: ${(activity.mxp - activity.mxpPrev) / (activity.mxpNext - activity.mxpPrev) * 100}%;`">
                 </div>
               </div>
-
             </div>
 
           </div>

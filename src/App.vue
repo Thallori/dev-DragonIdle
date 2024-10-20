@@ -1,6 +1,7 @@
 <script>
 import { useSkillStore } from './stores/skills'
 import { useCombatStore } from './stores/combat'
+import { useItemStore } from './stores/inventory'
 import { useDiaStore } from './stores/dialog'
 
 import InventoryTab from './components/InventoryTab.vue'
@@ -15,23 +16,25 @@ import MiningTab from './components/MiningTab.vue'
 import ArtificeTab from './components/ArtificeTab.vue'
 import SmithingTab from './components/SmithingTab.vue'
 import CookingTab from './components/CookingTab.vue'
+import TailoringTab from './components/TailoringTab.vue'
 import SettingsTab from './components/SettingsTab.vue'
 
 export default {
   components: {
-    InventoryTab, ShopTab, CombatTab, MechanicsTab, ExplorationTab, ScryingTab, ForagingTab, HuntingTab, MiningTab, SmithingTab, ArtificeTab, CookingTab, SettingsTab
+    InventoryTab, ShopTab, CombatTab, MechanicsTab, ExplorationTab, ScryingTab, ForagingTab, HuntingTab, MiningTab, SmithingTab, ArtificeTab, TailoringTab, CookingTab, SettingsTab
   },
   setup() {
     const skillStore = useSkillStore()
     const combatStore = useCombatStore()
+    const itemStore = useItemStore()
     const diaStore = useDiaStore()
-    return { skillStore, combatStore, diaStore }
+    return { skillStore, combatStore, itemStore, diaStore }
   },
   data() {
     return {
       window: {
         width: 0,
-        height: 0
+        height: 0,
       },
       showSidenav: true,
       showAllAffinities: true,
@@ -80,6 +83,12 @@ export default {
           if (this.skillStore.currentCat == 'Artificing: ') {
             this.currentViewedWindow = 'ArtificeTab'
           }
+          if (this.skillStore.currentCat == 'Machining: ') {
+            this.currentViewedWindow = 'MechanicsTab'
+          }
+          if (this.skillStore.currentCat == 'Tailoring: ') {
+            this.currentViewedWindow = 'TailoringTab'
+          }
         }
       }
     }
@@ -115,6 +124,9 @@ export default {
         this.toggleSidenav()
       }
     },
+    gotoDiscord: function () {
+      window.open('https://discord.gg/hHzyS2at5P')
+    },
     debuggingBoop: function () {
       console.log('boop')
     },
@@ -134,8 +146,8 @@ export default {
         style="margin-top: 8%; width: 23rem; min-height: 15rem;">
 
         <!-- Skip -->
-        <div class="card equipment-card text-center little-levels ms-auto px-2" @click="diaStore.skipDia()"
-          v-if="diaStore.showSkip == true">
+        <div class="card equipment-card text-center little-levels ms-auto px-2"
+          :class="diaStore.showSkip == false ? 'hidden' : ''" @click="diaStore.skipDia()">
           >SKIP
         </div>
 
@@ -151,14 +163,16 @@ export default {
             OK
           </div>
 
-          <div class="card equipment-card text-center mb-5 mx-auto w-50"
-            @click="diaStore.nextDia(diaStore.activeStep.r1)" v-if="undefined !== diaStore.activeStep.r1">
-            {{ diaStore.activeStep.r1[0] }}
-          </div>
+          <div class="d-flex gap-4 mb-5 w-100" v-if="diaStore.activeStep.r1">
+            <div class="card equipment-card justify-content-center px-1 w-50"
+              @click="diaStore.nextDia(diaStore.activeStep.r1)" v-if="undefined !== diaStore.activeStep.r1">
+              {{ diaStore.activeStep.r1[0] }}
+            </div>
 
-          <div class="card equipment-card text-center mb-5 mx-auto w-50"
-            @click="diaStore.nextDia(diaStore.activeStep.r2)" v-if="undefined !== diaStore.activeStep.r2">
-            {{ diaStore.activeStep.r2[0] }}
+            <div class="card equipment-card justify-content-center px-1 w-50"
+              @click="diaStore.nextDia(diaStore.activeStep.r2)" v-if="undefined !== diaStore.activeStep.r2">
+              {{ diaStore.activeStep.r2[0] }}
+            </div>
           </div>
 
         </div>
@@ -175,16 +189,33 @@ export default {
       </div>
 
       <!-- Inventory -->
-      <div class="sidenav-item d-flex align-items-center" @click="currentViewedWindow = 'InventoryTab'"
-        v-if="skillStore.flags.showHoard == true">
+      <div class="sidenav-item d-flex align-items-center hover-box tooltip-b"
+        @click="currentViewedWindow = 'InventoryTab'" v-if="skillStore.flags.showHoard == true">
+        <!-- Tooltip -->
+        <div class="tooltip-text little-levels py-1 w-100">
+          View and Equip Items
+        </div>
         <img src="/src/assets/12x/coins.png" alt="" style="height: 24px; width: 24px;">
         <span>Hoard</span>
       </div>
 
-      <div class="sidenav-item d-flex align-items-center" @click="currentViewedWindow = 'ShopTab'"
+      <div class="sidenav-item d-flex align-items-center hover-box tooltip-b" @click="currentViewedWindow = 'ShopTab'"
         v-if="skillStore.flags.showHoard == true">
+        <!-- Tooltip -->
+        <div class="tooltip-text little-levels py-1 w-100">
+          Buy New Items and Skills
+        </div>
         <img src="/src/assets/12x/shop.png" alt="" style="height: 24px; width: 24px;">
-        <span>Shops</span>
+
+        <div class="d-flex flex-grow-1 justify-content-between align-items-center">
+          <div>
+            Shop
+          </div>
+          <div class="little-levels" v-if="itemStore.resourceItems[0].count > 0">
+            {{ itemStore.resourceItems[0].count.toLocaleString(undefined, { notation: 'compact' }) }}
+            <img class="m-0" src="/src/assets/12x/coins.png" alt="" style="height: 12x; width: 12px;">
+          </div>
+        </div>
       </div>
 
       <!-- Combat -->
@@ -198,6 +229,7 @@ export default {
         <img src="/src/assets/12x/combat.png" alt="" style="height: 24px; width: 24px;">
         <span>Combat</span>
       </div>
+
       <div v-if="showAllAffinities == true">
 
         <div v-for="skill in skillStore.categoryCombat">
@@ -214,7 +246,7 @@ export default {
                 {{ skill.tip }}
               </div>
               <div class="little-levels">
-                XP to Next Level: {{ skill.xpNext - skill.xp }}
+                XP to Next Level: {{ (skill.xpNext - skill.xp).toLocaleString() }}
               </div>
             </div>
 
@@ -226,7 +258,7 @@ export default {
                   {{ skill.name }}
                 </div>
                 <div class="hover-hide little-levels">
-                  ({{ skill.xp }}/{{ skill.xpNext }})
+                  ({{ (skill.xp).toLocaleString() }}/{{ (skill.xpNext).toLocaleString() }})
                 </div>
                 <div class="little-levels">
                   {{ skill.level }}/{{ skillStore.maxLevel }}
@@ -244,6 +276,24 @@ export default {
         </div>
       </div>
 
+      <!-- Max Level -->
+      <div class="d-flex sidenav-category justify-content-between pe-2 py-0 my-0 hover-box tooltip-b"
+        v-if="skillStore.flags.showCombat == true">
+        <!-- Tooltip -->
+        <div class="tooltip-text little-levels py-1 w-100">
+          Increase max level by completing Sequence {{skillStore.maxLevel}}
+
+          <div class="dark-text" v-if="skillStore.maxLevel == 3">
+            (Crumbling Tower)
+          </div>
+          <div class="dark-text" v-if="skillStore.maxLevel == 6">
+            [future update]
+          </div>
+        </div>
+        <span>Max Level</span>
+        <span class="px-1">{{skillStore.maxLevel}}</span>
+      </div>
+
       <!-- Skills -->
       <div class="sidenav-category card-button" @click="showAllSkills = !showAllSkills">
         <span>Skills </span>
@@ -254,7 +304,7 @@ export default {
         <div v-for="skill in skillStore.categorySkill">
 
           <div class="sidenav-item d-flex align-items-center justify-content-start tooltip-b hover-box"
-            @click="currentViewedWindow = skill.name + 'Tab'" v-if="skill.locked == false">
+            @click="currentViewedWindow = skill.name + 'Tab'">
 
             <!-- Tooltip -->
             <div class="tooltip-text w-100 py-2">
@@ -265,7 +315,7 @@ export default {
                 {{ skill.tip }}
               </div>
               <div class="little-levels">
-                XP to Next Level: {{ skill.xpNext - skill.xp }}
+                XP to Next Level: {{ (skill.xpNext - skill.xp).toLocaleString() }}
               </div>
             </div>
 
@@ -275,7 +325,7 @@ export default {
                 {{ skill.name }}
               </div>
               <div class="hover-hide little-levels">
-                ({{ skill.xp }}/{{ skill.xpNext }})
+                ({{ (skill.xp).toLocaleString() }}/{{ (skill.xpNext).toLocaleString() }})
               </div>
               <div class="little-levels">
                 {{ skill.level }}/{{ skillStore.maxLevel }}
@@ -299,14 +349,14 @@ export default {
         <img src="/src/assets/icons/testIcon12.png" alt="" style="height: 24px; width: 24px;">
         <span>Wiki</span>
       </div> -->
-      <div class="sidenav-item d-flex align-items-center justify-content-start" v-if="skillStore.flags.showAux == true">
+      <div class="sidenav-item d-flex align-items-center justify-content-start" v-if="skillStore.flags.showAux == true" @click="gotoDiscord()">
         <img src="/src/assets/12x/discord.png" alt="" style="height: 24px; width: 24px;">
         <span>Discord</span>
       </div>
-      <div class="sidenav-item d-flex align-items-center justify-content-start" v-if="skillStore.flags.showAux == true">
+      <!-- <div class="sidenav-item d-flex align-items-center justify-content-start" v-if="skillStore.flags.showAux == true">
         <img src="/src/assets/12x/about.png" alt="" style="height: 24px; width: 24px;">
         <span>About</span>
-      </div>
+      </div> -->
 
       <!-- Settings Footer -->
       <div class="sidenav-category"></div>
@@ -344,15 +394,27 @@ export default {
         </div>
       </div>
 
-      <div class="text-white little-levels tooltip-bl">
+      <div class="text-white little-levels tooltip-bl-sticky">
         <span class="tooltip-text">
-          Time is stored when idle, and expended when active.
-          <br><br>
-          +75% efficency to gathering skills
-          <br>
-          +50% efficency to production skills
-          <br>
-          +25% extra drop chance in combat
+          Time is stored when idle.
+          <div v-if="skillStore.totalOffline > 28800000">
+            <div class="btn darkequipment-card sidenav-item big-levels text-white mx-4 my-1" @click="skillStore.warp()">
+            Warp 8 Hours
+            </div>
+            If eight or more hours are banked, automatic warp is disabled.
+            <br><br>
+          </div>
+          <div v-else>
+            <div class="btn darkequipment-card sidenav-item big-levels text-white mx-4 my-1" @click="skillStore.warp()">
+            Warp Banked Time
+            </div>
+            <div class="btn darkequipment-card sidenav-item big-levels text-white mx-4 my-1" @click="skillStore.warpAutomatically = !skillStore.warpAutomatically">
+              <span v-if="skillStore.warpAutomatically == true">Warp Automatically</span>
+              <span v-else>Bank All Idle Time</span>
+            </div>
+          </div>
+
+          [combat-warp in a future update]
         </span>
         <div>
           Offline Bank
@@ -916,6 +978,29 @@ img {
   visibility: visible;
 }
 
+.tooltip-bl-sticky {
+  position: relative;
+  display: inline-block;
+}
+.tooltip-bl-sticky .tooltip-text {
+  visibility: hidden;
+  width: 250px;
+  background-color: #6c757d;
+  color: white;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  cursor: default;
+
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  right: 0%;
+}
+.tooltip-bl-sticky:hover .tooltip-text {
+  visibility: visible;
+}
+
 .crafting-activities {
   max-width: 46.5rem;
 }
@@ -993,5 +1078,14 @@ img {
   text-decoration: none;
   cursor: pointer;
 }
+.hidden {
+  visibility: hidden
+}
 
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 </style>

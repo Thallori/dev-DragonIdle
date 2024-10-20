@@ -83,9 +83,9 @@ export const useCookingStore = defineStore('cookingStore', {
         itemID: 'meal1',
         neededItem1: 'plant1',
         levelRequired: 1,
-        xpGain: 3,
-        cookTime: 2.00,
-        baseCookTime: 2.00,
+        xpGain: 4,
+        cookTime: 3.00,
+        baseCookTime: 3.00,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
@@ -98,9 +98,9 @@ export const useCookingStore = defineStore('cookingStore', {
         itemID: 'meal2',
         neededItem1: 'plant2',
         levelRequired: 2,
-        xpGain: 5,
-        cookTime: 3.25,
-        baseCookTime: 3.25,
+        xpGain: 8,
+        cookTime: 4.75,
+        baseCookTime: 4.75,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
@@ -114,9 +114,9 @@ export const useCookingStore = defineStore('cookingStore', {
         neededItem1: 'plant2',
         neededItem2: 'plant3',
         levelRequired: 3,
-        xpGain: 9,
-        cookTime: 4.50,
-        baseCookTime: 4.50,
+        xpGain: 15,
+        cookTime: 6.50,
+        baseCookTime: 6.50,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
@@ -130,9 +130,9 @@ export const useCookingStore = defineStore('cookingStore', {
         neededMeatItem1: 'meatChop',
         neededItem1: 'plant3',
         levelRequired: 4,
-        xpGain: 12,
-        cookTime: 5.75,
-        baseCookTime: 5.75,
+        xpGain: 20,
+        cookTime: 8.25,
+        baseCookTime: 8.25,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
@@ -143,12 +143,12 @@ export const useCookingStore = defineStore('cookingStore', {
         cat: 'meal',
         name: 'Flatcake',
         itemID: 'meal5',
-        neededItem1: 'plant3',
+        neededItem1: 'plant2',
         neededItem2: 'plant5',
         levelRequired: 5,
-        xpGain: 17,
-        cookTime: 7.00,
-        baseCookTime: 7.00,
+        xpGain: 25,
+        cookTime: 10.00,
+        baseCookTime: 10.00,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
@@ -162,9 +162,9 @@ export const useCookingStore = defineStore('cookingStore', {
         neededMeatItem1: 'meatGame',
         neededItem1: 'plant6',
         levelRequired: 6,
-        xpGain: 22,
-        cookTime: 8.25,
-        baseCookTime: 8.25,
+        xpGain: 30,
+        cookTime: 11.75,
+        baseCookTime: 11.75,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
@@ -178,9 +178,9 @@ export const useCookingStore = defineStore('cookingStore', {
         neededMeatItem1: 'meatFlank',
         neededItem1: 'plant2',
         levelRequired: 7,
-        xpGain: 25,
-        cookTime: 9.50,
-        baseCookTime: 9.50,
+        xpGain: 36,
+        cookTime: 13.50,
+        baseCookTime: 13.50,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
@@ -195,9 +195,26 @@ export const useCookingStore = defineStore('cookingStore', {
         neededItem1: 'plant2',
         neededItem2: 'plant8',
         levelRequired: 8,
-        xpGain: 32,
-        cookTime: 10.75,
-        baseCookTime: 10.75,
+        xpGain: 42,
+        cookTime: 15.25,
+        baseCookTime: 15.25,
+        mxp: 0,
+        mLevel: 0,
+        mxpPrev: 0,
+        mxpNext: 10,
+      },
+      {
+        id: 'meal9',
+        cat: 'meal',
+        name: 'Maple Jerk',
+        itemID: 'meal9',
+        neededMeatItem1: 'meatFlank',
+        neededItem1: 'plant6',
+        neededItem2: 'rune7',
+        levelRequired: 9,
+        xpGain: 45,
+        cookTime: 17.0,
+        baseCookTime: 17.0,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
@@ -235,20 +252,20 @@ export const useCookingStore = defineStore('cookingStore', {
 
       let tempActivities = this.activities.filter(temp => temp.cat === 'meat')
       for (let i in tempActivities) {
-        tempActivities[i].cookTime = JSON.parse(localStorage.getItem('cooking-meat-cookTime' + i))
-        tempActivities[i].mxp = JSON.parse(localStorage.getItem('cooking-meat-mxp' + i))
-        tempActivities[i].mLevel = JSON.parse(localStorage.getItem('cooking-meat-mLevel' + i))
-        tempActivities[i].mxpPrev = JSON.parse(localStorage.getItem('cooking-meat-mxpPrev' + i))
-        tempActivities[i].mxpNext = JSON.parse(localStorage.getItem('cooking-meat-mxpNext' + i))
+        tempActivities[i].cookTime = JSON.parse(localStorage.getItem('cooking-meat-cookTime' + i)) ?? this.activities[i].baseCookTime
+        tempActivities[i].mxp = JSON.parse(localStorage.getItem('cooking-meat-mxp' + i)) ?? 0
+        tempActivities[i].mLevel = JSON.parse(localStorage.getItem('cooking-meat-mLevel' + i)) ?? 0
+        tempActivities[i].mxpPrev = JSON.parse(localStorage.getItem('cooking-meat-mxpPrev' + i)) ?? 0
+        tempActivities[i].mxpNext = JSON.parse(localStorage.getItem('cooking-meat-mxpNext' + i)) ?? 10
       }
 
       tempActivities = this.activities.filter(temp => temp.cat === 'meal')
       for (let i in tempActivities) {
-        tempActivities[i].cookTime = JSON.parse(localStorage.getItem('cooking-meal-cookTime' + i))
-        tempActivities[i].mxp = JSON.parse(localStorage.getItem('cooking-meal-mxp' + i))
-        tempActivities[i].mLevel = JSON.parse(localStorage.getItem('cooking-meal-mLevel' + i))
-        tempActivities[i].mxpPrev = JSON.parse(localStorage.getItem('cooking-meal-mxpPrev' + i))
-        tempActivities[i].mxpNext = JSON.parse(localStorage.getItem('cooking-meal-mxpNext' + i))
+        tempActivities[i].cookTime = JSON.parse(localStorage.getItem('cooking-meal-cookTime' + i)) ?? this.activities[i].baseCookTime
+        tempActivities[i].mxp = JSON.parse(localStorage.getItem('cooking-meal-mxp' + i)) ?? 0
+        tempActivities[i].mLevel = JSON.parse(localStorage.getItem('cooking-meal-mLevel' + i)) ?? 0
+        tempActivities[i].mxpPrev = JSON.parse(localStorage.getItem('cooking-meal-mxpPrev' + i)) ?? 0
+        tempActivities[i].mxpNext = JSON.parse(localStorage.getItem('cooking-meal-mxpNext' + i)) ?? 10
       }
     },
     
@@ -259,6 +276,120 @@ export const useCookingStore = defineStore('cookingStore', {
       skillStore().activePercent = this.activePercent
       this.updateEfficency()
       this.tryRepeatActionCook()
+    },
+
+    warp(ttime) {
+      //if less than 2 seconds, do not attempt
+      if (ttime < 2000) {
+        return
+      }
+      if (this.activeObject.id == undefined) {
+        return
+      }
+      let timeRemaining = ttime / 1000
+      let timeNextLevel = -1
+      let timeNextMLevel = -1
+      let timeToUse = -1
+      let avgInterval = 2
+      
+      if (this.activeObject.cat == 'meat') {
+        this.activeObject.cookTime = this.activeObject.baseCookTime * (1 - (this.activeObject.mLevel * 0.02))
+      }
+
+      avgInterval = (Math.ceil(this.activeObject.cookTime * (1 - itemStore().equippedTools.cookingTool.toolStats.cookSpeed) * 20) / 20)
+
+      //if you can't cook in time, do not attempt
+      if (avgInterval > timeRemaining) {
+        return
+      }
+
+      //if not max level, do the calc
+      if ((skillStore().skills[this.skillID].xpNext - skillStore().skills[this.skillID].xp) > 1) {
+        //next level = action time * (xp to next level / xp per action)
+        timeNextLevel = avgInterval * Math.ceil((skillStore().skills[this.skillID].xpNext - skillStore().skills[this.skillID].xp) / this.activeObject.xpGain)
+      }
+
+      //if not max mxp level, do the calc
+      if ((this.activeObject.mxpNext - this.activeObject.mxp) > 1) {
+        timeNextMLevel = avgInterval * (this.activeObject.mxpNext - this.activeObject.mxp)
+      }
+
+      //timeToUse = smallest time, or -1 if there is no smallest
+      if (timeNextLevel != -1 && timeNextMLevel != -1) {
+        timeToUse = Math.min(timeNextLevel, timeNextMLevel)
+      } else if (timeNextLevel != -1) {
+        timeToUse = timeNextLevel
+      } else if (timeNextMLevel != -1) {
+        timeToUse = timeNextMLevel
+      }
+
+      if (timeToUse < 1) {
+        this.batchGain(timeRemaining, avgInterval)
+        return
+      }
+
+      //if it will take longer to the next calc point than we have remaining time, use all of it
+      if (timeToUse > timeRemaining) {
+        this.batchGain(timeRemaining, avgInterval)
+        return
+      }
+
+      this.batchGain(timeToUse, avgInterval)
+      timeRemaining -= timeToUse
+      this.warp(timeRemaining * 1000)
+    },
+
+    batchGain(ttime, tavg) {
+      let meat1 = 90000
+      let item1 = 90000
+      let item2 = 90000
+
+      //first meat item
+      if (this.activeObject.neededMeatItem1) {
+        meat1 = itemStore().getItemCount(this.activeObject.neededMeatItem1, 'consumableItems')
+      }
+      //first resource item
+      if (this.activeObject.neededItem1) {
+        item1 = itemStore().getItemCount(this.activeObject.neededItem1, 'resourceItems')
+      }
+      //second resource item
+      if (this.activeObject.neededItem2) {
+        item2 = itemStore().getItemCount(this.activeObject.neededItem2, 'resourceItems')
+      }
+
+      if (meat1 < 1 || item1 < 1 || item2 < 1) {
+        this.cancelAction()
+        return
+      }
+
+      let maxActions = Math.min(Math.min(meat1, item1, item2), Math.floor(ttime / tavg))
+      let actions = Math.floor(maxActions * (1 + (this.efficency / 100)))
+
+      if (itemStore().equippedTools.cookingTool.dcat == 'device') {
+        mechanicsStore().addPendingXP(this.activeObject.xpGain * actions)
+      } else {
+        skillStore().addXP(this.skillID, (this.activeObject.xpGain * actions))
+      }
+
+      this.addMXP(actions)
+      itemStore().changeItemCount(this.activeObject.itemID, actions * (itemStore().equippedTools.cookingTool.toolStats.extraItems + 1), 'consumableItems')
+
+      //first meat item
+      if (this.activeObject.neededMeatItem1) {
+        itemStore().changeItemCount(this.activeObject.neededMeatItem1, (-1 * maxActions), 'consumableItems')
+      }
+      //first resource item
+      if (this.activeObject.neededItem1) {
+        itemStore().changeItemCount(this.activeObject.neededItem1, (-1 * maxActions), 'resourceItems')
+      }
+      //second resource item
+      if (this.activeObject.neededItem2) {
+        itemStore().changeItemCount(this.activeObject.neededItem2, (-1 * maxActions), 'resourceItems')
+      }
+      skillStore().totalOffline -= (maxActions * tavg) * 1000
+
+      this.updateEfficency()
+      console.log('warp actions performed: ' + maxActions)
     },
 
     setActiveAction(newActiveActivity) {
@@ -291,18 +422,13 @@ export const useCookingStore = defineStore('cookingStore', {
     },
 
     updateCookProgress() {
-      if (this.activeProgress >= (this.activeObject.cookTime * 1000)) {
+      if (this.activeProgress >= (this.activeObject.cookTime * (1 - itemStore().equippedTools.cookingTool.toolStats.cookSpeed) * 1000)) {
         let wasEfficent = this.efficencyReturn()
 
         skillStore().addXP(this.skillID, (this.activeObject.xpGain * wasEfficent))
         this.addMXP(1 * wasEfficent)
-        itemStore().changeItemCount(this.activeObject.itemID, (1 * wasEfficent), 'consumableItems')
-
+        itemStore().changeItemCount(this.activeObject.itemID, (1 * wasEfficent) + itemStore().equippedTools.cookingTool.toolStats.extraItems, 'consumableItems')
         this.updateEfficency()
-        //update meat cook time
-        if (this.activeObject.cat == 'meat') {
-          this.activeObject.cookTime = this.activeObject.baseCookTime * (1 - (this.activeObject.mLevel * 0.02))
-        }
 
         //first meat item
         if (this.activeObject.neededMeatItem1) {
@@ -324,10 +450,14 @@ export const useCookingStore = defineStore('cookingStore', {
       }
 
       this.activeProgress += this.progressInterval
-      this.activePercent.a = this.activeProgress / (this.activeObject.cookTime * 10)
+      this.activePercent.a = this.activeProgress / (this.activeObject.cookTime * (1 - itemStore().equippedTools.cookingTool.toolStats.cookSpeed) * 10)
       this.tryRepeatActionCook()
     },
     tryRepeatActionCook() {
+      //update meat cook time
+      if (this.activeObject.cat == 'meat') {
+        this.activeObject.cookTime = this.activeObject.baseCookTime * (1 - (this.activeObject.mLevel * 0.02))
+      }
       //first meat item
       if (this.activeObject.neededMeatItem1) {
         if (itemStore().hasItemCount(this.activeObject.neededMeatItem1, 1, 'consumableItems') == false) {
@@ -356,9 +486,10 @@ export const useCookingStore = defineStore('cookingStore', {
 
     updateEfficency() {
       this.efficency = 2 * skillStore().skills[this.skillID].level
-      if (skillStore().totalOffline >= 1000) {
-        this.efficency += 50
-      }
+      this.efficency += itemStore().equippedStats.allEfficency
+      // if (skillStore().totalOffline >= 1000) {
+      //   this.efficency += 50
+      // }
     },
     efficencyReturn() {
       let a = 1 + Math.floor(this.efficency / 100)
@@ -366,7 +497,7 @@ export const useCookingStore = defineStore('cookingStore', {
         a += 1
       }
       if (a == 2) {
-        console.log('efficent!')
+        // console.log('efficent!')
       }
       if (a == 3) {
         console.log('double efficent!')
@@ -377,28 +508,6 @@ export const useCookingStore = defineStore('cookingStore', {
       return a
     },
 
-    addMXPCat(mxpAmount, mCatIndex) {
-      let mxp = this.equipmentMastery[mCatIndex].mxp
-      let mLevel = this.equipmentMastery[mCatIndex].mLevel
-      let maxMLevel = 20
-
-      mxp += mxpAmount
-      mLevel = levelFromMXP(mxp)
-      if (mLevel >= maxMLevel) {
-        mLevel = maxMLevel
-        mxp = mxpFromLevel(maxMLevel)
-        this.equipmentMastery[mCatIndex].mxp = mxp
-        this.equipmentMastery[mCatIndex].mLevel = mLevel
-        return
-      }
-
-      this.equipmentMastery[mCatIndex].mxp = mxp
-
-      // I should be able to just compute all of these, but I don't know how to get the data out.
-      this.equipmentMastery[mCatIndex].mLevel = mLevel
-      this.equipmentMastery[mCatIndex].mxpPrev = mxpFromLevel(mLevel)
-      this.equipmentMastery[mCatIndex].mxpNext = mxpFromLevel(mLevel + 1)
-    },
     addMXP(mxpAmount) {
       let maxMLevel = 20
       if (this.activeObject.mLevel >= maxMLevel) {
@@ -409,8 +518,9 @@ export const useCookingStore = defineStore('cookingStore', {
       this.activeObject.mLevel = levelFromMXP(this.activeObject.mxp)
 
       if (this.activeObject.mLevel >= maxMLevel) {
-        this.activeObject.mLevel = maxMLevel
-        this.activeObject.mxp = mxpFromLevel(maxMLevel)
+        this.activeObject.mLevel = 20
+        this.activeObject.mxp = 28700
+        this.activeObject.mxpNext = 28700
         return
       }
 

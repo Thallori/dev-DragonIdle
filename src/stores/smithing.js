@@ -1,12 +1,11 @@
 import { defineStore } from 'pinia'
 import { useSkillStore as skillStore } from '@/stores/skills';
+import { useMechanicsStore as mechanicsStore } from '@/stores/mechanics'
 import { useItemStore as itemStore } from '@/stores/inventory';
 
 export const useSmithingStore = defineStore('smithingStore', {
   state: () => ({
     heatFromUpgrades: 2,
-    workFromTools: 1,
-    workInterval: 2000, // 2 seconds per update
     efficency: 2,
 
     activeObject: {},
@@ -194,6 +193,22 @@ export const useSmithingStore = defineStore('smithingStore', {
         levelRequired: 7,
         xpGain: 10,
         heatNeeded: 11,
+        mxp: 0,
+        mLevel: 0,
+        mxpPrev: 0,
+        mxpNext: 10,
+      },
+      {
+        id: 'mythrilbar',
+        cat: 'bar',
+        name: 'Mythril Ingot',
+        itemID: 'bar6',
+        itemAmount: 1,
+        neededItem1: ['ore9', 1],
+        neededItem2: ['rune5', 1],
+        levelRequired: 9,
+        xpGain: 14,
+        heatNeeded: 12,
         mxp: 0,
         mLevel: 0,
         mxpPrev: 0,
@@ -711,6 +726,152 @@ export const useSmithingStore = defineStore('smithingStore', {
         heatNeeded: 28,
         mCat: 11,
       },
+
+      //mythril
+      {
+        id: 'mythrilHatchet',
+        cat: 'mythril',
+        name: 'Mythril Hatchet',
+        itemID: 'mythrilHatchet',
+        itemAmount: 1,
+        neededItem1: ['bar6', 2],
+        levelRequired: 9,
+        xpGain: 200,
+        heatNeeded: 27,
+        mCat: 0,
+      },
+      {
+        id: 'mythrilClaws',
+        cat: 'mythril',
+        name: 'Mythril Claws',
+        itemID: 'mythrilClaws',
+        itemAmount: 1,
+        neededItem1: ['bar6', 2],
+        levelRequired: 9,
+        xpGain: 200,
+        heatNeeded: 27,
+        mCat: 1,
+      },
+      {
+        id: 'mythrilPickaxe',
+        cat: 'mythril',
+        name: 'Mythril Pickaxe',
+        itemID: 'mythrilPickaxe',
+        itemAmount: 1,
+        neededItem1: ['bar6', 2],
+        levelRequired: 9,
+        xpGain: 200,
+        heatNeeded: 27,
+        mCat: 2,
+      },
+      {
+        id: 'mythrilDagger',
+        cat: 'mythril',
+        name: 'Mythril Dagger',
+        itemID: 'mythrilDagger',
+        itemAmount: 1,
+        neededItem1: ['bar6', 1],
+        levelRequired: 9,
+        xpGain: 100,
+        heatNeeded: 14,
+        mCat: 3,
+      },
+      {
+        id: 'mythrilBroadsword',
+        cat: 'mythril',
+        name: 'Mythril Broadsword',
+        itemID: 'mythrilBroadsword',
+        itemAmount: 1,
+        neededItem1: ['bar6', 2],
+        levelRequired: 10,
+        xpGain: 200,
+        heatNeeded: 27,
+        mCat: 4,
+      },
+      {
+        id: 'mythrilMace',
+        cat: 'mythril',
+        name: 'Mythril Mace',
+        itemID: 'mythrilMace',
+        itemAmount: 1,
+        neededItem1: ['bar6', 2],
+        levelRequired: 10,
+        xpGain: 200,
+        heatNeeded: 27,
+        mCat: 5,
+      },
+      {
+        id: 'mythrilHeavy',
+        cat: 'mythril',
+        name: 'Mythril Greatsword',
+        itemID: 'mythrilHeavy',
+        itemAmount: 1,
+        neededItem1: ['bar6', 3],
+        levelRequired: 10,
+        xpGain: 300,
+        heatNeeded: 40,
+        mCat: 6,
+      },
+      {
+        id: 'mythrilGreaves',
+        cat: 'mythril',
+        name: 'Mythril Greaves',
+        itemID: 'mythrilGreaves',
+        itemAmount: 1,
+        neededItem1: ['bar6', 2],
+        levelRequired: 9,
+        xpGain: 200,
+        heatNeeded: 27,
+        mCat: 7,
+      },
+      {
+        id: 'mythrilHelmet',
+        cat: 'mythril',
+        name: 'Mythril Helmet',
+        itemID: 'mythrilHelmet',
+        itemAmount: 1,
+        neededItem1: ['bar6', 2],
+        levelRequired: 9,
+        xpGain: 200,
+        heatNeeded: 27,
+        mCat: 8,
+      },
+      {
+        id: 'mythrilChainmail',
+        cat: 'mythril',
+        name: 'Mythril Chainmail',
+        itemID: 'mythrilChainmail',
+        itemAmount: 1,
+        neededItem1: ['bar6', 4],
+        levelRequired: 9,
+        xpGain: 400,
+        heatNeeded: 53,
+        mCat: 9,
+      },
+      {
+        id: 'mythrilPlate',
+        cat: 'mythril',
+        name: 'Mythril Plate',
+        itemID: 'mythrilPlate',
+        itemAmount: 1,
+        neededItem1: ['bar6', 5],
+        levelRequired: 10,
+        xpGain: 500,
+        heatNeeded: 53,
+        mCat: 10,
+      },
+      {
+        id: 'mythrilShield',
+        cat: 'mythril',
+        name: 'Mythril Wingshields',
+        itemID: 'mythrilShield',
+        itemAmount: 1,
+        neededItem1: ['bar6', 3],
+        levelRequired: 10,
+        xpGain: 300,
+        heatNeeded: 40,
+        mCat: 11,
+      },
     ]
   }),
   getters: {
@@ -739,18 +900,18 @@ export const useSmithingStore = defineStore('smithingStore', {
       this.efficency = JSON.parse(localStorage.getItem('smithing-efficency'))
 
       for (let i in this.equipmentMastery) {
-        this.equipmentMastery[i].mxp = JSON.parse(localStorage.getItem('smithing-equipmentMastery-mxp' + i))
-        this.equipmentMastery[i].mLevel = JSON.parse(localStorage.getItem('smithing-equipmentMastery-mLevel' + i))
-        this.equipmentMastery[i].mxpPrev = JSON.parse(localStorage.getItem('smithing-equipmentMastery-mxpPrev' + i))
-        this.equipmentMastery[i].mxpNext = JSON.parse(localStorage.getItem('smithing-equipmentMastery-mxpNext' + i))
+        this.equipmentMastery[i].mxp = JSON.parse(localStorage.getItem('smithing-equipmentMastery-mxp' + i)) ?? 0
+        this.equipmentMastery[i].mLevel = JSON.parse(localStorage.getItem('smithing-equipmentMastery-mLevel' + i)) ?? 0
+        this.equipmentMastery[i].mxpPrev = JSON.parse(localStorage.getItem('smithing-equipmentMastery-mxpPrev' + i)) ?? 0
+        this.equipmentMastery[i].mxpNext = JSON.parse(localStorage.getItem('smithing-equipmentMastery-mxpNext' + i)) ?? 10
       }
 
       let tempActivities = this.activities.filter(temp => temp.cat === 'bar')
       for (let i in tempActivities) {
-        tempActivities[i].mxp = JSON.parse(localStorage.getItem('smithing-bar-mxp' + i))
-        tempActivities[i].mLevel = JSON.parse(localStorage.getItem('smithing-bar-mLevel' + i))
-        tempActivities[i].mxpPrev = JSON.parse(localStorage.getItem('smithing-bar-mxpPrev' + i))
-        tempActivities[i].mxpNext = JSON.parse(localStorage.getItem('smithing-bar-mxpNext' + i))
+        tempActivities[i].mxp = JSON.parse(localStorage.getItem('smithing-bar-mxp' + i)) ?? 0
+        tempActivities[i].mLevel = JSON.parse(localStorage.getItem('smithing-bar-mLevel' + i)) ?? 0
+        tempActivities[i].mxpPrev = JSON.parse(localStorage.getItem('smithing-bar-mxpPrev' + i)) ?? 0
+        tempActivities[i].mxpNext = JSON.parse(localStorage.getItem('smithing-bar-mxpNext' + i)) ?? 10
       }
     },
 
@@ -761,6 +922,121 @@ export const useSmithingStore = defineStore('smithingStore', {
       skillStore().activePercent = this.activePercent
       this.updateEfficency()
       this.tryRepeatActionHeat()
+    },
+
+    warp(ttime) {
+      //if less than 2 seconds, do not attempt
+      if (ttime < 2000) {
+        return
+      }
+      if (this.activeObject.id == undefined) {
+        return
+      }
+      let timeRemaining = ttime / 1000
+      let timeNextLevel = -1
+      let timeNextMLevel = -1
+      let timeToUse = -1
+      let avgInterval = 2
+
+      if (this.activeObject.cat == 'bar') {
+        avgInterval = Math.ceil((this.activeObject.heatNeeded / (this.heatFromUpgrades + (0.1 * this.activeObject.mLevel))) * 20) / 20
+      } else {
+        avgInterval = Math.ceil(((this.activeObject.heatNeeded / itemStore().equippedTools.smithingTool.toolStats.workPerAction) * (itemStore().equippedTools.smithingTool.toolStats.workSpeed)) + (this.activeObject.heatNeeded / this.heatFromUpgrades))
+      }
+
+      //if you can't smith in time, do not attempt
+      if (avgInterval > timeRemaining) {
+        return
+      }
+
+      //if not max level, do the calc
+      if ((skillStore().skills[this.skillID].xpNext - skillStore().skills[this.skillID].xp) > 1) {
+        //next level = action time * (xp to next level / xp per action)
+        timeNextLevel = avgInterval * Math.ceil((skillStore().skills[this.skillID].xpNext - skillStore().skills[this.skillID].xp) / this.activeObject.xpGain)
+      }
+
+      //if not max mxp level, do the calc
+      if ((this.activeObject.mxpNext - this.activeObject.mxp) > 1) {
+        timeNextMLevel = avgInterval * (this.activeObject.mxpNext - this.activeObject.mxp)
+      }
+
+      //timeToUse = smallest time, or -1 if there is no smallest
+      if (timeNextLevel != -1 && timeNextMLevel != -1) {
+        timeToUse = Math.min(timeNextLevel, timeNextMLevel)
+      } else if (timeNextLevel != -1) {
+        timeToUse = timeNextLevel
+      } else if (timeNextMLevel != -1) {
+        timeToUse = timeNextMLevel
+      }
+
+      if (timeToUse < 1) {
+        this.batchGain(timeRemaining, avgInterval)
+        return
+      }
+
+      //if it will take longer to the next calc point than we have remaining time, use all of it
+      if (timeToUse > timeRemaining) {
+        this.batchGain(timeRemaining, avgInterval)
+        return
+      }
+
+      this.batchGain(timeToUse, avgInterval)
+      timeRemaining -= timeToUse
+      this.warp(timeRemaining * 1000)
+    },
+
+    batchGain(ttime, tavg) {
+      let item1 = itemStore().getItemCount(this.activeObject.neededItem1[0], 'resourceItems')
+      let item2 = 90000
+      if (this.activeObject.neededItem2) {
+        item2 = itemStore().getItemCount(this.activeObject.neededItem2[0], 'resourceItems')
+      }
+
+      item1 = Math.floor(item1 / this.activeObject.neededItem1[1])
+      if (this.activeObject.neededItem2) {
+        item2 = Math.floor(item2 / this.activeObject.neededItem2[1])
+      }
+
+      if (item1 < 1 || item2 < 1) {
+        this.cancelAction()
+        return
+      }
+
+      let maxActions = Math.min(Math.min(item1, item2), Math.floor(ttime / tavg))
+      let actions = Math.floor(maxActions * (1 + (this.efficency / 100)))
+
+      //if bar
+      if (this.activeObject.cat == 'bar') {
+        if (itemStore().equippedTools.smithingTool.dcat == 'device') {
+          mechanicsStore().addPendingXP(this.activeObject.xpGain * actions)
+        } else {
+          skillStore().addXP(this.skillID, (this.activeObject.xpGain * actions))
+        }
+
+        this.addMXP(actions)
+        itemStore().changeItemCount(this.activeObject.itemID, (this.activeObject.itemAmount * actions), 'resourceItems')
+      //if not-bar
+      } else {
+        if (itemStore().equippedTools.smithingTool.dcat == 'device') {
+          mechanicsStore().addPendingXP(this.activeObject.xpGain * actions)
+        } else {
+          skillStore().addXP(this.skillID, (this.activeObject.xpGain * actions))
+        }
+
+        this.addMXPCat(actions, this.activeObject.mCat)
+        itemStore().changeItemCount(this.activeObject.itemID, (this.activeObject.itemAmount * actions), 'equipmentItems')
+      }
+
+      //remove item(s)
+      itemStore().changeItemCount(this.activeObject.neededItem1[0], (0 - (this.activeObject.neededItem1[1] * maxActions)), 'resourceItems')
+      //second neededItem
+      if (this.activeObject.neededItem2) {
+        itemStore().changeItemCount(this.activeObject.neededItem2[0], (0 - (this.activeObject.neededItem2[1] * maxActions)), 'resourceItems')
+      }
+      skillStore().totalOffline -= (maxActions * tavg) * 1000
+
+      this.updateEfficency()
+      console.log('warp actions performed: ' + maxActions)
     },
 
     setActiveAction(newActiveActivity) {
@@ -798,7 +1074,12 @@ export const useSmithingStore = defineStore('smithingStore', {
         if (this.activeObject.cat == 'bar') {
           let wasEfficent = this.efficencyReturn()
 
-          skillStore().addXP(this.skillID, (this.activeObject.xpGain * wasEfficent))
+          if (itemStore().equippedTools.smithingTool.dcat == 'device') {
+            mechanicsStore().addPendingXP(this.activeObject.xpGain * wasEfficent)
+          } else {
+            skillStore().addXP(this.skillID, (this.activeObject.xpGain * wasEfficent))
+          }
+
           this.addMXP(1 * wasEfficent)
           itemStore().changeItemCount(this.activeObject.itemID, (this.activeObject.itemAmount * wasEfficent), 'resourceItems')
           
@@ -856,7 +1137,12 @@ export const useSmithingStore = defineStore('smithingStore', {
       if (this.activeProgress <= 1) {
         let wasEfficent = this.efficencyReturn()
 
-        skillStore().addXP(this.skillID, (this.activeObject.xpGain * wasEfficent))
+        if (itemStore().equippedTools.smithingTool.dcat == 'device') {
+          mechanicsStore().addPendingXP(this.activeObject.xpGain * wasEfficent)
+        } else {
+          skillStore().addXP(this.skillID, (this.activeObject.xpGain * wasEfficent))
+        }
+
         this.addMXPCat((1 * wasEfficent), this.activeObject.mCat)
         itemStore().changeItemCount(this.activeObject.itemID, (this.activeObject.itemAmount * wasEfficent), 'equipmentItems')
         
@@ -870,20 +1156,25 @@ export const useSmithingStore = defineStore('smithingStore', {
         return
       }
 
-      this.activeProgress -= this.workFromTools
+      this.activeProgress -= itemStore().equippedTools.smithingTool.toolStats.workPerAction
+      this.activeProgress = Math.max(0, this.activeProgress) //progress cannot be less than 0
       this.activePercent.a = 100 * this.activeProgress / this.activeObject.heatNeeded
       this.tryRepeatActionWork()
       return
     },
     tryRepeatActionWork() {
-      this.currentTimeout = setTimeout(this.updateWorkProgress, this.workInterval)
+      this.currentTimeout = setTimeout(this.updateWorkProgress, itemStore().equippedTools.smithingTool.toolStats.workSpeed * 1000)
     },
 
     updateEfficency() {
       this.efficency = 2 * skillStore().skills[this.skillID].level
-      if (skillStore().totalOffline >= 1000) {
-        this.efficency += 50
+      this.efficency += itemStore().equippedStats.allEfficency
+      if (itemStore().equippedTools.smithingTool.dcat == 'device') {
+        this.efficency += mechanicsStore().activities[3].mLevel * 5
       }
+      // if (skillStore().totalOffline >= 1000) {
+      //   this.efficency += 50
+      // }
     },
     efficencyReturn() {
       let a = 1 + Math.floor(this.efficency / 100)
@@ -891,7 +1182,7 @@ export const useSmithingStore = defineStore('smithingStore', {
         a += 1
       }
       if (a == 2) {
-        console.log('efficent!')
+        // console.log('efficent!')
       }
       if (a == 3) {
         console.log('double efficent!')
@@ -906,14 +1197,17 @@ export const useSmithingStore = defineStore('smithingStore', {
       let mxp = this.equipmentMastery[mCatIndex].mxp
       let mLevel = this.equipmentMastery[mCatIndex].mLevel
       let maxMLevel = 20
+      if (this.activeObject.mLevel >= maxMLevel) {
+        return
+      }
 
       mxp += mxpAmount
       mLevel = levelFromMXP(mxp)
+
       if (mLevel >= maxMLevel) {
-        mLevel = maxMLevel
-        mxp = mxpFromLevel(maxMLevel)
-        this.equipmentMastery[mCatIndex].mxp = mxp
-        this.equipmentMastery[mCatIndex].mLevel = mLevel
+        this.equipmentMastery[mCatIndex].mxp = 28700
+        this.equipmentMastery[mCatIndex].mxpNext = 28700
+        this.equipmentMastery[mCatIndex].mLevel = 20
         return
       }
 
@@ -934,8 +1228,9 @@ export const useSmithingStore = defineStore('smithingStore', {
       this.activeObject.mLevel = levelFromMXP(this.activeObject.mxp)
 
       if (this.activeObject.mLevel >= maxMLevel) {
-        this.activeObject.mLevel = maxMLevel
-        this.activeObject.mxp = mxpFromLevel(maxMLevel)
+        this.activeObject.mLevel = 20
+        this.activeObject.mxp = 28700
+        this.activeObject.mxpNext = 28700
         return
       }
 

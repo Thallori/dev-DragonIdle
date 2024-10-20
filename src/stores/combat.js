@@ -4,6 +4,7 @@ import { useDiaStore as diaStore } from '@/stores/dialog'
 import { useItemStore as itemStore } from '@/stores/inventory'
 import { useSkillStore as skillStore } from '@/stores/skills'
 import { useCookingStore as cookingStore } from '@/stores/cooking'
+import { useMechanicsStore as mechanicsStore } from '@/stores/mechanics'
 
 export const useCombatStore = defineStore('combatStore', {
   state: () => ({
@@ -73,6 +74,7 @@ export const useCombatStore = defineStore('combatStore', {
         location: -1, //any
         image: 'assets/icons/dummy.png',
         totalCount: 0,
+        murder: false,
         styles: ['melee'], //melee, ranged, magic
         stats: {
           health: 1,
@@ -104,6 +106,7 @@ export const useCombatStore = defineStore('combatStore', {
         location: 0, //glade
         image: 'assets/icons/fox.png',
         totalCount: 0,
+        murder: false,
         styles: ['melee'],
         stats: {
           health: 3,
@@ -150,6 +153,7 @@ export const useCombatStore = defineStore('combatStore', {
         location: 0, //glade
         image: 'assets/icons/wolf.png',
         totalCount: 0,
+        murder: false,
         styles: ['melee'],
         stats: {
           health: 6,
@@ -198,6 +202,7 @@ export const useCombatStore = defineStore('combatStore', {
         location: 0, //glade
         image: 'assets/icons/greenslug.png',
         totalCount: 0,
+        murder: true,
         styles: ['ranged'],
         stats: {
           health: 5,
@@ -247,6 +252,7 @@ export const useCombatStore = defineStore('combatStore', {
         location: 0, //glade
         image: 'assets/icons/koboldexile.png',
         totalCount: 0,
+        murder: true,
         styles: ['melee'],
         stats: {
           health: 8,
@@ -304,6 +310,7 @@ export const useCombatStore = defineStore('combatStore', {
         location: 1, //canton
         image: 'assets/icons/koboldslinger.png',
         totalCount: 0,
+        murder: true,
         styles: ['ranged'],
         stats: {
           health: 12,
@@ -353,6 +360,7 @@ export const useCombatStore = defineStore('combatStore', {
         location: 1, //canton
         image: 'assets/icons/koboldarcher.png',
         totalCount: 0,
+        murder: true,
         styles: ['ranged'],
         stats: {
           health: 14,
@@ -410,6 +418,7 @@ export const useCombatStore = defineStore('combatStore', {
         location: 1, //canton
         image: 'assets/newness/huggyboi.png',
         totalCount: 0,
+        murder: true,
         styles: ['melee'],
         stats: {
           health: 11,
@@ -464,6 +473,7 @@ export const useCombatStore = defineStore('combatStore', {
         location: 2, //vale
         image: 'assets/icons/wisp.png',
         totalCount: 0,
+        murder: true,
         styles: ['magic'],
         stats: {
           health: 15,
@@ -507,6 +517,7 @@ export const useCombatStore = defineStore('combatStore', {
         location: 2, //vale
         image: 'assets/icons/turretrust.png',
         totalCount: 0,
+        murder: false,
         styles: ['magic'],
         stats: {
           health: 17,
@@ -554,6 +565,7 @@ export const useCombatStore = defineStore('combatStore', {
         location: 2, //vale
         image: 'assets/icons/plantpitch.png',
         totalCount: 0,
+        murder: false,
         styles: ['ranged'],
         stats: {
           health: 18,
@@ -567,10 +579,10 @@ export const useCombatStore = defineStore('combatStore', {
           meleePen: 0,
           rangedPen: 0,
           magicPen: 0,
-          resist: 0.05,
+          resist: 0,
 
           slayer: [1, 0.15], //poison
-          
+
           meleeDodge: 16,
           rangedDodge: 30,
           magicDodge: 16,
@@ -596,6 +608,154 @@ export const useCombatStore = defineStore('combatStore', {
           },
         ],
       },
+      {
+        id: 'wilyBoar',
+        name: 'Wily Boar',
+        flavor: "Some (huge) pig.",
+        location: 3, //field
+        image: 'assets/icons/testIcon16.png',
+        totalCount: 0,
+        murder: false,
+        styles: ['melee'],
+        stats: {
+          health: 20,
+          speed: 2.8,
+
+          meleeDamage: 4,
+          meleeAccuracy: 10,
+
+          physicalArmor: 0,
+          energyArmor: 0,
+          meleePen: 0,
+          rangedPen: 0,
+          magicPen: 0,
+          resist: 0,
+
+          slayer: [-1, 0],
+
+          meleeDodge: 17,
+          rangedDodge: 17,
+          magicDodge: 17,
+        },
+        alwaysDrops: [
+          {
+            itemID: 'bones1',
+          },
+          {
+            itemID: 'meatFlank',
+            itemRange: [1, 3],
+          },
+          {
+            itemID: 'hide2',
+            itemRange: [1, 2],
+          },
+        ],
+        randomDrops: [],
+      },
+      {
+        id: 'ashSlug',
+        name: 'Ash Slug',
+        flavor: "Concrete's secret ingredient.",
+        location: 3, //field
+        image: 'assets/icons/testIcon16.png',
+        totalCount: 0,
+        murder: false,
+        styles: ['ranged'],
+        stats: {
+          health: 25,
+          speed: 3.0,
+
+          rangedDamage: 5,
+          rangedAccuracy: 12,
+
+          physicalArmor: 0,
+          energyArmor: 0,
+          meleePen: 0,
+          rangedPen: 0,
+          magicPen: 0,
+          resist: 0,
+
+          slayer: [0, 0.20], //slow
+
+          meleeDodge: 18,
+          rangedDodge: 18,
+          magicDodge: 18,
+        },
+        alwaysDrops: [
+          {
+            itemID: 'bones1',
+          },
+        ],
+        randomDrops: [
+          {
+            itemID: 'money',
+            itemRange: [1, 3],
+            weight: 21
+          },
+          {
+            itemID: 'copperRingGlass',
+            weight: 2
+          },
+          {
+            itemID: 'pinkAmmy',
+            weight: 1
+          },
+        ],
+      },
+      {
+        id: 'magmaCutter',
+        name: 'Stubble Burner',
+        flavor: "Turns plants into acrid smoke.",
+        location: 3, //field
+        image: 'assets/icons/testIcon16.png',
+        totalCount: 0,
+        murder: true,
+        styles: ['magic'],
+        stats: {
+          health: 22,
+          speed: 2.8,
+
+          magicDamage: 6,
+          magicAccuracy: 14,
+
+          physicalArmor: 0,
+          energyArmor: 0,
+          meleePen: 0,
+          rangedPen: 0,
+          magicPen: 0,
+          resist: 0.10,
+
+          slayer: [3, 0.15], //recoil
+
+          meleeDodge: 30,
+          rangedDodge: 19,
+          magicDodge: 30,
+        },
+        alwaysDrops: [
+          {
+            itemID: 'bones2',
+          },
+        ],
+        randomDrops: [
+          {
+            itemID: 'money',
+            itemRange: [3, 10],
+            weight: 8
+          },
+          {
+            itemID: 'stew',
+            weight: 7
+          },
+          {
+            itemID: 'hotsuitBody',
+            weight: 2
+          },
+          {
+            itemID: 'deviceFlamethrower',
+            weight: 1
+          },
+        ],
+      },
     ],
     dungeons: [
       {
@@ -604,6 +764,7 @@ export const useCombatStore = defineStore('combatStore', {
         location: 0, //glade
         image: 'assets/icons/area1.png',
         totalCount: 0,
+        hasMurder: true,
         alwaysDrops: [
           {
             itemID: 'antler',
@@ -627,6 +788,7 @@ export const useCombatStore = defineStore('combatStore', {
             image: 'assets/icons/deer.png',
             amount: 4,
             totalCount: 0,
+            murder: false,
             styles: ['melee'],
             stats: {
               health: 7,
@@ -675,6 +837,7 @@ export const useCombatStore = defineStore('combatStore', {
             image: 'assets/icons/deerant.png',
             amount: 1,
             totalCount: 0,
+            murder: true,
             styles: ['melee'],
             stats: {
               health: 40,
@@ -724,6 +887,7 @@ export const useCombatStore = defineStore('combatStore', {
         location: 1, //canton
         image: 'assets/icons/area2.png',
         totalCount: 0,
+        hasMurder: true,
         alwaysDrops: [
           {
             itemID: 'bronzeArrow',
@@ -764,6 +928,7 @@ export const useCombatStore = defineStore('combatStore', {
             image: 'assets/icons/koboldarcher2.png',
             amount: 4,
             totalCount: 0,
+            murder: true,
             styles: ['ranged'],
             stats: {
               health: 16,
@@ -813,6 +978,7 @@ export const useCombatStore = defineStore('combatStore', {
             image: 'assets/icons/koboldguard2.png',
             amount: 2,
             totalCount: 0,
+            murder: true,
             styles: ['melee'],
             stats: {
               health: 19,
@@ -858,6 +1024,7 @@ export const useCombatStore = defineStore('combatStore', {
             image: 'assets/icons/koboldduke2.png',
             amount: 1,
             totalCount: 0,
+            murder: true,
             styles: ['melee', 'ranged'],
             stats: {
               health: 60,
@@ -907,6 +1074,7 @@ export const useCombatStore = defineStore('combatStore', {
         location: 2, //vale
         image: 'assets/icons/area3.png',
         totalCount: 0,
+        hasMurder: true,
         alwaysDrops: [
           {
             itemID: 'charge2',
@@ -947,6 +1115,7 @@ export const useCombatStore = defineStore('combatStore', {
             image: 'assets/icons/turret.png',
             amount: 4,
             totalCount: 0,
+            murder: false,
             styles: ['magic'],
             stats: {
               health: 22,
@@ -994,6 +1163,7 @@ export const useCombatStore = defineStore('combatStore', {
             image: 'assets/icons/plantpitch2.png',
             amount: 1,
             totalCount: 0,
+            murder: false,
             styles: ['ranged'],
             stats: {
               health: 35,
@@ -1040,6 +1210,7 @@ export const useCombatStore = defineStore('combatStore', {
             image: 'assets/icons/towerboss.png',
             amount: 1,
             totalCount: 0,
+            murder: true,
             styles: ['melee', 'magic'],
             stats: {
               health: 85,
@@ -1066,6 +1237,186 @@ export const useCombatStore = defineStore('combatStore', {
             alwaysDrops: [
               {
                 itemID: 'ashes2',
+              },
+            ],
+            randomDrops: [],
+          },
+        ],
+      },
+      {
+        id: '3',
+        name: 'Burnt Silos',
+        location: 3, //field
+        image: 'assets/icons/area4.png',
+        totalCount: 0,
+        hasMurder: true,
+        alwaysDrops: [
+          {
+            itemID: 'ironArrow',
+            itemRange: [2, 5],
+          },
+          {
+            itemID: 'charge2',
+            itemRange: [2, 5],
+          },
+        ],
+        randomDrops: [
+          {
+            itemID: 'farmerHelm',
+            weight: 2,
+          },
+          {
+            itemID: 'hotsuitBody',
+            weight: 2
+          },
+          {
+            itemID: 'farmerWings',
+            weight: 2,
+          },
+          {
+            itemID: 'farmerBow',
+            weight: 2,
+          },
+          {
+            itemID: 'farmerHatchet',
+            weight: 1,
+          },
+        ],
+        rounds: [
+          {
+            id: 'bossFarmerRanged',
+            name: 'Human Shepherd',
+            flavor: 'As lost as the flock.',
+            image: 'assets/icons/testIcon16.png',
+            amount: 2,
+            totalCount: 0,
+            murder: true,
+            styles: ['ranged'],
+            stats: {
+              health: 25,
+              speed: 2.6,
+
+              rangedDamage: 6,
+              rangedAccuracy: 20,
+
+              physicalArmor: 0,
+              energyArmor: 0,
+              meleePen: 0,
+              rangedPen: 0,
+              magicPen: 0,
+              resist: 0.05,
+
+              slayer: [-1, 0],
+
+              meleeDodge: 20,
+              rangedDodge: 35,
+              magicDodge: 35,
+            },
+            alwaysDrops: [
+              {
+                itemID: 'bones2',
+              },
+              {
+                itemID: 'ironArrow',
+                itemRange: [1, 4],
+              },
+            ],
+            randomDrops: [
+              {
+                itemID: 'money',
+                itemRange: [3, 12],
+                weight: 10
+              },
+              {
+                itemID: 'stew',
+                weight: 6
+              },
+            ],
+          },
+          {
+            id: 'bossFarmerMagic',
+            name: 'Human Birdkeeper',
+            flavor: "Brooks no gawkers.",
+            image: 'assets/icons/testIcon16.png',
+            amount: 4,
+            totalCount: 0,
+            murder: true,
+            styles: ['magic'],
+            stats: {
+              health: 30,
+              speed: 2.6,
+
+              magicDamage: 7,
+              magicAccuracy: 25,
+
+              physicalArmor: 0,
+              energyArmor: 0,
+              meleePen: 0,
+              rangedPen: 0,
+              magicPen: 0,
+              resist: 0.35,
+
+              slayer: [-1, 0],
+
+              meleeDodge: 35,
+              rangedDodge: 22,
+              magicDodge: 35,
+            },
+            alwaysDrops: [
+              {
+                itemID: 'bones2',
+              },
+              {
+                itemID: 'charge2',
+                itemRange: [1, 4],
+              },
+            ],
+            randomDrops: [
+              {
+                itemID: 'money',
+                itemRange: [3, 14],
+                weight: 10
+              },
+              {
+                itemID: 'stew',
+                weight: 6
+              },
+            ],
+          },
+          {
+            id: 'bossBird',
+            name: 'Scorch',
+            flavor: 'Wakes everyone up when fall ends.',
+            image: 'assets/icons/testIcon16.png',
+            amount: 1,
+            totalCount: 0,
+            murder: true,
+            styles: ['ranged', 'magic'],
+            stats: {
+              health: 100,
+              speed: 2.8,
+
+              rangedDamage: 9,
+              rangedAccuracy: 30,
+              magicDamage: 7,
+              magicAccuracy: 30,
+
+              physicalArmor: 0,
+              energyArmor: 0,
+              meleePen: 0,
+              rangedPen: 0,
+              magicPen: 0,
+              resist: 0,
+
+              slayer: [3, 0.20], //recoil
+
+              meleeDodge: 45,
+              rangedDodge: 25,
+              magicDodge: 45,
+            },
+            alwaysDrops: [
+              {
+                itemID: 'bones3',
               },
             ],
             randomDrops: [],
@@ -1126,23 +1477,24 @@ export const useCombatStore = defineStore('combatStore', {
       let tempEnemies = JSON.parse(localStorage.getItem('combat-enemies'))
       for (let i in tempEnemies) {
         tempObject = this.enemies.find(t => t.id === tempEnemies[i].id)
-        tempObject.totalCount = tempEnemies[i].totalCount
+        if (undefined != tempEnemies[i]) {
+          tempObject.totalCount = tempEnemies[i].totalCount ?? 0
+        }
       }
-
       let tempDungeons = JSON.parse(localStorage.getItem('combat-dungeons'))
       for (let i in tempDungeons) {
         // tempObject = this.dungeons.find(t => t.id === tempDungeons[i].id)
-        this.dungeons[i].totalCount = tempDungeons[i].totalCount
+        if (undefined != tempDungeons[i]) {
+          this.dungeons[i].totalCount = tempDungeons[i].totalCount ?? 0
 
-        for (let t in tempDungeons[i].rounds) {
-          // tempObject = this.dungeons[i].rounds.find(t => t.id === tempDungeons[i].rounds[t].id)
-          this.dungeons[i].rounds[t].totalCount = tempDungeons[i].rounds[t].totalCount
+          for (let t in tempDungeons[i].rounds) {
+            // tempObject = this.dungeons[i].rounds.find(t => t.id === tempDungeons[i].rounds[t].id)
+            if (undefined != tempDungeons[i].rounds[t]) {
+              this.dungeons[i].rounds[t].totalCount = tempDungeons[i].rounds[t].totalCount ?? 0
+            }
+          }
         }
       }
-
-      tempObject = null
-      tempEnemies = null
-      tempDungeons = null
       this.currentHealthPercent.a = 100 * this.currentHealth / (skillStore().skills[this.vitalitySkillID].level * 5)
       this.resetDragonAttack()
     },
@@ -1155,7 +1507,15 @@ export const useCombatStore = defineStore('combatStore', {
         this.dungeonEnemyCounter = JSON.parse(localStorage.getItem('combat-dungeonEnemyCounter'))
 
         this.activeDungeon = this.dungeons.find(t => t.id === this.activeDungeon.id)
+        if (this.activeDungeon.rounds.length <= this.dungeonRound[0]) {
+          this.cancelAction()
+          return
+        }
+
         this.activeObject = this.activeDungeon.rounds[this.dungeonRound[0]]
+        console.log(this.activeDungeon)
+        console.log(this.dungeonRound)
+        console.log(this.activeObject)
         this.findEnemy()
         return
       }
@@ -1288,17 +1648,20 @@ export const useCombatStore = defineStore('combatStore', {
       if (this.bestStyle == 'melee') {
         //if there is oil
         if (itemStore().equippedCombat.oilSlot.id != undefined) {
-          //remove 1 oil and unequip if count is 0
-          itemStore().changeItemCount(itemStore().equippedCombat.oilSlot.id, -1, 'equipmentItems')
-          if (itemStore().equippedCombat.oilSlot.count <= 0) {
-            itemStore().equipItem(itemStore().equippedCombat.oilSlot)
+          //if oil preserve does not proc
+          if (Math.random() > itemStore().equippedStats.oilPreserve) {
+            //remove 1 oil and unequip if count is 0
+            itemStore().changeItemCount(itemStore().equippedCombat.oilSlot.id, -1, 'equipmentItems')
+            if (itemStore().equippedCombat.oilSlot.count <= 0) {
+              itemStore().equipItem(itemStore().equippedCombat.oilSlot)
+            }
           }
         }
       }
       //use ammo
       if (this.bestStyle == 'ranged') {
-        //if the weapon has required ammo and the required ammo is equipped
-        if (itemStore().equippedCombat.rangedSlot.requiredAmmo == itemStore().equippedCombat.ammoSlot.ammoType) {
+        //if the weapon has required ammo and the required ammo is equipped, and ammo preserve does not proc
+        if (itemStore().equippedCombat.rangedSlot.requiredAmmo == itemStore().equippedCombat.ammoSlot.ammoType && (Math.random() > itemStore().equippedStats.ammoPreserve)) {
           //remove 1 ammo and unequip if count is 0
           itemStore().changeItemCount(itemStore().equippedCombat.ammoSlot.id, -1, 'equipmentItems')
           if (itemStore().equippedCombat.ammoSlot.count <= 0) {
@@ -1310,10 +1673,13 @@ export const useCombatStore = defineStore('combatStore', {
       if (this.bestStyle == 'magic') {
         //if there is charge
         if (itemStore().equippedCombat.chargeSlot.id != undefined) {
-          //remove 1 charge and unequip if count is 0
-          itemStore().changeItemCount(itemStore().equippedCombat.chargeSlot.id, -1, 'equipmentItems')
-          if (itemStore().equippedCombat.chargeSlot.count <= 0) {
-            itemStore().equipItem(itemStore().equippedCombat.chargeSlot)
+          //if charge preserve does not proc
+          if (Math.random() > itemStore().equippedStats.chargePreserve) {
+            //remove 1 charge and unequip if count is 0
+            itemStore().changeItemCount(itemStore().equippedCombat.chargeSlot.id, -1, 'equipmentItems')
+            if (itemStore().equippedCombat.chargeSlot.count <= 0) {
+              itemStore().equipItem(itemStore().equippedCombat.chargeSlot)
+            }
           }
         }
       }
@@ -1332,44 +1698,100 @@ export const useCombatStore = defineStore('combatStore', {
         toDamage[0] = this.eHealth
       }
       //recieve xp for dealing damage based on style and stance
-      //accurate
-      if (itemStore().preStance > 0) {
-        skillStore().addXP(this.accuracySkillID, toDamage[0] * this.xpMulti)
-      }
-      //aggressive/defensive
       if (this.bestStyle == 'melee') {
-        if (itemStore().aggStance > 0) {
-          skillStore().addXP(this.strengthSkillID, toDamage[0] * this.xpMulti)
-        }
-        if (itemStore().defStance > 0) {
-          skillStore().addXP(this.blockSkillID, toDamage[0] * this.xpMulti)
+        //if melee weapon isn't a device
+        if (itemStore().equippedStats.deviceWeapons[0] == 0) {
+          //accurage/aggressive/defensive
+          if (itemStore().preStance > 0) {
+            skillStore().addXP(this.accuracySkillID, toDamage[0] * this.xpMulti)
+          }
+          if (itemStore().aggStance > 0) {
+            skillStore().addXP(this.strengthSkillID, toDamage[0] * this.xpMulti)
+          }
+          if (itemStore().defStance > 0) {
+            skillStore().addXP(this.blockSkillID, toDamage[0] * this.xpMulti)
+          }
+        } else { //if melee weapon is a device
+          mechanicsStore().addPendingXP(toDamage[0] * this.xpMulti)
         }
       }
       if (this.bestStyle == 'ranged') {
-        if (itemStore().aggStance > 0) {
-          skillStore().addXP(this.markshipSkillID, toDamage[0] * this.xpMulti)
-        }
-        if (itemStore().defStance > 0) {
-          skillStore().addXP(this.reflexSkillID, toDamage[0] * this.xpMulti)
+        //if ranged weapon isn't a device
+        if (itemStore().equippedStats.deviceWeapons[1] == 0) {
+          //accurage/aggressive/defensive
+          if (itemStore().preStance > 0) {
+            skillStore().addXP(this.accuracySkillID, toDamage[0] * this.xpMulti)
+          }
+          if (itemStore().aggStance > 0) {
+            skillStore().addXP(this.markshipSkillID, toDamage[0] * this.xpMulti)
+          }
+          if (itemStore().defStance > 0) {
+            skillStore().addXP(this.reflexSkillID, toDamage[0] * this.xpMulti)
+          }
+        } else { //if ranged weapon is a device
+          mechanicsStore().addPendingXP(toDamage[0] * this.xpMulti)
         }
       }
       if (this.bestStyle == 'magic') {
-        if (itemStore().aggStance > 0) {
-          skillStore().addXP(this.spiritSkillID, toDamage[0] * this.xpMulti)
-        }
-        if (itemStore().defStance > 0) {
-          skillStore().addXP(this.acuitySkillID, toDamage[0] * this.xpMulti)
+        //if magic weapon isn't a device
+        if (itemStore().equippedStats.deviceWeapons[2] == 0) {
+        //accurage/aggressive/defensive
+          if (itemStore().preStance > 0) {
+            skillStore().addXP(this.accuracySkillID, toDamage[0] * this.xpMulti)
+          }
+          if (itemStore().aggStance > 0) {
+            skillStore().addXP(this.spiritSkillID, toDamage[0] * this.xpMulti)
+          }
+          if (itemStore().defStance > 0) {
+            skillStore().addXP(this.acuitySkillID, toDamage[0] * this.xpMulti)
+          }
+        } else { //if magic weapon is a device
+          mechanicsStore().addPendingXP(toDamage[0] * this.xpMulti)
         }
       }
       this.eHit = toDamage[0]
       this.eHitColor = toDamage[1]
       this.enemyHealthDamage(toDamage[0])
       this.enemyGetSpecialAttacked()
+      //recoil from enemy
+      if (this.activeObject.stats.slayer != undefined) {
+        if (3 == this.activeObject.stats.slayer[0] ?? -1) {
+          //deal damage based on (damage dealt) * (slayer intensity - slayer mitigation), rounded up
+          this.dragonHealthDamage(Math.ceil(toDamage[0] * Math.max(0, this.activeObject.stats.slayer[1] - itemStore().equippedStats.slayerMitigation)))
+        }
+      }
     },
     enemyAttacksDragon() {
       let toDamage = this.calculatedDamage(this.eBestStyle, 1.25, this.activeObject.stats, itemStore().equippedStats)
       //if no damage is to be done, hitsplat miss and do nothing
       if (toDamage[0] == 0) {
+        //if hugging, then get 1xp for each 4 enemy accuracy on dodge 
+        if (this.currentStyle == 'hug' && toDamage[0] == 0) {
+          if (this.eBestStyle == 'melee') {
+            //if not wearing a device TODO MAYBE: chance of device xp instead of always device xp, will have to make device xp if-check the top level if-check
+            if (itemStore().equippedStats.deviceArmorTotal == 0) {
+              skillStore().addXP(this.blockSkillID, 1 + Math.floor(this.activeObject.stats.meleeAccuracy / 4))
+            } else {
+              mechanicsStore().addPendingXP(1 + Math.floor(this.activeObject.stats.meleeAccuracy / 4))
+            }
+          }
+          if (this.eBestStyle == 'ranged') {
+            //if not wearing a device
+            if (itemStore().equippedStats.deviceArmorTotal == 0) {
+              skillStore().addXP(this.reflexSkillID, 1 + Math.floor(this.activeObject.stats.rangedAccuracy / 4))
+            } else {
+              mechanicsStore().addPendingXP(1 + Math.floor(this.activeObject.stats.rangedAccuracy / 4))
+            }
+          }
+          if (this.eBestStyle == 'magic') {
+            //if not wearing a device
+            if (itemStore().equippedStats.deviceArmorTotal == 0) {
+              skillStore().addXP(this.acuitySkillID, 1 + Math.floor(this.activeObject.stats.magicAccuracy / 4))
+            } else {
+              mechanicsStore().addPendingXP(1 + Math.floor(this.activeObject.stats.magicAccuracy / 4))
+            }
+          }
+        }
         // console.log('attack dodged')
         this.dragonHit = -1
         return
@@ -1377,18 +1799,6 @@ export const useCombatStore = defineStore('combatStore', {
       //if damage is greater than health, deal health damage
       if (toDamage[0] > this.currentHealth) {
         toDamage[0] = this.currentHealth
-      }
-      //if hugging, then get 1xp for each 4 enemy accuracy on dodge 
-      if (this.currentStyle == 'hug' && toDamage[0] == 0) {
-        if (this.eBestStyle == 'melee') {
-          skillStore().addXP(this.blockSkillID, 1 + Math.floor(this.activeObject.stats.meleeAccuracy / 4))
-        }
-        if (this.eBestStyle == 'ranged') {
-          skillStore().addXP(this.reflexSkillID, 1 + Math.floor(this.activeObject.stats.rangedAccuracy / 4))
-        }
-        if (this.eBestStyle == 'magic') {
-          skillStore().addXP(this.acuitySkillID, 1 + Math.floor(this.activeObject.stats.magicAccuracy / 4))
-        }
       }
       //recieve xp for taking damage, but not too much
       skillStore().addXP(this.vitalitySkillID, toDamage[0])
@@ -1415,7 +1825,7 @@ export const useCombatStore = defineStore('combatStore', {
         toAccuracy = attackerStats.rangedAccuracy - defenderStats.rangedDodge
       }
       if (attackerStyle == 'magic') {
-        toDamage = (attackerStats.magicDamage * (1 - Math.max(0, defenderStats.resist - attackerStats.magicPen))) - defenderStats.physicalArmor
+        toDamage = (attackerStats.magicDamage * (1 - Math.max(0, defenderStats.resist - attackerStats.magicPen))) - defenderStats.energyArmor
 
         toAccuracy = attackerStats.magicAccuracy - defenderStats.magicDodge
       }
@@ -1429,7 +1839,7 @@ export const useCombatStore = defineStore('combatStore', {
       //gooey 
       if (this.activeObject.stats.slayer != undefined) { //TODO add .slayer [] to everything?
         if (0 == this.activeObject.stats.slayer[0] ?? -1) {
-          this.currentSpeedMod += this.activeObject.stats.slayer[1] //TODO slayer mastery/equipment mitigates chances
+          this.currentSpeedMod += Math.max(0, this.activeObject.stats.slayer[1] - itemStore().equippedStats.slayerMitigation)
         }
       }
     },
@@ -1479,14 +1889,14 @@ export const useCombatStore = defineStore('combatStore', {
       if (this.activeObject.stats.slayer != undefined) {
         //poison
         if (1 == this.activeObject.stats.slayer[0] ?? -1) {
-          if (Math.random() < this.activeObject.stats.slayer[1]) { //TODO slayer mastery/equipment mitigates chances
+          if (Math.random() < (this.activeObject.stats.slayer[1] - itemStore().equippedStats.slayerMitigation)) {
             this.currentStatus.poison[0] = 8000 //poisoned for 8s
           }
         }
 
         //shock
         if (2 == this.activeObject.stats.slayer[0] ?? -1) {
-          if (Math.random() < this.activeObject.stats.slayer[1]) { //TODO slayer mastery/equipment mitigates chances
+          if (Math.random() < (this.activeObject.stats.slayer[1] - itemStore().equippedStats.slayerMitigation)) {
             this.currentStatus.shock = 1500 //shocked for 1.5s
           }
         }
@@ -1529,7 +1939,7 @@ export const useCombatStore = defineStore('combatStore', {
     },
     maimed() {
       //cancels everything
-      console.log('aww, but free death healing')
+      // console.log('aww, but free death healing')
       this.cancelAction()
       this.currentHealth = 1
       this.currentHealthPercent.a = 100 * this.currentHealth / (skillStore().skills[this.vitalitySkillID].level * 5)
@@ -1551,29 +1961,35 @@ export const useCombatStore = defineStore('combatStore', {
       //the dummy doesn't care if you kill them, so count it with everyone else
       this.activeObject.totalCount += 1
       // console.log('yay, kc ' + this.activeObject.totalCount)
-      //if you kill someone who isn't the combat dummy, you are no longer a pacifist
-      if (this.activeObject.id != 'combatDummy') {
+      //if you murder someone, you are no longer a pacifist
+      if (this.activeObject.murder == true) {
         if (skillStore().flags.pacifist == true) {
           skillStore().unlockCombat()
           skillStore().flags.pacifist = false
+          skillStore().flags.ultraPacifist = false
         }
         //if you kill someone after being told murder is wrong, you are just a murderer
         if (skillStore().flags.flawedPacifist == true) {
           skillStore().flags.flawedPacifist = false
+          skillStore().flags.ultraPacifist = false
         }
+      //if anyone dies who isn't a combat dummy, not an ultraPacifist
+      } else if (this.activeObject.id != 'combatDummy' && skillStore().flags.ultraPacifist == true) {
+        skillStore().flags.ultraPacifist = false
       }
       //gives drops
-      let extradrops = itemStore().equippedStats.extraDropChance
-      if (skillStore().totalOffline >= 1000) {
-        extradrops += 0.25
-      }
+      let extradrops = 0
+      extradrops += itemStore().equippedStats.extraDropChance
+      // if (skillStore().totalOffline >= 1000) {
+      //   extradrops += 0.25
+      // }
       this.alwaysDrops(this.activeObject.alwaysDrops)
       this.randomDrops(this.activeObject.randomDrops)
       //gives extra drops TODO makes values over 100% meaningful
       if (Math.random() < extradrops) {
         this.alwaysDrops(this.activeObject.alwaysDrops)
         this.randomDrops(this.activeObject.randomDrops)
-        console.log('extradrop happened, chance: ' + extradrops)
+        // console.log('enemy extradrop happened, chance: ' + extradrops)
       }
       //gives exploration xp if kobold map is equipped and it will probably return a number instead of breaking exploration xp storage
       if (itemStore().equippedTools.explorationTool.id == 'koboldMap' && this.activeObject.location != undefined) {
@@ -1622,17 +2038,18 @@ export const useCombatStore = defineStore('combatStore', {
         this.activeDungeon.totalCount += 1
         // console.log('yay, dungeon kc ' + this.activeDungeon.totalCount)
         //gives drops
-        let extradrops = itemStore().equippedStats.extraDropChance
-        if (skillStore().totalOffline >= 1000) {
-          extradrops += 0.25
-        }
+        let extradrops = 0
+        extradrops = itemStore().equippedStats.extraDropChance
+        // if (skillStore().totalOffline >= 1000) {
+        //   extradrops += 0.25
+        // }
         this.alwaysDrops(this.activeDungeon.alwaysDrops)
         this.randomDrops(this.activeDungeon.randomDrops)
         //gives extra drops TODO makes values over 100% meaningful
         if (Math.random() < extradrops) {
           this.alwaysDrops(this.activeDungeon.alwaysDrops)
           this.randomDrops(this.activeDungeon.randomDrops)
-          console.log('extradrop happened, chance: ' + extradrops)
+          // console.log('sequence extradrop happened, chance: ' + extradrops)
         }
         //1 in 200 chance of dropping runeword
         if (Math.random() < 0.005) {
@@ -1643,12 +2060,12 @@ export const useCombatStore = defineStore('combatStore', {
           }
         }
         if (Math.random() < extradrops) {
-          console.log('word drop chanced, chance: ' + extradrops)
           if (Math.random() < 0.005) {
             itemStore().addWord(this.activeDungeon.id + 6)
             //gives extra drops TODO makes values over 100% meaningful
             if (Math.random() < itemStore().equippedStats.extraDropChance) {
               itemStore().addWord(this.activeDungeon.id + 6)
+              // console.log('word extradrop happened, chance: ' + (extradrops * 0.005))
             }
           }
         }
@@ -1791,7 +2208,7 @@ export const useCombatStore = defineStore('combatStore', {
       }
       //if no healing items, do not attempt
       if (0 >= temp.count) {
-        console.log('Not enough food, silly.')
+        // console.log('Not enough food, silly.')
         return
       }
       toHeal += temp.heals ?? 0

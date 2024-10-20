@@ -2,6 +2,7 @@
 import { useSmithingStore } from '@/stores/smithing'
 import { useArtificeStore } from '@/stores/artifice'
 import { useCookingStore } from '@/stores/cooking'
+import { useMechanicsStore } from '@/stores/mechanics'
 import { useItemStore } from '@/stores/inventory'
 
 export default {
@@ -11,12 +12,20 @@ export default {
     const smithingStore = useSmithingStore()
     const artificeStore = useArtificeStore()
     const cookingStore = useCookingStore()
+    const mechanicsStore = useMechanicsStore()
     const itemStore = useItemStore()
-    return { smithingStore, artificeStore, cookingStore, itemStore }
+    return { smithingStore, artificeStore, cookingStore, mechanicsStore, itemStore }
   },
   methods: {
     bonusSmithingMastery(temp) {
       if (temp.mSmithing) {
+        temp = this.smithingStore.equipmentMastery.find(blep => blep.id === temp.mSmithing)
+        return temp.mLevel
+      }
+      return 0
+    },
+    bonusSmithingMasteryAcc(temp) {
+      if (temp.mSmithing && temp.slot == 'meleeSlot') {
         temp = this.smithingStore.equipmentMastery.find(blep => blep.id === temp.mSmithing)
         return temp.mLevel
       }
@@ -28,6 +37,19 @@ export default {
         return temp.mLevel
       }
       return 0
+    },
+    bonusArificeMasteryAcc(temp) {
+      if (temp.mArtifice && temp.slot == 'magicSlot') {
+        temp = this.artificeStore.equipmentMastery.find(t => t.id === temp.mArtifice)
+        return temp.mLevel
+      }
+      return 0
+    },
+    bonusDeviceMastery(temp) {
+      if (temp.dcat == 'device') {
+        temp = this.mechanicsStore.activities.find(t => t.id === temp.id)
+        return temp.mLevel * 5
+      }
     },
     bonusHeals(temp) {
       let spice = 0
@@ -97,6 +119,20 @@ export default {
         <span>Hardness: </span>
         <span>{{ this.itemObject.toolStats.bonusPen }}</span>
       </div>
+
+      <div class="d-flex justify-content-between" v-if="undefined != this.itemObject.toolStats.cookSpeed">
+        <span>Cook Time: </span>
+        <span>{{ (this.itemObject.toolStats.cookSpeed * 100) }}%</span>
+      </div>
+
+      <div class="d-flex justify-content-between" v-if="this.itemObject.toolStats.efficency != undefined">
+        <span>Bonus Efficency: </span>
+        <span>{{ this.itemObject.toolStats.efficency + bonusDeviceMastery(this.itemObject) }}%</span>
+      </div>
+      <div class="d-flex justify-content-between" v-if="this.itemObject.toolStats.extraItems">
+        <span>Extra Items: </span>
+        <span>{{ this.itemObject.toolStats.extraItems }}</span>
+      </div>
     </div>
 
     <!-- Combat Stats-->
@@ -131,7 +167,7 @@ export default {
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.meleeAccuracy != null">
         <span>🗡️ Accuracy: </span>
         <span>
-          {{ this.itemObject.stats.meleeAccuracy + bonusSmithingMastery(this.itemObject) }}
+          {{ this.itemObject.stats.meleeAccuracy + bonusSmithingMasteryAcc(this.itemObject) }}
         </span>
       </div>
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.rangedAccuracy != null">
@@ -143,7 +179,7 @@ export default {
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.magicAccuracy != null">
         <span>🔥 Accuracy: </span>
         <span>
-          {{ this.itemObject.stats.magicAccuracy + bonusArificeMastery(this.itemObject) }}
+          {{ this.itemObject.stats.magicAccuracy + bonusArificeMasteryAcc(this.itemObject) }}
         </span>
       </div>
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.accuracy != null">
@@ -219,7 +255,7 @@ export default {
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.magicDodge != null">
         <span>🛡️🔥 Defense: </span>
         <span>
-          {{ this.itemObject.stats.magicDodge }}
+          {{ this.itemObject.stats.magicDodge + (bonusArificeMastery(this.itemObject) / 4) }}
         </span>
       </div>
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.dodge != null">
@@ -240,6 +276,11 @@ export default {
       <div class="d-flex justify-content-between" v-if="this.itemObject.stats.resist">
         <span>Resistance: </span>
         <span>{{ (this.itemObject.stats.resist * 100) }}%</span>
+      </div>
+
+      <div class="d-flex justify-content-between" v-if="this.itemObject.stats.slayerMitigation">
+        <span>Slayer Mitigation: </span>
+        <span>{{ (this.itemObject.stats.slayerMitigation * 100) }}%</span>
       </div>
 
       <!-- <div class="d-flex justify-content-between" v-if="this.itemObject.stats.precision">
@@ -286,7 +327,7 @@ export default {
     </div>
 
     <!-- Extra and Flavor Text -->
-    <div class="info-text" v-if="this.itemObject.extra != null">
+    <div class="info-text" style="white-space: pre-wrap;" v-if="this.itemObject.extra != null">
       {{ this.itemObject.extra }}
     </div>
     <div class="dark-text tiny-levels" v-if="this.itemObject.flavor != null">

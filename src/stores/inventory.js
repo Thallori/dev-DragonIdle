@@ -36,9 +36,20 @@ export const useItemStore = defineStore('itemStore', {
       rangedDodge: 3,
       magicDodge: 3,
 
+      //device
+      deviceArmorTotal: 0,
+      deviceWeapons: [0, 0, 0],
+      oilPreserve: 0,
+      ammoPreserve: 0,
+      chargePreserve: 0,
+
       //special
       poisonChance: [0, 0, 0],
       extraDropChance: 0,
+      slayerMitigation: 0,
+
+      //skills
+      allEfficency: 0,
     },
     equippedCombat: {
       hatSlot: {},
@@ -78,7 +89,7 @@ export const useItemStore = defineStore('itemStore', {
       },
       scryingTool: {
         id: 'defaultStylus',
-        name: 'Chalk Stylus',
+        name: 'Chalk',
         image: 'assets/icons/defaultstylus16.png',
         toolStats: {
           bonusSyphoningTime: 0,
@@ -113,9 +124,24 @@ export const useItemStore = defineStore('itemStore', {
           bonusMiningSpeed: 0,
         },
       },
-      smithingTool: {},
-      cookingTool: {},
-      alchemyTool: {},
+      smithingTool: {
+        id: 'defaultHammer',
+        name: 'Hammer',
+        image: 'assets/icons/defaulthammer16.png',
+        toolStats: {
+          workPerAction: 1,
+          workSpeed: 2.0,
+        },
+      },
+      cookingTool: {
+        id: 'defaultCook',
+        name: 'Fire Pit',
+        image: 'assets/icons/defaultcook16.png',
+        toolStats: {
+          cookSpeed: 0,
+          extraItems: 0,
+        },
+      },
     },
     defaultTools: {
       explorationTool: {
@@ -128,7 +154,7 @@ export const useItemStore = defineStore('itemStore', {
       },
       scryingTool: {
         id: 'defaultStylus',
-        name: 'Chalk Stylus',
+        name: 'Chalk',
         image: 'assets/icons/defaultstylus16.png',
         toolStats: {
           bonusSyphoningTime: 0,
@@ -163,11 +189,201 @@ export const useItemStore = defineStore('itemStore', {
           bonusMiningSpeed: 0,
         },
       },
-      smithingTool: {},
-      cookingTool: {},
-      alchemyTool: {},
+      smithingTool: {
+        id: 'defaultHammer',
+        name: 'Hammer',
+        image: 'assets/icons/defaulthammer16.png',
+        toolStats: {
+          workPerAction: 1,
+          workSpeed: 2.0,
+        },
+      },
+      cookingTool: {
+        id: 'defaultCook',
+        name: 'Fire Pit',
+        image: 'assets/icons/defaultcook16.png',
+        toolStats: {
+          cookSpeed: 0,
+          extraItems: 0,
+        },
+      },
     },
     equipmentItems: [
+      //devices
+      {
+        id: 'device1',
+        name: 'Polypass',
+        extra: 'Mechanics Device',
+        flavor: 'Outputs multi-dimensional space-filling directions.',
+        image: 'assets/icons/device1.png',
+        dcat: 'device',
+        dlvl: 1,
+        toolSlot: 'explorationTool',
+        isTool: true,
+        onEquip: false,
+        toolStats: {
+          explorationMulti: 0.0,
+          efficency: 0,
+        },
+        sellPrice: 30,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'device2',
+        name: 'Loop Reloader',
+        extra: 'Mechanics Device\n+60% ammo saving',
+        flavor: "If it's nice, shoot it twice.",
+        image: 'assets/icons/device2.png',
+        dcat: 'device',
+        dlvl: 1,
+        slot: 'legSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          dodge: 0,
+          resist: 0,
+          ammoPreserve: 0.6,
+        },
+        sellPrice: 45,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'device3',
+        name: 'Clockwork Pendant',
+        extra: 'Mechanics Device\n+25% extra drop chance\n+10% all skill efficency',
+        flavor: 'Recount the best seconds again and again.',
+        image: 'assets/icons/device3.png',
+        dcat: 'device',
+        dlvl: 1,
+        slot: 'ammySlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          dodge: 0,
+          resist: 0,
+          extraDropChance: 25,
+          allEfficency: 10,
+        },
+        sellPrice: 60,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'device4',
+        name: 'Auto-Hammer',
+        extra: 'Mechanics Device',
+        flavor: 'Perfect hits without the guesswork.',
+        image: 'assets/icons/device4.png',
+        dcat: 'device',
+        dlvl: 1,
+        toolSlot: 'smithingTool',
+        isTool: true,
+        onEquip: false,
+        toolStats: {
+          workPerAction : 1,
+          workSpeed: 1.2,
+          efficency: 0,
+        },
+        sellPrice: 90,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'device5',
+        name: 'Laminar Pump',
+        extra: 'Mechanics Device\n+60% oil saving',
+        flavor: 'Unmix oil and carnage.',
+        image: 'assets/icons/device5.png',
+        dcat: 'device',
+        dlvl: 1,
+        slot: 'bodySlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          dodge: 0,
+          resist: 0,
+          oilPreserve: 0.6,
+        },
+        sellPrice: 120,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'device6',
+        name: 'Thread Trimmer',
+        extra: 'Mechanics Device',
+        flavor: 'Free armor embroidering.',
+        image: 'assets/icons/testIcon16.png',
+        dcat: 'device',
+        dlvl: 1,
+        // toolSlot: 'tailoringTool',
+        // isTool: true,
+        // onEquip: false,
+        // toolStats: {
+        //   efficency: 0,
+        // },
+        sellPrice: 150,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'device7',
+        name: 'Deja-View',
+        extra: 'Mechanics Device',
+        // flavor: 'b.',
+        image: 'assets/icons/testIcon16.png',
+        dcat: 'device',
+        dlvl: 1,
+        // toolSlot: 'explorationTool',
+        // isTool: true,
+        // onEquip: false,
+        // toolStats: {
+        //   explorationMulti: 0.1,
+        // },
+        sellPrice: 180,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'device8',
+        name: 'Deliverator',
+        extra: 'Mechanics Device',
+        // flavor: 'b.',
+        image: 'assets/icons/testIcon16.png',
+        dcat: 'device',
+        dlvl: 1,
+        // toolSlot: 'explorationTool',
+        // isTool: true,
+        // onEquip: false,
+        // toolStats: {
+        //   explorationMulti: 0.1,
+        // },
+        sellPrice: 210,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'device9',
+        name: 'Convector',
+        extra: 'Mechanics Device',
+        // flavor: 'b.',
+        image: 'assets/icons/testIcon16.png',
+        dcat: 'device',
+        dlvl: 1,
+        // toolSlot: 'explorationTool',
+        // isTool: true,
+        // onEquip: false,
+        // toolStats: {
+        //   explorationMulti: 0.1,
+        // },
+        sellPrice: 240,
+        count: 0,
+        totalCount: 0,
+      },
+
+      //tools
       {
         id: 'koboldMap',
         name: 'Kobold Map',
@@ -205,11 +421,81 @@ export const useItemStore = defineStore('itemStore', {
         totalCount: 0,
       },
       {
+        id: 'bronzeCook',
+        name: 'Bronze Oven',
+        image: 'assets/icons/bronzecook.png',
+        dcat: 'tool',
+        dlvl: 1,
+        toolSlot: 'cookingTool',
+        isTool: true,
+        onEquip: false,
+        toolStats: {
+          cookSpeed: 0.1,
+          extraItems: 1,
+        },
+        sellPrice: 20,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'ironCook',
+        name: 'Iron Oven',
+        image: 'assets/icons/ironcook.png',
+        dcat: 'tool',
+        dlvl: 2,
+        toolSlot: 'cookingTool',
+        isTool: true,
+        onEquip: false,
+        toolStats: {
+          cookSpeed: 0.2,
+          extraItems: 1,
+        },
+        sellPrice: 28,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'steelCook',
+        name: 'Steel Oven',
+        image: 'assets/icons/steelcook.png',
+        dcat: 'tool',
+        dlvl: 3,
+        toolSlot: 'cookingTool',
+        isTool: true,
+        onEquip: false,
+        toolStats: {
+          cookSpeed: 0.25,
+          extraItems: 1,
+        },
+        sellPrice: 45,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'mythrilCook',
+        name: 'Mythril Oven',
+        image: 'assets/icons/mythrilcook.png',
+        dcat: 'tool',
+        dlvl: 4,
+        toolSlot: 'cookingTool',
+        isTool: true,
+        onEquip: false,
+        toolStats: {
+          cookSpeed: 0.3,
+          extraItems: 2,
+        },
+        sellPrice: 80,
+        count: 0,
+        totalCount: 0,
+      },
+
+      //toolweapons
+      {
         id: 'copperHatchet',
         name: 'Copper Hatchet',
         image: 'assets/icons/copperaxe16.png',
         mSmithing: 'hatchet',
-        dcat: 'meleeTool',
+        dcat: 'toolWeapon',
         dlvl: 1,
         slot: 'meleeSlot',
         isCombat: true,
@@ -234,7 +520,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Bronze Hatchet',
         image: 'assets/icons/bronzeaxe16.png',
         mSmithing: 'hatchet',
-        dcat: 'meleeTool',
+        dcat: 'toolWeapon',
         dlvl: 2,
         slot: 'meleeSlot',
         isCombat: true,
@@ -259,7 +545,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Iron Hatchet',
         image: 'assets/icons/ironaxe16.png',
         mSmithing: 'hatchet',
-        dcat: 'meleeTool',
+        dcat: 'toolWeapon',
         dlvl: 7,
         slot: 'meleeSlot',
         isCombat: true,
@@ -284,7 +570,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Steel Hatchet',
         image: 'assets/icons/steelaxe16.png',
         mSmithing: 'hatchet',
-        dcat: 'meleeTool',
+        dcat: 'toolWeapon',
         dlvl: 7,
         slot: 'meleeSlot',
         isCombat: true,
@@ -305,18 +591,45 @@ export const useItemStore = defineStore('itemStore', {
         totalCount: 0,
       },
       {
+        id: 'farmerHatchet',
+        name: 'Phoenix Axe',
+        flavor: 'Unweildy, unclouth, unbreakable.',
+        image: 'assets/icons/testIcon16.png',
+        dcat: 'toolWeapon',
+        dlvl: 4,
+        slot: 'meleeSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeAccuracy: 10,
+          meleeDamage: 0.60,
+          meleeSpeed: 2.6,
+          meleePen: 0.05,
+        },
+        toolSlot: 'foragingTool',
+        isTool: true,
+        toolStats: {
+          locatingMultiplierAdd: 0.2,
+          harvestingTimeBonus: 1.75,
+        },
+        sellPrice: 90,
+        count: 0,
+        totalCount: 0,
+      },
+
+      {
         id: 'copperClaws',
         name: 'Copper Claws',
         image: 'assets/icons/copperclaws16.png',
         mSmithing: 'claws',
-        dcat: 'meleeTool',
+        dcat: 'toolWeapon',
         dlvl: 1,
         slot: 'meleeSlot',
         isCombat: true,
         onEquip: false,
         stats: {
           meleeAccuracy: 0,
-          meleeDamage: 0.30,
+          meleeDamage: 0.25,
           meleeSpeed: 2.0,
         },
         toolSlot: 'huntingTool',
@@ -334,14 +647,14 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Bronze Claws',
         image: 'assets/icons/bronzeclaws16.png',
         mSmithing: 'claws',
-        dcat: 'meleeTool',
+        dcat: 'toolWeapon',
         dlvl: 2,
         slot: 'meleeSlot',
         isCombat: true,
         onEquip: false,
         stats: {
           meleeAccuracy: 0,
-          meleeDamage: 0.35,
+          meleeDamage: 0.30,
           meleeSpeed: 2.0,
         },
         toolSlot: 'huntingTool',
@@ -359,14 +672,14 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Iron Claws',
         image: 'assets/icons/ironclaws16.png',
         mSmithing: 'claws',
-        dcat: 'meleeTool',
+        dcat: 'toolWeapon',
         dlvl: 4,
         slot: 'meleeSlot',
         isCombat: true,
         onEquip: false,
         stats: {
           meleeAccuracy: 0,
-          meleeDamage: 0.40,
+          meleeDamage: 0.35,
           meleeSpeed: 2.0,
         },
         toolSlot: 'huntingTool',
@@ -381,17 +694,17 @@ export const useItemStore = defineStore('itemStore', {
       },
       {
         id: 'steelClaws',
-        name: 'Iron Claws',
+        name: 'Steel Claws',
         image: 'assets/icons/steelclaws16.png',
         mSmithing: 'claws',
-        dcat: 'meleeTool',
+        dcat: 'toolWeapon',
         dlvl: 7,
         slot: 'meleeSlot',
         isCombat: true,
         onEquip: false,
         stats: {
           meleeAccuracy: 0,
-          meleeDamage: 0.45,
+          meleeDamage: 0.40,
           meleeSpeed: 2.0,
         },
         toolSlot: 'huntingTool',
@@ -409,14 +722,14 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Crystal Claws',
         flavor: 'A gnarled gnash of spikes.',
         image: 'assets/icons/crystalclaws.png',
-        dcat: 'meleeTool',
+        dcat: 'toolWeapon',
         dlvl: 3,
         slot: 'meleeSlot',
         isCombat: true,
         onEquip: false,
         stats: {
           meleeAccuracy: 10,
-          meleeDamage: 0.35,
+          meleeDamage: 0.30,
           meleePen: 0.05,
           meleeSpeed: 2.0,
         },
@@ -435,7 +748,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Copper Pickaxe',
         image: 'assets/icons/copperpick16.png',
         mSmithing: 'pickaxe',
-        dcat: 'meleeTool',
+        dcat: 'toolWeapon',
         dlvl: 1,
         slot: 'meleeSlot',
         isCombat: true,
@@ -462,7 +775,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Bronze Pickaxe',
         image: 'assets/icons/bronzepick16.png',
         mSmithing: 'pickaxe',
-        dcat: 'meleeTool',
+        dcat: 'toolWeapon',
         dlvl: 2,
         slot: 'meleeSlot',
         isCombat: true,
@@ -489,7 +802,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Iron Pickaxe',
         image: 'assets/icons/ironpick16.png',
         mSmithing: 'pickaxe',
-        dcat: 'meleeTool',
+        dcat: 'toolWeapon',
         dlvl: 4,
         slot: 'meleeSlot',
         isCombat: true,
@@ -516,7 +829,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Steel Pickaxe',
         image: 'assets/icons/steelpick16.png',
         mSmithing: 'pickaxe',
-        dcat: 'meleeTool',
+        dcat: 'toolWeapon',
         dlvl: 7,
         slot: 'meleeSlot',
         isCombat: true,
@@ -544,7 +857,7 @@ export const useItemStore = defineStore('itemStore', {
         flavor: "One swing through the other side.",
         image: 'assets/icons/koboldpick.png',
         mSmithing: 'pickaxe',
-        dcat: 'meleeTool',
+        dcat: 'toolWeapon',
         dlvl: 4,
         slot: 'meleeSlot',
         isCombat: true,
@@ -573,7 +886,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Copper Dagger',
         image: 'assets/icons/copperdagger16.png',
         mSmithing: 'dagger',
-        dcat: 'meleeBlade',
+        dcat: 'meleeWeapon',
         dlvl: 1,
         slot: 'meleeSlot',
         isCombat: true,
@@ -593,7 +906,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Bronze Dagger',
         image: 'assets/icons/bronzedagger16.png',
         mSmithing: 'dagger',
-        dcat: 'meleeBlade',
+        dcat: 'meleeWeapon',
         dlvl: 2,
         slot: 'meleeSlot',
         isCombat: true,
@@ -613,7 +926,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Iron Dagger',
         image: 'assets/icons/irondagger16.png',
         mSmithing: 'dagger',
-        dcat: 'meleeBlade',
+        dcat: 'meleeWeapon',
         dlvl: 4,
         slot: 'meleeSlot',
         isCombat: true,
@@ -633,7 +946,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Steel Dagger',
         image: 'assets/icons/steeldagger16.png',
         mSmithing: 'dagger',
-        dcat: 'meleeBlade',
+        dcat: 'meleeWeapon',
         dlvl: 7,
         slot: 'meleeSlot',
         isCombat: true,
@@ -655,7 +968,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Bronze Broadsword',
         image: 'assets/icons/bronzesword16.png',
         mSmithing: 'broadsword',
-        dcat: 'meleeBlade',
+        dcat: 'meleeWeapon',
         dlvl: 3,
         slot: 'meleeSlot',
         isCombat: true,
@@ -675,7 +988,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Iron Broadsword',
         image: 'assets/icons/ironsword16.png',
         mSmithing: 'broadsword',
-        dcat: 'meleeBlade',
+        dcat: 'meleeWeapon',
         dlvl: 6,
         slot: 'meleeSlot',
         isCombat: true,
@@ -695,7 +1008,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Steel Broadsword',
         image: 'assets/icons/steelsword16.png',
         mSmithing: 'broadsword',
-        dcat: 'meleeBlade',
+        dcat: 'meleeWeapon',
         dlvl: 8,
         slot: 'meleeSlot',
         isCombat: true,
@@ -717,7 +1030,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Bronze Mace',
         image: 'assets/icons/bronzemace16.png',
         mSmithing: 'mace',
-        dcat: 'meleeBlunt',
+        dcat: 'meleeWeapon',
         dlvl: 3,
         slot: 'meleeSlot',
         isCombat: true,
@@ -737,7 +1050,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Iron Mace',
         image: 'assets/icons/ironmace16.png',
         mSmithing: 'mace',
-        dcat: 'meleeBlunt',
+        dcat: 'meleeWeapon',
         dlvl: 6,
         slot: 'meleeSlot',
         isCombat: true,
@@ -757,7 +1070,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Steel Mace',
         image: 'assets/icons/steelmace16.png',
         mSmithing: 'mace',
-        dcat: 'meleeBlunt',
+        dcat: 'meleeWeapon',
         dlvl: 8,
         slot: 'meleeSlot',
         isCombat: true,
@@ -779,7 +1092,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Bronze Warhammer',
         image: 'assets/icons/bronzeheavy16.png',
         mSmithing: 'heavy',
-        dcat: 'meleeBlunt',
+        dcat: 'meleeWeapon',
         dlvl: 4,
         slot: 'meleeSlot',
         isCombat: true,
@@ -799,7 +1112,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Iron Warhammer',
         image: 'assets/icons/testIcon16.png',
         mSmithing: 'heavy',
-        dcat: 'meleeBlunt',
+        dcat: 'meleeWeapon',
         dlvl: 7,
         slot: 'meleeSlot',
         isCombat: true,
@@ -819,7 +1132,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Steel Warhammer',
         image: 'assets/icons/testIcon16.png',
         mSmithing: 'heavy',
-        dcat: 'meleeBlunt',
+        dcat: 'meleeWeapon',
         dlvl: 9,
         slot: 'meleeSlot',
         isCombat: true,
@@ -1186,11 +1499,526 @@ export const useItemStore = defineStore('itemStore', {
         totalCount: 0,
       },
 
+      //mythril set
+      {
+        id: 'mythrilHelmet',
+        name: 'Mythril Helmet',
+        image: 'assets/icons/mythrilhelmet16.png',
+        mSmithing: 'helmet',
+        dcat: 'meleeArmor',
+        dlvl: 9,
+        slot: 'hatSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 7,
+          rangedDodge: 6,
+          magicDodge: 3,
+          resist: 0.06,
+        },
+        sellPrice: 92,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'mythrilPlate',
+        name: 'Mythril Plate',
+        image: 'assets/icons/mythrilplate16.png',
+        mSmithing: 'plate',
+        dcat: 'meleeArmor',
+        dlvl: 11,
+        slot: 'chestSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 9,
+          rangedDodge: 9,
+          magicDodge: 3,
+          physicalArmor: 4,
+          resist: 0.06,
+        },
+        sellPrice: 260,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'mythrilChainmail',
+        name: 'Mythril Chainmail',
+        image: 'assets/icons/mythrilchain16.png',
+        mSmithing: 'chainmail',
+        dcat: 'meleeArmor',
+        dlvl: 9,
+        slot: 'bodySlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 7,
+          rangedDodge: 7,
+          magicDodge: 3,
+          resist: 0.06,
+        },
+        sellPrice: 185,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'mythrilShield',
+        name: 'Mythril Wingshields',
+        image: 'assets/icons/mythrilwing16.png',
+        mSmithing: 'shield',
+        dcat: 'meleeArmor',
+        dlvl: 10,
+        slot: 'wingSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 8,
+          rangedDodge: 7,
+          magicDodge: 3,
+          resist: 0.06,
+        },
+        sellPrice: 135,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'mythrilGreaves',
+        name: 'Mythril Greaves',
+        image: 'assets/icons/mythrilgreaves16.png',
+        mSmithing: 'greaves',
+        dcat: 'meleeArmor',
+        dlvl: 9,
+        slot: 'legSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeAccuracy: 5,
+          meleeDodge: 6,
+          rangedDodge: 5,
+          magicDodge: 3,
+          resist: 0.06,
+        },
+        sellPrice: 86,
+        count: 0,
+        totalCount: 0,
+      },
+
+      //ranged weapon set 1
+
+      //ranged armor set 1
+      {
+        id: 'woolHood',
+        name: 'Knitted Hood',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'hood',
+        dcat: 'rangedArmor',
+        dlvl: 1,
+        slot: 'hatSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 2,
+          rangedDodge: 2,
+          magicDodge: 2,
+          resist: 0.02,
+        },
+        sellPrice: 20,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'woolJacket',
+        name: 'Knitted Jacket',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'jacket',
+        dcat: 'rangedArmor',
+        dlvl: 1,
+        slot: 'chestSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 4,
+          rangedDodge: 4,
+          magicDodge: 4,
+          resist: 0.02,
+        },
+        sellPrice: 36,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'woolVest',
+        name: 'Knitted Vest',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'vest',
+        dcat: 'rangedArmor',
+        dlvl: 1,
+        slot: 'bodySlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 2,
+          rangedDodge: 2,
+          magicDodge: 2,
+          resist: 0.02,
+        },
+        sellPrice: 28,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'woolWings',
+        name: 'Knitted Wingcloak',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'wingcloak',
+        dcat: 'rangedArmor',
+        dlvl: 1,
+        slot: 'wingSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 3,
+          rangedDodge: 3,
+          magicDodge: 3,
+          resist: 0.02,
+        },
+        sellPrice: 24,
+        count: 0,
+        totalCount: 0,
+      },
+
+      //ranged armor set 2
+      {
+        id: 'furHood',
+        name: 'Fur Hood',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'hood',
+        dcat: 'rangedArmor',
+        dlvl: 3,
+        slot: 'hatSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 3,
+          rangedDodge: 3,
+          magicDodge: 3,
+          resist: 0.03,
+        },
+        sellPrice: 30,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'furJacket',
+        name: 'Fur Jacket',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'jacket',
+        dcat: 'rangedArmor',
+        dlvl: 3,
+        slot: 'chestSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 5,
+          rangedDodge: 5,
+          magicDodge: 5,
+          resist: 0.03,
+        },
+        sellPrice: 54,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'furVest',
+        name: 'Fur Vest',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'vest',
+        dcat: 'rangedArmor',
+        dlvl: 3,
+        slot: 'bodySlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 3,
+          rangedDodge: 3,
+          magicDodge: 3,
+          resist: 0.03,
+        },
+        sellPrice: 42,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'furWings',
+        name: 'Fur Wingcloak',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'wingcloak',
+        dcat: 'rangedArmor',
+        dlvl: 3,
+        slot: 'wingSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 4,
+          rangedDodge: 4,
+          magicDodge: 4,
+          resist: 0.03,
+        },
+        sellPrice: 36,
+        count: 0,
+        totalCount: 0,
+      },
+
+      //ranged armor set 3
+      {
+        id: 'leatherHood',
+        name: 'Leather Hood',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'hood',
+        dcat: 'rangedArmor',
+        dlvl: 5,
+        slot: 'hatSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 4,
+          rangedDodge: 4,
+          magicDodge: 4,
+          resist: 0.04,
+        },
+        sellPrice: 65,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'leatherJacket',
+        name: 'Leather Jacket',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'jacket',
+        dcat: 'rangedArmor',
+        dlvl: 5,
+        slot: 'chestSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 6,
+          rangedDodge: 6,
+          magicDodge: 6,
+          resist: 0.04,
+        },
+        sellPrice: 120,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'leatherVest',
+        name: 'Leather Vest',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'vest',
+        dcat: 'rangedArmor',
+        dlvl: 5,
+        slot: 'bodySlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 4,
+          rangedDodge: 4,
+          magicDodge: 4,
+          resist: 0.04,
+        },
+        sellPrice: 90,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'leatherWings',
+        name: 'Leather Wingcloak',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'wingcloak',
+        dcat: 'rangedArmor',
+        dlvl: 5,
+        slot: 'wingSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 5,
+          rangedDodge: 5,
+          magicDodge: 5,
+          resist: 0.04,
+        },
+        sellPrice: 78,
+        count: 0,
+        totalCount: 0,
+      },
+
+      //ranged armor set 4
+      {
+        id: 'hideHood',
+        name: 'Hide Hood',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'hood',
+        dcat: 'rangedArmor',
+        dlvl: 7,
+        slot: 'hatSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 5,
+          rangedDodge: 5,
+          magicDodge: 5,
+          resist: 0.05,
+        },
+        sellPrice: 85,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'hideJacket',
+        name: 'Hide Jacket',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'jacket',
+        dcat: 'rangedArmor',
+        dlvl: 7,
+        slot: 'chestSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 7,
+          rangedDodge: 7,
+          magicDodge: 7,
+          resist: 0.05,
+        },
+        sellPrice: 155,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'hideVest',
+        name: 'Hide Vest',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'vest',
+        dcat: 'rangedArmor',
+        dlvl: 7,
+        slot: 'bodySlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 5,
+          rangedDodge: 5,
+          magicDodge: 5,
+          resist: 0.05,
+        },
+        sellPrice: 110,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'hideWings',
+        name: 'Hide Wingcloak',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'wingcloak',
+        dcat: 'rangedArmor',
+        dlvl: 7,
+        slot: 'wingSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 6,
+          rangedDodge: 6,
+          magicDodge: 6,
+          resist: 0.05,
+        },
+        sellPrice: 100,
+        count: 0,
+        totalCount: 0,
+      },
+
+      //ranged armor set 5
+      {
+        id: 'caraHood',
+        name: 'Carapace Hood',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'hood',
+        dcat: 'rangedArmor',
+        dlvl: 9,
+        slot: 'hatSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 6,
+          rangedDodge: 6,
+          magicDodge: 6,
+          resist: 0.06,
+        },
+        sellPrice: 70,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'caraJacket',
+        name: 'Carapace Jacket',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'jacket',
+        dcat: 'rangedArmor',
+        dlvl: 9,
+        slot: 'chestSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 8,
+          rangedDodge: 8,
+          magicDodge: 8,
+          resist: 0.06,
+        },
+        sellPrice: 105,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'caraVest',
+        name: 'Carapace Vest',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'vest',
+        dcat: 'rangedArmor',
+        dlvl: 9,
+        slot: 'bodySlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 6,
+          rangedDodge: 6,
+          magicDodge: 6,
+          resist: 0.06,
+        },
+        sellPrice: 85,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'caraWings',
+        name: 'Carapace Wingcloak',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'wingcloak',
+        dcat: 'rangedArmor',
+        dlvl: 9,
+        slot: 'wingSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDodge: 7,
+          rangedDodge: 7,
+          magicDodge: 7,
+          resist: 0.06,
+        },
+        sellPrice: 75,
+        count: 0,
+        totalCount: 0,
+      },
+
       //wands
       {
         id: 'wand1',
-        name: 'wand1',
-        flavor: 'bbbb.',
+        name: 'Pale Wand',
         image: 'assets/icons/wand1.png',
         mArtifice: 'wand',
         dcat: 'magicWeapon',
@@ -1210,12 +2038,11 @@ export const useItemStore = defineStore('itemStore', {
       },
       {
         id: 'wand2',
-        name: 'wand2',
-        flavor: 'bbbb.',
+        name: 'Pure Wand',
         image: 'assets/icons/wand2.png',
         mArtifice: 'wand',
         dcat: 'magicWeapon',
-        dlvl: 3,
+        dlvl: 2,
         slot: 'magicSlot',
         isCombat: true,
         onEquip: false,
@@ -1231,12 +2058,11 @@ export const useItemStore = defineStore('itemStore', {
       },
       {
         id: 'wand3',
-        name: 'wand3',
-        flavor: 'bbbb.',
+        name: 'Spelldew Wand',
         image: 'assets/icons/wand3.png',
         mArtifice: 'wand',
         dcat: 'magicWeapon',
-        dlvl: 6,
+        dlvl: 4,
         slot: 'magicSlot',
         isCombat: true,
         onEquip: false,
@@ -1246,15 +2072,34 @@ export const useItemStore = defineStore('itemStore', {
           magicPen: 0.05,
           magicSpeed: 2.2,
         },
-        sellPrice: 98,
+        sellPrice: 85,
         count: 0,
         totalCount: 0,
       },
       {
         id: 'wand4',
-        name: 'wand4',
-        flavor: 'bbbb.',
+        name: 'Vis Wand',
         image: 'assets/icons/wand4.png',
+        mArtifice: 'wand',
+        dcat: 'magicWeapon',
+        dlvl: 6,
+        slot: 'magicSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          magicAccuracy: 0,
+          magicDamage: 0.20,
+          magicPen: 0.05,
+          magicSpeed: 2.2,
+        },
+        sellPrice: 120,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'wand5',
+        name: 'Flux Wand',
+        image: 'assets/icons/wand5.png',
         mArtifice: 'wand',
         dcat: 'magicWeapon',
         dlvl: 8,
@@ -1263,7 +2108,7 @@ export const useItemStore = defineStore('itemStore', {
         onEquip: false,
         stats: {
           magicAccuracy: 0,
-          magicDamage: 0.20,
+          magicDamage: 0.25,
           magicPen: 0.05,
           magicSpeed: 2.2,
         },
@@ -1275,8 +2120,7 @@ export const useItemStore = defineStore('itemStore', {
       //staffs
       {
         id: 'staff1',
-        name: 'staff1',
-        flavor: 'bbbb.',
+        name: 'Pure Staff',
         image: 'assets/icons/staff1.png',
         mArtifice: 'staff',
         dcat: 'magicWeapon',
@@ -1296,12 +2140,11 @@ export const useItemStore = defineStore('itemStore', {
       },
       {
         id: 'staff2',
-        name: 'staff2',
-        flavor: 'bbbb.',
+        name: 'Nitor Staff',
         image: 'assets/icons/staff2.png',
         mArtifice: 'staff',
         dcat: 'magicWeapon',
-        dlvl: 4,
+        dlvl: 3,
         slot: 'magicSlot',
         isCombat: true,
         onEquip: false,
@@ -1311,18 +2154,17 @@ export const useItemStore = defineStore('itemStore', {
           magicPen: 0.10,
           magicSpeed: 3.0,
         },
-        sellPrice: 60,
+        sellPrice: 40,
         count: 0,
         totalCount: 0,
       },
       {
         id: 'staff3',
-        name: 'staff3',
-        flavor: 'bbbb.',
+        name: 'Cinnabar Staff',
         image: 'assets/icons/staff3.png',
         mArtifice: 'staff',
         dcat: 'magicWeapon',
-        dlvl: 6,
+        dlvl: 5,
         slot: 'magicSlot',
         isCombat: true,
         onEquip: false,
@@ -1332,24 +2174,43 @@ export const useItemStore = defineStore('itemStore', {
           magicPen: 0.10,
           magicSpeed: 3.0,
         },
-        sellPrice: 90,
+        sellPrice: 60,
         count: 0,
         totalCount: 0,
       },
       {
         id: 'staff4',
-        name: 'staff4',
-        flavor: 'bbbb.',
+        name: 'Sparksalt Staff',
         image: 'assets/icons/staff4.png',
         mArtifice: 'staff',
         dcat: 'magicWeapon',
-        dlvl: 8,
+        dlvl: 7,
         slot: 'magicSlot',
         isCombat: true,
         onEquip: false,
         stats: {
           magicAccuracy: 0,
           magicDamage: 0.50,
+          magicPen: 0.10,
+          magicSpeed: 3.0,
+        },
+        sellPrice: 90,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'staff5',
+        name: 'Naptha Staff',
+        image: 'assets/icons/staff5.png',
+        mArtifice: 'staff',
+        dcat: 'magicWeapon',
+        dlvl: 9,
+        slot: 'magicSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          magicAccuracy: 0,
+          magicDamage: 0.55,
           magicPen: 0.10,
           magicSpeed: 3.0,
         },
@@ -1361,12 +2222,11 @@ export const useItemStore = defineStore('itemStore', {
       //books
       {
         id: 'book1',
-        name: 'book1',
-        flavor: 'bbbb.',
+        name: 'Pure Grimoire',
         image: 'assets/icons/book1.png',
         mArtifice: 'book',
         dcat: 'magicWeapon',
-        dlvl: 3,
+        dlvl: 4,
         slot: 'magicSlot',
         isCombat: true,
         onEquip: false,
@@ -1382,12 +2242,11 @@ export const useItemStore = defineStore('itemStore', {
       },
       {
         id: 'book2',
-        name: 'book2',
-        flavor: 'bbbb.',
+        name: 'Spelldew Grimoire',
         image: 'assets/icons/book2.png',
         mArtifice: 'book',
         dcat: 'magicWeapon',
-        dlvl: 5,
+        dlvl: 6,
         slot: 'magicSlot',
         isCombat: true,
         onEquip: false,
@@ -1403,12 +2262,11 @@ export const useItemStore = defineStore('itemStore', {
       },
       {
         id: 'book3',
-        name: 'book3',
-        flavor: 'bbbb.',
+        name: 'Sparksalt Grimoire',
         image: 'assets/icons/book3.png',
         mArtifice: 'book',
         dcat: 'magicWeapon',
-        dlvl: 7,
+        dlvl: 8,
         slot: 'magicSlot',
         isCombat: true,
         onEquip: false,
@@ -1418,7 +2276,7 @@ export const useItemStore = defineStore('itemStore', {
           magicPen: 0.15,
           magicSpeed: 2.6,
         },
-        sellPrice: 170,
+        sellPrice: 198,
         count: 0,
         totalCount: 0,
       },
@@ -1426,8 +2284,7 @@ export const useItemStore = defineStore('itemStore', {
       //orbs
       {
         id: 'orb1',
-        name: 'orb1',
-        flavor: 'bbbb.',
+        name: 'Amber Orb',
         image: 'assets/icons/orb1.png',
         mArtifice: 'orb',
         dcat: 'magicWeapon',
@@ -1441,14 +2298,13 @@ export const useItemStore = defineStore('itemStore', {
           magicPen: -0.3,
           magicSpeed: 2.0,
         },
-        sellPrice: 32,
+        sellPrice: 42,
         count: 0,
         totalCount: 0,
       },
       {
         id: 'orb2',
-        name: 'orb2',
-        flavor: 'bbbb.',
+        name: 'Silver Orb',
         image: 'assets/icons/orb2.png',
         mArtifice: 'orb',
         dcat: 'magicWeapon',
@@ -1462,14 +2318,13 @@ export const useItemStore = defineStore('itemStore', {
           magicPen: -0.3,
           magicSpeed: 2.0,
         },
-        sellPrice: 49,
+        sellPrice: 79,
         count: 0,
         totalCount: 0,
       },
       {
         id: 'orb3',
-        name: 'orb3',
-        flavor: 'bbbb.',
+        name: 'Spinel Orb',
         image: 'assets/icons/orb3.png',
         mArtifice: 'orb',
         dcat: 'magicWeapon',
@@ -1483,17 +2338,150 @@ export const useItemStore = defineStore('itemStore', {
           magicPen: -0.3,
           magicSpeed: 2.0,
         },
-        sellPrice: 125,
+        sellPrice: 160,
         count: 0,
         totalCount: 0,
       },
 
       //magic set 1
+      {
+        id: 'flaxGloves',
+        name: 'Linen Gloves',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'glove',
+        dcat: 'magicArmor',
+        dlvl: 2,
+        slot: 'hatSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          magicAccuracy: 1,
+          magicDodge: 2,
+          resist: 0.02,
+        },
+        sellPrice: 15,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'flaxHat',
+        name: 'Linen Hat',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'hat',
+        dcat: 'magicArmor',
+        dlvl: 2,
+        slot: 'hatSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          magicAccuracy: 1,
+          magicDodge: 3,
+          resist: 0.02,
+        },
+        sellPrice: 22,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'flaxTunic',
+        name: 'Linen Tunic',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'tunic',
+        dcat: 'magicArmor',
+        dlvl: 2,
+        slot: 'bodySlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          magicAccuracy: 1,
+          magicDodge: 3,
+          resist: 0.02,
+        },
+        sellPrice: 40,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'flaxRobe',
+        name: 'Linen Robe',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'robe',
+        dcat: 'magicArmor',
+        dlvl: 2,
+        slot: 'chestSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          magicAccuracy: 1,
+          magicDodge: 5,
+          resist: 0.02,
+        },
+        sellPrice: 54,
+        count: 0,
+        totalCount: 0,
+      },
+
       //magic set 2
       {
+        id: 'cottonHat',
+        name: 'Cotton Hat',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'hat',
+        dcat: 'magicArmor',
+        dlvl: 4,
+        slot: 'hatSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          magicAccuracy: 2,
+          magicDodge: 4,
+          resist: 0.03,
+        },
+        sellPrice: 45,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'cottonRobe',
+        name: 'Cotton Robe',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'robe',
+        dcat: 'magicArmor',
+        dlvl: 4,
+        slot: 'chestSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          magicAccuracy: 2,
+          magicDodge: 6,
+          resist: 0.03,
+        },
+        sellPrice: 110,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'cottonTunic',
+        name: 'Cotton Tunic',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'tunic',
+        dcat: 'magicArmor',
+        dlvl: 4,
+        slot: 'bodySlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          magicAccuracy: 2,
+          magicDodge: 4,
+          resist: 0.03,
+        },
+        sellPrice: 80,
+        count: 0,
+        totalCount: 0,
+      },
+      {
         id: 'wingward1',
-        name: 'wingward1',
-        flavor: 'cccc.',
+        name: 'Nitor Wingwards',
         image: 'assets/icons/wing1.png',
         mArtifice: 'wing',
         dcat: 'magicArmor',
@@ -1502,21 +2490,102 @@ export const useItemStore = defineStore('itemStore', {
         isCombat: true,
         onEquip: false,
         stats: {
-          magicAccuracy: 0,
+          magicAccuracy: 2,
           magicDodge: 5,
           energyArmor: 1,
           resist: 0.03,
         },
-        sellPrice: 44,
+        sellPrice: 95,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'cottonGloves',
+        name: 'Cotton Gloves',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'glove',
+        dcat: 'magicArmor',
+        dlvl: 4,
+        slot: 'hatSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          magicAccuracy: 2,
+          magicDodge: 3,
+          resist: 0.03,
+        },
+        sellPrice: 30,
         count: 0,
         totalCount: 0,
       },
 
       //magic set 3
       {
+        id: 'barkHat',
+        name: 'Silverbark Hat',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'hat',
+        dcat: 'magicArmor',
+        dlvl: 6,
+        slot: 'hatSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          magicAccuracy: 3,
+          meleeDodge: 2,
+          rangedDodge: 2,
+          magicDodge: 5,
+          resist: 0.04,
+        },
+        sellPrice: 52,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'barkRobe',
+        name: 'Silverbark Robe',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'robe',
+        dcat: 'magicArmor',
+        dlvl: 6,
+        slot: 'chestSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          magicAccuracy: 3,
+          meleeDodge: 2,
+          rangedDodge: 2,
+          magicDodge: 7,
+          resist: 0.04,
+        },
+        sellPrice: 70,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'barkTunic',
+        name: 'Silverbark Tunic',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'tunic',
+        dcat: 'magicArmor',
+        dlvl: 6,
+        slot: 'bodySlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          magicAccuracy: 3,
+          meleeDodge: 2,
+          rangedDodge: 2,
+          magicDodge: 5,
+          resist: 0.04,
+        },
+        sellPrice: 65,
+        count: 0,
+        totalCount: 0,
+      },
+      {
         id: 'wingward2',
-        name: 'wingward2',
-        flavor: 'cccc.',
+        name: 'Cinnabar Wingwards',
         image: 'assets/icons/wing2.png',
         mArtifice: 'wing',
         dcat: 'magicArmor',
@@ -1525,35 +2594,131 @@ export const useItemStore = defineStore('itemStore', {
         isCombat: true,
         onEquip: false,
         stats: {
-          magicAccuracy: 0,
+          magicAccuracy: 3,
           magicDodge: 6,
           energyArmor: 2,
           resist: 0.04,
         },
-        sellPrice: 64,
+        sellPrice: 140,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'barkGloves',
+        name: 'Silverbark Gloves',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'glove',
+        dcat: 'magicArmor',
+        dlvl: 6,
+        slot: 'hatSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          magicAccuracy: 3,
+          meleeDodge: 2,
+          rangedDodge: 2,
+          magicDodge: 4,
+          resist: 0.04,
+        },
+        sellPrice: 44,
         count: 0,
         totalCount: 0,
       },
 
       //magic set 4
       {
+        id: 'silkHat',
+        name: 'Silk Hat',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'hat',
+        dcat: 'magicArmor',
+        dlvl: 8,
+        slot: 'hatSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          magicAccuracy: 4,
+          magicDodge: 6,
+          resist: 0.05,
+        },
+        sellPrice: 90,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'silkRobe',
+        name: 'Silk Robe',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'robe',
+        dcat: 'magicArmor',
+        dlvl: 8,
+        slot: 'chestSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          magicAccuracy: 4,
+          magicDodge: 8,
+          resist: 0.05,
+        },
+        sellPrice: 115,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'silkTunic',
+        name: 'Silk Tunic',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'tunic',
+        dcat: 'magicArmor',
+        dlvl: 8,
+        slot: 'bodySlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          magicAccuracy: 4,
+          magicDodge: 6,
+          resist: 0.05,
+        },
+        sellPrice: 200,
+        count: 0,
+        totalCount: 0,
+      },
+      {
         id: 'wingward3',
-        name: 'wingward3',
-        flavor: 'cccc.',
+        name: 'Sparksalt Wingswards',
         image: 'assets/icons/wing3.png',
         mArtifice: 'wing',
         dcat: 'magicArmor',
-        dlvl: 5,
+        dlvl: 8,
         slot: 'wingSlot',
         isCombat: true,
         onEquip: false,
         stats: {
-          magicAccuracy: 0,
+          magicAccuracy: 4,
           magicDodge: 7,
           energyArmor: 3,
           resist: 0.05,
         },
-        sellPrice: 95,
+        sellPrice: 195,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'silkGloves',
+        name: 'Silk Gloves',
+        image: 'assets/icons/testIcon16.png',
+        mTailoring: 'glove',
+        dcat: 'magicArmor',
+        dlvl: 8,
+        slot: 'hatSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          magicAccuracy: 4,
+          magicDodge: 5,
+          resist: 0.05,
+        },
+        sellPrice: 60,
         count: 0,
         totalCount: 0,
       },
@@ -1564,7 +2729,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Kobold Nail',
         flavor: 'Not that kind of nail.',
         image: 'assets/icons/kobolddagger.png',
-        dcat: 'meleeBlade',
+        dcat: 'meleeWeapon',
         dlvl: 2,
         slot: 'meleeSlot',
         isCombat: true,
@@ -1582,7 +2747,7 @@ export const useItemStore = defineStore('itemStore', {
       {
         id: 'koboldSling',
         name: 'Kobold Sling',
-        extra: 'Requires no ammo.',
+        extra: 'Requires no ammo',
         flavor: "Shepherd's favourite.",
         image: 'assets/icons/koboldsling.png',
         dcat: 'rangedWeapon',
@@ -1714,7 +2879,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Process Mace',
         flavor: 'The auto-abacus only processes smashing now.',
         image: 'assets/icons/towermace.png',
-        dcat: 'meleeBlunt',
+        dcat: 'meleeWeapon',
         dlvl: 5,
         slot: 'meleeSlot',
         isCombat: true,
@@ -1789,7 +2954,7 @@ export const useItemStore = defineStore('itemStore', {
           energyArmor: 1,
           resist: 0.04,
         },
-        sellPrice: 270,
+        sellPrice: 250,
         count: 0,
         totalCount: 0,
       },
@@ -1811,6 +2976,114 @@ export const useItemStore = defineStore('itemStore', {
           resist: 0.04,
         },
         sellPrice: 45,
+        count: 0,
+        totalCount: 0,
+      },
+
+      //phoenix set
+      {
+        id: 'farmerBow',
+        name: 'Phoenix Crossbow',
+        flavor: "Former property of the phoenix farmers.",
+        image: 'assets/icons/testIcon16.png',
+        dcat: 'rangedWeapon',
+        dlvl: 4,
+        slot: 'rangedSlot',
+        requiredAmmo: 'arrow',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          rangedAccuracy: 5,
+          rangedDamage: 0.10,
+          rangedPen: 0.25,
+          rangedSpeed: 2.6,
+        },
+        sellPrice: 45,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'deviceFlamethrower',
+        name: 'Phoenix Staff',
+        extra: 'Mechanics Device\nNo combat XP',
+        flavor: 'Anywhere it drips, it holes.',
+        image: 'assets/icons/testIcon16.png',
+        dcat: 'device',
+        dlvl: 1,
+        slot: 'magicSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          magicAccuracy: 5,
+          magicDamage: 0.30,
+          magicPen: 0.05,
+          magicSpeed: 2.8,
+        },
+        sellPrice: 55,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'farmerHelm',
+        name: 'Phoenix Hood',
+        flavor: 'Keeps hair safe from fire, keeps eyes safe from hair.',
+        image: 'assets/icons/testIcon16.png',
+        dcat: 'rangedArmor',
+        dlvl: 4,
+        slot: 'hatSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          rangedDamage: 0.05,
+          meleeDodge: 2,
+          rangedDodge: 4,
+          magicDodge: 4,
+          resist: 0.04,
+        },
+        sellPrice: 40,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'hotsuitBody',
+        name: "Phoenix Apron",
+        flavor: 'Heavy and ash resistant.',
+        image: 'assets/icons/testIcon16.png',
+        dcat: 'meleeArmor',
+        dlvl: 4,
+        slot: 'bodySlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          meleeDamage: 0.05,
+          meleeDodge: 3,
+          rangedDodge: 5,
+          magicDodge: 5,
+          resist: 0.04,
+        },
+        sellPrice: 45,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'farmerWings',
+        name: 'Phoenix Ashes',
+        flavor: 'Remembers being wings, remembers burning steel.',
+        image: 'assets/icons/testIcon16.png',
+        dcat: 'magicArmor',
+        dlvl: 5,
+        slot: 'wingSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          magicDamage: 0.05,
+          meleeDodge: 4,
+          rangedDodge: 6,
+          magicDodge: 6,
+          energyArmor: 2,
+          resist: 0.04,
+        },
+        sellPrice: 85,
         count: 0,
         totalCount: 0,
       },
@@ -1869,7 +3142,7 @@ export const useItemStore = defineStore('itemStore', {
         flavor: "Adds a bit of pep to life.",
         extra: '+1 bonus healing',
         image: 'assets/icons/spicepouch.png',
-        dcat: 'jewellery',
+        dcat: 'tool',
         dlvl: 1,
         slot: 'trinketSlot',
         isCombat: true,
@@ -1897,11 +3170,28 @@ export const useItemStore = defineStore('itemStore', {
         totalCount: 0,
       },
       {
+        id: 'copperRingGlass',
+        name: 'Ring of Glass (c)',
+        flavor: "Inverted purpose.",
+        image: 'assets/icons/ringcopperglass.png',
+        dcat: 'jewellery',
+        dlvl: 3,
+        slot: 'ringSlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          accuracy: 1,
+        },
+        sellPrice: 25,
+        count: 0,
+        totalCount: 0,
+      },
+      {
         id: 'silverRing',
         name: 'Ring of Silver',
         image: 'assets/icons/ringsilver.png',
         dcat: 'jewellery',
-        dlvl: 5,
+        dlvl: 2,
         slot: 'ringSlot',
         isCombat: true,
         onEquip: false,
@@ -1934,7 +3224,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Ring of Gold',
         image: 'assets/icons/ringgold.png',
         dcat: 'jewellery',
-        dlvl: 10,
+        dlvl: 3,
         slot: 'ringSlot',
         isCombat: true,
         onEquip: false,
@@ -1963,11 +3253,28 @@ export const useItemStore = defineStore('itemStore', {
         totalCount: 0,
       },
       {
+        id: 'copperAmmyGlass',
+        name: 'Amulet of Glass (c)',
+        flavor: "Unsighted.",
+        image: 'assets/icons/ammycopper.png',
+        dcat: 'jewellery',
+        dlvl: 3,
+        slot: 'ammySlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          dodge: 1,
+        },
+        sellPrice: 30,
+        count: 0,
+        totalCount: 0,
+      },
+      {
         id: 'silverAmmy',
         name: 'Amulet of Silver',
         image: 'assets/icons/ammysilver.png',
         dcat: 'jewellery',
-        dlvl: 5,
+        dlvl: 2,
         slot: 'ammySlot',
         isCombat: true,
         onEquip: false,
@@ -1979,11 +3286,27 @@ export const useItemStore = defineStore('itemStore', {
         totalCount: 0,
       },
       {
+        id: 'pinkAmmy',
+        name: 'Amulet of Slaying',
+        image: 'assets/icons/ammypink.png',
+        dcat: 'jewellery',
+        dlvl: 5,
+        slot: 'ammySlot',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          slayerMitigation: 0.10,
+        },
+        sellPrice: 140,
+        count: 0,
+        totalCount: 0,
+      },
+      {
         id: 'goldAmmy',
         name: 'Amulet of Gold',
         image: 'assets/icons/ammygold.png',
         dcat: 'jewellery',
-        dlvl: 10,
+        dlvl: 3,
         slot: 'ammySlot',
         isCombat: true,
         onEquip: false,
@@ -2139,6 +3462,24 @@ export const useItemStore = defineStore('itemStore', {
         count: 0,
         totalCount: 0,
       },
+      {
+        id: 'mythrilArrow',
+        name: 'Mythril Arrows',
+        flavor: "If found, do not return to sender.",
+        image: 'assets/icons/mythrilarrow.png',
+        dcat: 'ammo',
+        dlvl: 9,
+        slot: 'ammoSlot',
+        ammoType: 'arrow',
+        isCombat: true,
+        onEquip: false,
+        stats: {
+          rangedDamage: 0.65,
+        },
+        sellPrice: 8,
+        count: 0,
+        totalCount: 0,
+      },
 
       //charges
       {
@@ -2271,7 +3612,7 @@ export const useItemStore = defineStore('itemStore', {
         onEquip: false,
         slot: 'foodSlot',
         heals: 2,
-        dlvl: 2,
+        dlvl: 3,
         sellPrice: 3,
         count: 0,
         totalCount: 0,
@@ -2284,8 +3625,8 @@ export const useItemStore = defineStore('itemStore', {
         isFood: true,
         onEquip: false,
         slot: 'foodSlot',
-        heals: 3,
-        dlvl: 3,
+        heals: 5,
+        dlvl: 5,
         sellPrice: 14,
         count: 0,
         totalCount: 0,
@@ -2298,8 +3639,8 @@ export const useItemStore = defineStore('itemStore', {
         isFood: true,
         onEquip: false,
         slot: 'foodSlot',
-        heals: 4,
-        dlvl: 4,
+        heals: 9,
+        dlvl: 8,
         sellPrice: 22,
         count: 0,
         totalCount: 0,
@@ -2327,7 +3668,7 @@ export const useItemStore = defineStore('itemStore', {
         onEquip: false,
         slot: 'foodSlot',
         heals: 3,
-        dlvl: 2,
+        dlvl: 3,
         sellPrice: 5,
         count: 0,
         totalCount: 0,
@@ -2340,8 +3681,8 @@ export const useItemStore = defineStore('itemStore', {
         isFood: true,
         onEquip: false,
         slot: 'foodSlot',
-        heals: 4,
-        dlvl: 3,
+        heals: 7,
+        dlvl: 5,
         sellPrice: 19,
         count: 0,
         totalCount: 0,
@@ -2354,8 +3695,8 @@ export const useItemStore = defineStore('itemStore', {
         isFood: true,
         onEquip: false,
         slot: 'foodSlot',
-        heals: 5,
-        dlvl: 4,
+        heals: 14,
+        dlvl: 8,
         sellPrice: 27,
         count: 0,
         totalCount: 0,
@@ -2552,7 +3893,7 @@ export const useItemStore = defineStore('itemStore', {
       },
       {
         id: 'rune7',
-        name: 'Spark Salt',
+        name: 'Sparksalt',
         image: 'assets/icons/rune7.png',
         dcat: 'magic',
         dlvl: 7,
@@ -2625,7 +3966,7 @@ export const useItemStore = defineStore('itemStore', {
       },
       {
         id: 'plant6',
-        name: 'Liquor Maple',
+        name: 'Drip Maple',
         image: 'assets/icons/plant6.png',
         dcat: 'living',
         dlvl: 6,
@@ -2727,13 +4068,23 @@ export const useItemStore = defineStore('itemStore', {
         totalCount: 0,
       },
       {
-        id: 'ore8', //oops, this should be so many gems, TODO
-        name: 'Gem Dust',
+        id: 'ore8', //probably give mining an image: '' and use it if it has it
+        name: 'fakegem',
         extra: 'buggy bud shudnt hav dis :(',
         image: 'assets/icons/ore8.png',
         dcat: 'ore',
         dlvl: 8,
-        sellPrice: 20,
+        sellPrice: 1,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'ore9',
+        name: 'Cobalt Ore',
+        image: 'assets/icons/ore7.png',
+        dcat: 'ore',
+        dlvl: 9,
+        sellPrice: 22,
         count: 0,
         totalCount: 0,
       },
@@ -2773,7 +4124,7 @@ export const useItemStore = defineStore('itemStore', {
         id: 'bar4',
         name: 'Silver Ingot',
         image: 'assets/icons/silveringot16.png',
-        dcat: 'luxbar',
+        dcat: 'lux',
         dlvl: 5,
         sellPrice: 35,
         count: 0,
@@ -2783,9 +4134,19 @@ export const useItemStore = defineStore('itemStore', {
         id: 'bar5',
         name: 'Steel Ingot',
         image: 'assets/icons/steelingot16.png',
-        dcat: 'ore',
+        dcat: 'bar',
         dlvl: 7,
         sellPrice: 28,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'bar6',
+        name: 'Mythril Ingot',
+        image: 'assets/icons/mythrilingot16.png',
+        dcat: 'bar',
+        dlvl: 9,
+        sellPrice: 40,
         count: 0,
         totalCount: 0,
       },
@@ -2794,7 +4155,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Pyrite',
         flavor: 'Clever crystal.',
         image: 'assets/icons/gemyellow.png',
-        dcat: 'gem',
+        dcat: 'lux',
         dlvl: 5,
         sellPrice: 65,
         count: 0,
@@ -2805,7 +4166,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Spinel',
         flavor: "Pink's best friend.",
         image: 'assets/icons/gempink.png',
-        dcat: 'gem',
+        dcat: 'lux',
         dlvl: 5,
         sellPrice: 80,
         count: 0,
@@ -2816,7 +4177,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Ruby',
         flavor: 'Direct and feisty.',
         image: 'assets/icons/gemred.png',
-        dcat: 'gem',
+        dcat: 'lux',
         dlvl: 10,
         sellPrice: 140,
         count: 0,
@@ -2827,7 +4188,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Emerald',
         flavor: 'Imperial focus.',
         image: 'assets/icons/gemgreen.png',
-        dcat: 'gem',
+        dcat: 'lux',
         dlvl: 10,
         sellPrice: 180,
         count: 0,
@@ -2838,7 +4199,7 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Sapphire',
         flavor: 'Concentrated patience.',
         image: 'assets/icons/gemblue.png',
-        dcat: 'gem',
+        dcat: 'lux',
         dlvl: 10,
         sellPrice: 210,
         count: 0,
@@ -2848,7 +4209,7 @@ export const useItemStore = defineStore('itemStore', {
         id: 'glassBar',
         name: 'Glass',
         image: 'assets/icons/glassingot16.png',
-        dcat: 'luxbar',
+        dcat: 'lux',
         dlvl: 1,
         sellPrice: 5,
         count: 0,
@@ -2934,7 +4295,7 @@ export const useItemStore = defineStore('itemStore', {
         flavor: "The smallest kind of wing.",
         image: 'assets/icons/feather.png',
         dcat: 'ingredient',
-        dlvl: 3,
+        dlvl: 1,
         sellPrice: 1,
         count: 0,
         totalCount: 0,
@@ -2951,6 +4312,17 @@ export const useItemStore = defineStore('itemStore', {
         totalCount: 0,
       },
       {
+        id: 'oxTail',
+        name: 'Oxtail',
+        flavor: "Bulk stock of tail dock.",
+        image: 'assets/icons/testIcon16.png',
+        dcat: 'ingredient',
+        dlvl: 5,
+        sellPrice: 10,
+        count: 0,
+        totalCount: 0,
+      },
+      {
         id: 'slothClaws',
         name: 'Claws',
         flavor: "A group of these is called a contract.",
@@ -2958,6 +4330,17 @@ export const useItemStore = defineStore('itemStore', {
         dcat: 'ingredient',
         dlvl: 7,
         sellPrice: 24,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'carmine',
+        name: 'Carmine',
+        flavor: "The violent pigment.",
+        image: 'assets/icons/testIcon16.png',
+        dcat: 'ingredient',
+        dlvl: 10,
+        sellPrice: 32,
         count: 0,
         totalCount: 0,
       },
@@ -2999,31 +4382,9 @@ export const useItemStore = defineStore('itemStore', {
         name: 'Noble Bones',
         flavor: "Hardened remains.",
         image: 'assets/icons/bones3.png',
-        dcat: 'remains',
+        dcat: 'dust',
         dlvl: 4,
         sellPrice: 40,
-        count: 0,
-        totalCount: 0,
-      },
-      {
-        id: 'ashes1',
-        name: 'Fading Dust',
-        flavor: "Barely better than normal dust.",
-        image: 'assets/icons/dust1.png',
-        dcat: 'remains',
-        dlvl: 2,
-        sellPrice: 7,
-        count: 0,
-        totalCount: 0,
-      },
-      {
-        id: 'ashes2',
-        name: 'Glowing Dust',
-        flavor: "A pile of unstructured magic.",
-        image: 'assets/icons/dust2.png',
-        dcat: 'remains',
-        dlvl: 5,
-        sellPrice: 22,
         count: 0,
         totalCount: 0,
       },
@@ -3038,8 +4399,114 @@ export const useItemStore = defineStore('itemStore', {
         count: 0,
         totalCount: 0,
       },
+      {
+        id: 'ashes1',
+        name: 'Fading Dust',
+        flavor: "Barely better than normal dust.",
+        image: 'assets/icons/dust1.png',
+        dcat: 'dust',
+        dlvl: 2,
+        sellPrice: 7,
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'ashes2',
+        name: 'Glowing Dust',
+        flavor: "A pile of unstructured magic.",
+        image: 'assets/icons/dust2.png',
+        dcat: 'dust',
+        dlvl: 5,
+        sellPrice: 22,
+        count: 0,
+        totalCount: 0,
+      },
     ],
     mechanicsItems: [
+      {
+        id: 'parts1',
+        name: 'Simple Pieces',
+        image: 'assets/icons/parts1.png',
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'parts2',
+        name: 'Organic Pieces',
+        image: 'assets/icons/parts2.png',
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'parts3',
+        name: 'Metallic Pieces',
+        image: 'assets/icons/parts3.png',
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'parts4',
+        name: 'Energetic Pieces',
+        image: 'assets/icons/parts4.png',
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'components1',
+        name: 'Practical Components',
+        image: 'assets/icons/components1.png',
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'components2',
+        name: 'Direct Components',
+        image: 'assets/icons/components2.png',
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'components3',
+        name: 'Protective Components',
+        image: 'assets/icons/components3.png',
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'components4',
+        name: 'Precious Components',
+        image: 'assets/icons/components4.png',
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'components5',
+        name: 'Catalytic Components',
+        image: 'assets/icons/components5.png',
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'components6',
+        name: 'Hearty Components',
+        image: 'assets/icons/components6.png',
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'components7',
+        name: 'Ancient Components',
+        image: 'assets/icons/components7.png',
+        count: 0,
+        totalCount: 0,
+      },
+      {
+        id: 'components8',
+        name: 'Ethereal Components',
+        image: 'assets/icons/components8.png',
+        count: 0,
+        totalCount: 0,
+      },
       {
         id: 'word1',
         name: 'Ac',
@@ -3120,6 +4587,46 @@ export const useItemStore = defineStore('itemStore', {
         count: 0,
         totalCount: 0,
       },
+    ],
+    totaldcat: {
+      device: 0,
+      tool: 0,
+      toolWeapon: 0,
+
+      meleeWeapon: 0,
+      meleeArmor: 0,
+      rangedWeapon: 0,
+      rangedArmor: 0,
+      magicWeapon: 0,
+      magicArmor: 0,
+      jewellery: 0,
+      prayer: 0,
+
+      oil: 0,
+      ammo: 0,
+      charge: 0,
+
+      rawFood: 0,
+      cookedFood: 0,
+      potion: 0,
+
+      money: 0,
+      magic: 0,
+      living: 0,
+      ore: 0,
+      hide: 0,
+
+      bar: 0,
+      lux: 0,
+      ingredient: 0,
+      remains: 0,
+      dust: 0,
+    },
+    pendingParts: [
+      //simple, organic, metallic, energetic
+      0,0,0,0,
+      //practical, direct, protective, precious, catalytic, hearty, ancient, ethereal
+      0,0,0,0,0,0,0,0,
     ],
   }),
   getters: {
@@ -3209,7 +4716,7 @@ export const useItemStore = defineStore('itemStore', {
 
       let tempEquippedTools = JSON.parse(localStorage.getItem('item-equippedTools'))
       for (let i in tempEquippedTools) {
-        if (tempEquippedTools[i].dlvl != undefined) {
+        if (undefined != tempEquippedTools[i].dlvl) {
           this.quickEquipTool(tempEquippedTools[i])
         }
       }
@@ -3218,32 +4725,40 @@ export const useItemStore = defineStore('itemStore', {
       let tempEquipmentItems = JSON.parse(localStorage.getItem('item-equipmentItems'))
       for (let i in tempEquipmentItems) {
         tempObject = this.equipmentItems.find(t => t.id === tempEquipmentItems[i].id)
-        tempObject.count = tempEquipmentItems[i].count
-        tempObject.totalCount = tempEquipmentItems[i].totalCount
+        if (undefined != tempEquipmentItems[i].count) {
+          tempObject.count = tempEquipmentItems[i].count ?? 0
+          tempObject.totalCount = tempEquipmentItems[i].totalCount ?? 0
+        }
       }
       tempEquipmentItems = null
 
       let tempConsumableItems = JSON.parse(localStorage.getItem('item-consumableItems'))
       for (let i in tempConsumableItems) {
         tempObject = this.consumableItems.find(t => t.id === tempConsumableItems[i].id)
-        tempObject.count = tempConsumableItems[i].count
-        tempObject.totalCount = tempConsumableItems[i].totalCount
+        if (undefined != tempConsumableItems[i].count) {
+          tempObject.count = tempConsumableItems[i].count ?? 0
+          tempObject.totalCount = tempConsumableItems[i].totalCount ?? 0
+        }
       }
       tempConsumableItems = null
 
       let tempResourceItems = JSON.parse(localStorage.getItem('item-resourceItems'))
       for (let i in tempResourceItems) {
         tempObject = this.resourceItems.find(t => t.id === tempResourceItems[i].id)
-        tempObject.count = tempResourceItems[i].count
-        tempObject.totalCount = tempResourceItems[i].totalCount
+        if (undefined != tempResourceItems[i].count) {
+          tempObject.count = tempResourceItems[i].count ?? 0
+          tempObject.totalCount = tempResourceItems[i].totalCount ?? 0
+        }
       }
       tempResourceItems = null
 
       let tempMechanicsItems = JSON.parse(localStorage.getItem('item-mechanicsItems'))
       for (let i in tempMechanicsItems) {
         tempObject = this.mechanicsItems.find(t => t.id === tempMechanicsItems[i].id)
-        tempObject.count = tempMechanicsItems[i].count
-        tempObject.totalCount = tempMechanicsItems[i].totalCount
+        if (undefined != tempMechanicsItems[i].count) {
+          tempObject.count = tempMechanicsItems[i].count ?? 0
+          tempObject.totalCount = tempMechanicsItems[i].totalCount ?? 0
+        }
       }
       tempMechanicsItems = null
 
@@ -3272,11 +4787,15 @@ export const useItemStore = defineStore('itemStore', {
         if (itemToAddCount == undefined) {
           itemToAddCount = this.equipmentItems.find(t => t.id === itemID)
         }
+        //look in mechanics items
+        if (itemToAddCount == undefined) {
+          itemToAddCount = this.mechanicsItems.find(t => t.id === itemID)
+        }
       }
 
       //give up and report the error
       if (itemToAddCount == undefined) {
-        console.log('failed to add item ' + itemID)
+        console.error('failed to add item ' + itemID)
         return false
       }
       //let player see the hoard for the first time
@@ -3289,9 +4808,9 @@ export const useItemStore = defineStore('itemStore', {
 
       //explain what you're doing
       if (amount > 0) {
-        console.log('hoarding ' + amount + ' ' + itemToAddCount.name)
+        // console.log('hoarding ' + amount + ' ' + itemToAddCount.name)
       } else {
-        console.log('losing ' + amount + ' ' + itemToAddCount.name)
+        // console.log('losing ' + amount + ' ' + itemToAddCount.name)
       }
 
       //finally add the item, and update its total count if its positive
@@ -3301,15 +4820,15 @@ export const useItemStore = defineStore('itemStore', {
       }
     },
     addWord(level) {
-      skillStore().flags.showMechanics = true
-      this.changeItemCount(this.mechanicsItems[Math.floor(Math.random() * level)].id, 1, 'mechanicsItems')
+      skillStore().unlockedWords()
+      this.changeItemCount('word' + Math.ceil(Math.random() * level), 1, 'mechanicsItems')
     },
 
     hasItemCount(itemID, amount, itemCat) {
       let itemToAddCount = this[itemCat].find(t => t.id === itemID)
       //not enough items
       if (itemToAddCount.count - amount < 0) { 
-        console.log('not enough boop')
+        // console.log('not enough boop')
         return false
       }
       return true
@@ -3323,6 +4842,10 @@ export const useItemStore = defineStore('itemStore', {
       } else {
         //look in resource items
         temp = this.resourceItems.find(t => t.id === itemID)
+        //look in mechanics items
+        if (temp == undefined) {
+          temp = this.mechanicsItems.find(t => t.id === itemID)
+        }
         //look in consumable items
         if (temp == undefined) {
           temp = this.consumableItems.find(t => t.id === itemID)
@@ -3335,7 +4858,7 @@ export const useItemStore = defineStore('itemStore', {
 
       //give up and report the error
       if (temp == undefined) {
-        console.log('failed find item image' + itemID)
+        console.error('failed find item image: ' + itemID)
         return '/assets/icons/testIcon16.png'
       }
       return temp.image
@@ -3348,6 +4871,10 @@ export const useItemStore = defineStore('itemStore', {
       } else {
         //look in resource items
         temp = this.resourceItems.find(t => t.id === itemID)
+        //look in mechanics items
+        if (temp == undefined) {
+          temp = this.mechanicsItems.find(t => t.id === itemID)
+        }
         //look in consumable items
         if (temp == undefined) {
           temp = this.consumableItems.find(t => t.id === itemID)
@@ -3360,7 +4887,7 @@ export const useItemStore = defineStore('itemStore', {
 
       //give up and report the error
       if (temp == undefined) {
-        console.log('failed find item name' + itemID)
+        console.error('failed find item name: ' + itemID)
         return 'no name'
       }
       return temp.name
@@ -3373,6 +4900,10 @@ export const useItemStore = defineStore('itemStore', {
       } else {
         //look in resource items
         temp = this.resourceItems.find(t => t.id === itemID)
+        //look in mechanics items
+        if (temp == undefined) {
+          temp = this.mechanicsItems.find(t => t.id === itemID)
+        }
         //look in consumable items
         if (temp == undefined) {
           temp = this.consumableItems.find(t => t.id === itemID)
@@ -3385,7 +4916,7 @@ export const useItemStore = defineStore('itemStore', {
 
       //give up and report the error
       if (temp == undefined) {
-        console.log('failed find item count' + itemID)
+        console.error('failed find item count: ' + itemID)
         return 0
       }
       return temp.count
@@ -3398,6 +4929,10 @@ export const useItemStore = defineStore('itemStore', {
       } else {
         //look in resource items
         temp = this.resourceItems.find(t => t.id === itemID)
+        //look in mechanics items
+        if (temp == undefined) {
+          temp = this.mechanicsItems.find(t => t.id === itemID)
+        }
         //look in consumable items
         if (temp == undefined) {
           temp = this.consumableItems.find(t => t.id === itemID)
@@ -3410,9 +4945,140 @@ export const useItemStore = defineStore('itemStore', {
 
       //give up and report the error
       if (temp == undefined) {
-        console.log('failed find item data' + itemID)
+        console.error('failed find item data: ' + itemID)
       }
       return temp
+    },
+
+    totalUpDCAT() {
+      for (let i in this.totaldcat) {
+        this.totaldcat[i] = 0
+      }
+      for (let i in this.equipmentItems) {
+        if (this.equipmentItems[i].dcat != undefined) {
+          this.totaldcat[this.equipmentItems[i].dcat] += this.equipmentItems[i].dlvl * this.equipmentItems[i].count
+        }
+      }
+      for (let i in this.consumableItems) {
+        if (this.consumableItems[i].dcat != undefined) {
+          this.totaldcat[this.consumableItems[i].dcat] += this.consumableItems[i].dlvl * this.consumableItems[i].count
+        }
+      }
+      for (let i in this.resourceItems) {
+        if (this.resourceItems[i].dcat != undefined) {
+          this.totaldcat[this.resourceItems[i].dcat] += this.resourceItems[i].dlvl * this.resourceItems[i].count
+        }
+      }
+      this.pendingParts[0] = Math.ceil(this.totaldcat.money / 10) + this.totaldcat.device
+
+      let organic = 0
+      organic += Math.ceil(this.totaldcat.ingredient / 50)
+      organic += Math.ceil(this.totaldcat.hide / 50)
+      organic += Math.ceil(this.totaldcat.rawFood / 50)
+      organic += Math.ceil(this.totaldcat.remains / 50)
+      organic += Math.ceil(this.totaldcat.living / 10)
+      organic += Math.ceil(this.totaldcat.cookedFood / 10)
+      organic += this.totaldcat.rangedWeapon
+      organic += this.totaldcat.rangedArmor
+      organic += this.totaldcat.device
+      this.pendingParts[1] = organic
+
+      let metallic = 0
+      metallic += Math.ceil(this.totaldcat.ammo / 100)
+      metallic += Math.ceil(this.totaldcat.ore / 10)
+      metallic += Math.ceil(this.totaldcat.lux / 5)
+      metallic += Math.ceil(this.totaldcat.bar / 5)
+      metallic += this.totaldcat.tool
+      metallic += this.totaldcat.toolWeapon
+      metallic += this.totaldcat.meleeWeapon
+      metallic += this.totaldcat.meleeArmor
+      metallic += this.totaldcat.device
+      this.pendingParts[2] = metallic
+
+      let energetic = 0
+      energetic += Math.ceil(this.totaldcat.charge / 100)
+      energetic += Math.ceil(this.totaldcat.oil / 100)
+      energetic += Math.ceil(this.totaldcat.potion / 100)
+      energetic += Math.ceil(this.totaldcat.dust / 50)
+      energetic += Math.ceil(this.totaldcat.magic / 10)
+      energetic += this.totaldcat.magicWeapon
+      energetic += this.totaldcat.magicArmor
+      energetic += this.totaldcat.jewellery
+      energetic += this.totaldcat.device
+      this.pendingParts[3] = energetic
+
+      let practical = 0
+      practical += Math.ceil(this.totaldcat.tool / 10)
+      practical += Math.ceil(this.totaldcat.toolWeapon / 10)
+      this.pendingParts[4] = practical
+
+      let direct = 0
+      direct += Math.ceil(this.totaldcat.meleeWeapon / 10)
+      direct += Math.ceil(this.totaldcat.rangedWeapon / 10)
+      direct += Math.ceil(this.totaldcat.magicWeapon / 10)
+      this.pendingParts[5] = direct
+
+      let protective = 0
+      protective += Math.ceil(this.totaldcat.meleeArmor / 10)
+      protective += Math.ceil(this.totaldcat.rangedArmor / 10)
+      protective += Math.ceil(this.totaldcat.magicArmor / 10)
+      this.pendingParts[6] = protective
+
+      let precious = 0
+      precious += Math.ceil(this.totaldcat.lux / 50)
+      precious += Math.ceil(this.totaldcat.jewellery / 10)
+      this.pendingParts[7] = precious
+
+      let catalytic = 0
+      catalytic += Math.ceil(this.totaldcat.potion / 1000)
+      catalytic += Math.ceil(this.totaldcat.oil / 1000)
+      catalytic += Math.ceil(this.totaldcat.ammo / 1000)
+      catalytic += Math.ceil(this.totaldcat.charge / 1000)
+      this.pendingParts[8] = catalytic
+
+      let hearty = 0
+      hearty += Math.ceil(this.totaldcat.rawFood / 5000)
+      hearty += Math.ceil(this.totaldcat.cookedFood / 1000)
+      this.pendingParts[9] = hearty
+
+      let ancient = 0
+      this.pendingParts[10] = ancient
+
+      let ethereal = 0
+      ethereal += Math.ceil(this.totaldcat.remains / 500)
+      ethereal += Math.ceil(this.totaldcat.dust / 100)
+      ethereal += Math.ceil(this.totaldcat.prayer / 10)
+      this.pendingParts[11] = ethereal
+
+    },
+    resetTheLoop() {
+      //unequip all items
+      for (let i in this.equippedCombat) {
+        this.equippedCombat[i].onEquip = false
+        this.equippedCombat[i] = {}
+      }
+      for (let i in this.equippedTools) {
+        this.equippedTools[i].onEquip = false
+        this.equippedTools[i] = this.defaultTools[i]
+      }
+      this.updateEquippedStats()
+      //give timeless items
+      this.totalUpDCAT()
+      for (let i in this.pendingParts) {
+        this.mechanicsItems[i].count += this.pendingParts[i]
+        this.mechanicsItems[i].totalCount += this.pendingParts[i]
+      }
+      //remove all other items
+      for (let i in this.equipmentItems) {
+        this.equipmentItems[i].count = 0
+      }
+      for (let i in this.consumableItems) {
+        this.consumableItems[i].count = 0
+      }
+      for (let i in this.resourceItems) {
+        this.resourceItems[i].count = 0
+      }
+      this.totalUpDCAT()
     },
 
     //does not update stats, does not swap, dangerous
@@ -3601,9 +5267,20 @@ export const useItemStore = defineStore('itemStore', {
       this.equippedStats.energyArmor = 0
       this.equippedStats.resist = 0
 
+      //devices
+      this.equippedStats.deviceArmorTotal = 0
+      this.equippedStats.deviceWeapons = [0, 0, 0]
+
       //special
+      this.equippedStats.oilPreserve = 0
+      this.equippedStats.ammoPreserve = 0
+      this.equippedStats.chargePreserve = 0
       this.equippedStats.poisonChance = [0, 0, 0]
-      this.extraDropChance = 0
+      this.equippedStats.extraDropChance = 0
+      this.equippedStats.slayerMitigation = 0
+
+      //skills
+      this.equippedStats.allEfficency = 0
 
       for (item in this.equippedCombat) {
         if (this.equippedCombat[item].stats != null) {
@@ -3646,7 +5323,11 @@ export const useItemStore = defineStore('itemStore', {
           //accuracy
           //has melee accuracy
           if (this.equippedCombat[item].stats.meleeAccuracy != null) {
-            this.equippedStats.meleeAccuracy += this.equippedCombat[item].stats.meleeAccuracy + this.bonusSmithingMastery(this.equippedCombat[item])
+            this.equippedStats.meleeAccuracy += this.equippedCombat[item].stats.meleeAccuracy
+            //gives bonus acc if melee weapon
+            if (this.equippedCombat[item].slot == 'meleeSlot') {
+              this.equippedStats.meleeAccuracy += this.bonusSmithingMastery(this.equippedCombat[item])
+            }
           }
 
           //has ranged accuracy
@@ -3674,7 +5355,11 @@ export const useItemStore = defineStore('itemStore', {
 
           //has magic accuracy
           if (this.equippedCombat[item].stats.magicAccuracy != null) {
-            this.equippedStats.magicAccuracy += this.equippedCombat[item].stats.magicAccuracy + this.bonusArificeMastery(this.equippedCombat[item])
+            this.equippedStats.magicAccuracy += this.equippedCombat[item].stats.magicAccuracy
+            //gives bonus acc if magic weapon
+            if (this.equippedCombat[item].slot == 'magicSlot') {
+              this.equippedStats.magicAccuracy += this.bonusArificeMastery(this.equippedCombat[item])
+            }
           }
 
           //general accuracy stat for all attack styles
@@ -3778,7 +5463,7 @@ export const useItemStore = defineStore('itemStore', {
           }
           //has magic dodge
           if (this.equippedCombat[item].stats.magicDodge != null) {
-            this.equippedStats.magicDodge += this.equippedCombat[item].stats.magicDodge
+            this.equippedStats.magicDodge += this.equippedCombat[item].stats.magicDodge + (this.bonusArificeMastery(this.equippedCombat[item]) / 4)
           }
 
           //general speed stat for all defense styles
@@ -3799,6 +5484,30 @@ export const useItemStore = defineStore('itemStore', {
             this.equippedStats.resist += this.equippedCombat[item].stats.resist
           }
 
+          //devices
+          if (this.equippedCombat[item].dcat == 'device') {
+            if (this.equippedCombat[item].slot == 'meleeSlot') {
+              this.equippedStats.deviceWeapons[0] += 1
+            } else if (this.equippedCombat[item].slot == 'rangedSlot') {
+              this.equippedStats.deviceWeapons[1] += 1
+            } else if (this.equippedCombat[item].slot == 'magicSlot') {
+              this.equippedStats.deviceWeapons[2] += 1
+            } else { //potential bug: will work unless a device oil/ammo/charge type is made
+              this.equippedStats.deviceArmorTotal += 1
+            }
+          }
+
+          //catalyst preservation
+          if (this.equippedCombat[item].stats.oilPreserve != null) {
+            this.equippedStats.oilPreserve += this.equippedCombat[item].stats.oilPreserve
+          }
+          if (this.equippedCombat[item].stats.ammoPreserve != null) {
+            this.equippedStats.ammoPreserve += this.equippedCombat[item].stats.ammoPreserve
+          }
+          if (this.equippedCombat[item].stats.chargePreserve != null) {
+            this.equippedStats.chargePreserve += this.equippedCombat[item].stats.chargePreserve
+          }
+
           //special TODO make ranged ammo work for this
           if (this.equippedCombat[item].special != null) {
             if (this.equippedCombat[item].slot == 'meleeSlot') {
@@ -3813,8 +5522,18 @@ export const useItemStore = defineStore('itemStore', {
           }
 
           //drops
+          if (this.equippedCombat[item].stats.slayerMitigation != null) {
+            this.equippedStats.slayerMitigation += this.equippedCombat[item].stats.slayerMitigation
+          }
+
+          //drops
           if (this.equippedCombat[item].stats.extraDropChance != null) {
             this.equippedStats.extraDropChance += this.equippedCombat[item].stats.extraDropChance
+          }
+
+          //skills
+          if (this.equippedCombat[item].stats.allEfficency != null) {
+            this.equippedStats.allEfficency += this.equippedCombat[item].stats.allEfficency
           }
         }
       }

@@ -271,8 +271,8 @@ export default {
 
             <span class="text-warning">Rocks and Fire</span>
             <br>
-            Some weapons <span class="info-text tooltip-t">require ammo<span class="tooltip-text">bows and
-                arrows, orbs and charge spells</span></span>, others do not. When without, targets can always be
+            Some weapons <span class="info-text tooltip-t">require ammo<span class="tooltip-text">Bows and
+                arrows</span></span>, others do not. When without, targets can always be
             bit with <span class="info-text">fangs</span>,
             hit by <span class="info-text">rocks</span>, or puffed in <span class="info-text">flame</span>.
 
@@ -289,8 +289,11 @@ export default {
       <div class="d-flex flex-wrap justify-content-center gap-1">
 
         <!-- Skill Icon and Help Button -->
-        <div class="card card-activity align-items-center py-2" style="width: 67px; height: 67px;">
-          <img src="/src/assets/12x/questionmark.png" alt="" width="48" height="48">
+        <div class="card card-activity align-items-center pt-1" style="width: 67px; height: 67px;">
+          <img src="/src/assets/12x/questionmark.png" alt="" width="36" height="36">
+          <div class="little-levels my-auto">
+            Guide
+          </div>
           <div class="stretched-link" @click="showGuideModal = true"></div>
         </div>
 
@@ -339,7 +342,8 @@ export default {
             <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 150px"
               @click="shownLocation = 0">
               <div class="d-flex justify-content-start">
-                <img src="/src/assets/icons/area1.png" alt="" width="32" height="32">Glade
+                <img src="/src/assets/icons/area1.png" alt="" width="32" height="32">
+                Glade
               </div>
             </div>
 
@@ -347,7 +351,8 @@ export default {
               @click="shownLocation = 1">
               <div class="d-flex justify-content-start">
                 <img src="/src/assets/icons/area2.png" alt="" width="32" height="32"
-                  v-if="skillStore.skills[9].level > 1">Canton
+                  v-if="skillStore.skills[9].level > 1">
+                Canton
               </div>
             </div>
 
@@ -355,7 +360,17 @@ export default {
               @click="shownLocation = 2">
               <div class="d-flex justify-content-start">
                 <img src="/src/assets/icons/area3.png" alt="" width="32" height="32"
-                  v-if="skillStore.skills[9].level > 2">Vale
+                  v-if="skillStore.skills[9].level > 2">
+                Vale
+              </div>
+            </div>
+
+            <div class="btn sidenav-item px-2 py-1" style="font-size: 1.2rem; font-weight: 500; width: 150px"
+              @click="shownLocation = 3">
+              <div class="d-flex justify-content-start">
+                <img src="/src/assets/icons/area4.png" alt="" width="32" height="32"
+                  v-if="skillStore.skills[9].level > 3">
+                Fields
               </div>
             </div>
 
@@ -415,7 +430,7 @@ export default {
         <div class="d-flex flex-wrap gap-4 pt-1 px-2">
 
           <!-- Dungeons -->
-          <div style="width: 285px;" v-for="dungeon in combatStore.dungeons">
+          <div style="width: 285px;" v-for="(dungeon, index) in combatStore.dungeons">
             <div class="d-flex gap-1">
 
               <!-- Can Disable disabled for Debug -->
@@ -426,7 +441,9 @@ export default {
 
                 <div class="d-flex justify-content-start">
                   <img :src="dungeon.image" alt="" width="32" height="32"
-                    v-if="skillStore.skills[9].level > dungeon.id">{{ dungeon.name }}
+                    v-if="skillStore.skills[9].level > dungeon.id">
+                <span class="dark-text pe-1">{{index + 1}}:</span>
+                {{ dungeon.name }}
                 </div>
               </div>
 
@@ -460,8 +477,16 @@ export default {
           <div class="d-flex gap-1">
 
             <!-- Style Selector -->
-            <div class="card equipment-card flex-grow-1 mt-1"
+            <div class="card equipment-card flex-grow-1 mt-1 tooltip-bcf"
               v-if="combatStore.currentStyle == 'hug' && showAllStyles == false">
+
+              <div class="tooltip-text bg-secondary w-100 py-2">
+                Creatures will eventually stop fighting.
+                <br>
+                No drops except sequence drops.
+                <br>
+                Successful dodging gives xp.
+              </div>
 
               <div class="d-flex justify-content-center py-2">
                 <span>❤️ Act</span>
@@ -503,9 +528,17 @@ export default {
             <!-- All Styles -->
             <div class="flex-grow-1 mt-1" v-if="showAllStyles == true">
 
-              <div class="card equipment-card mb-1"
+              <div class="card equipment-card mb-1 tooltip-bcf"
                 @click="combatStore.currentStyle = 'hug'; showAllStyles = false; combatStore.resetDragonAttack()"
                 v-if="skillStore.flags.showHug == true">
+
+                <div class="tooltip-text bg-secondary w-100 py-2">
+                  Creatures will eventually stop fighting.
+                  <br>
+                  No drops except sequence drops.
+                  <br>
+                  Successful dodging gives xp.
+                </div>
 
                 <div class="d-flex justify-content-center py-2">
                   <span>❤️ Act</span>
@@ -522,7 +555,8 @@ export default {
               </div>
 
               <div class="card equipment-card mb-1"
-                @click="combatStore.currentStyle = 'melee'; showAllStyles = false; combatStore.resetDragonAttack()">
+                @click="combatStore.currentStyle = 'melee'; showAllStyles = false; combatStore.resetDragonAttack()"
+                v-if="skillStore.skills[1].locked == false">
 
                 <div class="d-flex justify-content-center py-2">
                   <span>🗡️ Melee</span>
@@ -551,7 +585,7 @@ export default {
             <!-- Show All Styles -->
             <div class="card equipment-card mt-1 tooltip-bcf" style="min-width: 2rem; height: fit-content"
               @click="toggleStyles()"
-              v-if="skillStore.skills[2].locked == false || skillStore.skills[3].locked == false || skillStore.flags.showHug == true">
+              v-if="skillStore.skills[2].locked == false || skillStore.skills[3].locked == false || (skillStore.flags.showHug == true && skillStore.skills[0].locked == false)">
 
               <div class="tooltip-text bg-secondary py-2">
                 View All Styles
@@ -665,6 +699,7 @@ export default {
 
       <!-- Dragon and Opponent -->
       <div class="d-flex flex-wrap justify-content-center gap-1">
+
         <!-- Dragon Panel -->
         <div class="card card-big px-0 pb-1 mb-1">
 
@@ -684,7 +719,7 @@ export default {
                 <div class="d-flex justify-content-center align-items-center gap-1 py-2">
 
                   <span class="align-content-center little-levels px-1 mt-1">
-                    ({{ itemStore.equippedCombat.foodSlot.count }})
+                    ({{ (itemStore.equippedCombat.foodSlot.count).toLocaleString() }})
                   </span>
 
                   <span>
@@ -896,7 +931,7 @@ export default {
             Creature
           </div>
 
-          <!-- Location -->
+          <!-- Pause/Unpause -->
           <div class="px-2">
             <div class="d-flex gap-1 justify-content-center">
 
@@ -904,13 +939,20 @@ export default {
               <div class="card equipment-card flex-grow-1 my-1"
                 @click="combatStore.combatPaused = !combatStore.combatPaused">
                 <div class="d-flex justify-content-center py-2">
-                  <span v-if="combatStore.combatPaused == false">
+                  <span class="tooltip-bcf" v-if="combatStore.combatPaused == false">
                     ⏱️ Pause Combat
+                    <div class="tooltip-text bg-secondary py-2">
+                      Stop time, take a moment to think.
+                    </div>
                   </span>
-                  <span v-if="combatStore.combatPaused == true">
+                  <span class="tooltip-bcf"  v-if="combatStore.combatPaused == true">
                     ▶️ Resume Combat
+                    <div class="tooltip-text bg-secondary py-2">
+                      Ready, let's go.
+                    </div>
                   </span>
                 </div>
+                
               </div>
 
             </div>
@@ -1099,6 +1141,11 @@ export default {
                       <span v-if="combatStore.activeObject.stats.rangedDamage">
                         Ranged
                       </span>
+                      
+                      <span
+                        v-if="combatStore.activeObject.styles.length == 3 || (combatStore.activeObject.styles[0] == 'ranged' && combatStore.activeObject.styles[1] == 'magic')">
+                        /
+                      </span>
 
                       <span v-if="combatStore.activeObject.stats.magicDamage">
                         Magic
@@ -1238,6 +1285,11 @@ export default {
 
                         </span>
 
+                      </span>
+                      
+                      <span
+                        v-if="combatStore.activeObject.styles.length == 3 || (combatStore.activeObject.styles[0] == 'ranged' && combatStore.activeObject.styles[1] == 'magic')">
+                        /
                       </span>
 
                       <!-- Magic Max Hit, Calculated -->
@@ -1385,6 +1437,20 @@ export default {
                         </div>
 
                       </span>
+                      <span v-if="combatStore.activeObject.stats.slayer[0] == 3">
+                        ↩️ Recoiling
+
+                        <div class="tooltip-text py-1 px-3">
+                          <div class="d-flex justify-content-center little-levels ">
+                            <span>
+                              <span class="text-warning">Recoil Damage</span>
+                              <br>
+                              Percent damage returned to attacker
+                            </span>
+                          </div>
+                        </div>
+
+                      </span>
 
                       <span v-if="combatStore.activeObject.stats.slayer[0] == -1">—</span>
                     </span>
@@ -1393,8 +1459,8 @@ export default {
                   <div class="d-flex justify-content-between">
                     <span>Intensity: </span>
                     <span v-if="combatStore.activeObject.stats">
-                      <span v-if="combatStore.activeObject.stats.slayer[1] > 0">
-                        {{ combatStore.activeObject.stats.slayer[1] * 100 }}%
+                      <span v-if="(combatStore.activeObject.stats.slayer[1] - itemStore.equippedStats.slayerMitigation) > 0">
+                        {{ ((combatStore.activeObject.stats.slayer[1] - itemStore.equippedStats.slayerMitigation) * 100).toFixed() }}%
                       </span>
 
                       <span v-else>—</span>
